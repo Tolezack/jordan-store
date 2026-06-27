@@ -1,0 +1,566 @@
+{
+  "produtos": [
+    {
+      "id": "camisa1",
+      "nome": "Camisa Jordan Air Classic",
+      "categoria": "camisas",
+      "preco": 299.9,
+      "estoque": 0,
+      "imagem": "https://images.unsplash.com/photo-1594032194509-0056023973b2?w=300&h=300&fit=crop",
+      "imagens": [],
+      "descricao": "Camisa clássica da linha Air Jordan com tecido premium e design icônico"
+    },
+    {
+      "id": "camisa2",
+      "nome": "Camisa Jordan Retro 23",
+      "categoria": "camisas",
+      "preco": 289.9,
+      "estoque": 2,
+      "imagem": "https://images.unsplash.com/photo-1516826957135-700dedea698c?w=300&h=300&fit=crop",
+      "imagens": [],
+      "descricao": "Design retrô inspirado nos anos 90 com logo bordado"
+    },
+    {
+      "id": "camisa3",
+      "nome": "Camisa Jordan Performance",
+      "categoria": "camisas",
+      "preco": 329.9,
+      "estoque": 12,
+      "imagem": "https://images.unsplash.com/photo-1596755094514-f87e34085b2c?w=300&h=300&fit=crop",
+      "imagens": [],
+      "descricao": "Tecnologia de alta performance para atividades esportivas"
+    },
+    {
+      "id": "camisa4",
+      "nome": "Camisa Jordan Signature",
+      "categoria": "camisas",
+      "preco": 349.9,
+      "estoque": 8,
+      "imagem": "https://images.unsplash.com/photo-1529374255404-311a2a4f1fd9?w=300&h=300&fit=crop",
+      "imagens": [],
+      "descricao": "Edição especial com assinatura bordada e detalhes premium"
+    },
+    {
+      "id": "camisa5",
+      "nome": "Camisa Jordan Street Style",
+      "categoria": "camisas",
+      "preco": 269.9,
+      "estoque": 15,
+      "imagem": "https://images.unsplash.com/photo-1574180045827-681f8a1a9622?w=300&h=300&fit=crop",
+      "imagens": [],
+      "descricao": "Estilo urbano com design moderno e conforto máximo"
+    },
+    {
+      "id": "camisa6",
+      "nome": "Camisa Jordan Essentials",
+      "categoria": "camisas",
+      "preco": 199.9,
+      "estoque": 30,
+      "imagem": "https://images.unsplash.com/photo-1551028719-00167b16eac5?w=300&h=300&fit=crop",
+      "imagens": [],
+      "descricao": "Básica essencial para o dia a dia, super confortável"
+    },
+    {
+      "id": "camisa7",
+      "nome": "Camisa Jordan Pro Elite",
+      "categoria": "camisas",
+      "preco": 379.9,
+      "estoque": 5,
+      "imagem": "https://images.unsplash.com/photo-1594032194509-0056023973b2?w=300&h=300&fit=crop",
+      "imagens": [],
+      "descricao": "Linha profissional com materiais de alta qualidade"
+    },
+    {
+      "id": "camisa8",
+      "nome": "Camisa Jordan Night Game",
+      "categoria": "camisas",
+      "preco": 319.9,
+      "estoque": 22,
+      "imagem": "https://images.unsplash.com/photo-1523381210434-271e8be1f52b?w=300&h=300&fit=crop",
+      "imagens": [],
+      "descricao": "Design elegante para jogos noturnos e eventos especiais"
+    },
+    {
+      "id": "camisa9",
+      "nome": "Camisa Jordan Summer Edition",
+      "categoria": "camisas",
+      "preco": 239.9,
+      "estoque": 14,
+      "imagem": "https://images.unsplash.com/photo-1544441893-675973e31985?w=300&h=300&fit=crop",
+      "imagens": [],
+      "descricao": "Edição verão com tecido leve e respirabilidade máxima"
+    },
+    {
+      "id": "camisa10",
+      "nome": "Camisa Jordan Limited Edition",
+      "categoria": "camisas",
+      "preco": 459.9,
+      "estoque": 3,
+      "imagem": "https://images.unsplash.com/photo-1503342394128-c104d54dba01?w=300&h=300&fit=crop",
+      "imagens": [],
+      "descricao": "Edição limitada numerada, apenas 100 unidades produzidas"
+    },
+    {
+      "id": "camisa11",
+      "nome": "Camisa Jordan Air Max Pro",
+      "categoria": "camisas",
+      "preco": 329.9,
+      "estoque": 20,
+      "imagem": "https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?w=300&h=300&fit=crop",
+      "imagens": [],
+      "descricao": "Tecnologia Air Max para máximo conforto e estilo"
+    },
+    {
+      "id": "camisa12",
+      "nome": "Camisa Jordan Urban Flex",
+      "categoria": "camisas",
+      "preco": 279.9,
+      "estoque": 16,
+      "imagem": "https://images.unsplash.com/photo-1529374255404-311a2a4f1fd9?w=300&h=300&fit=crop",
+      "imagens": [],
+      "descricao": "Flexibilidade urbana com design contemporâneo"
+    },
+    {
+      "id": "camisa13",
+      "nome": "Camisa Jordan Court Vision",
+      "categoria": "camisas",
+      "preco": 299.9,
+      "estoque": 11,
+      "imagem": "https://images.unsplash.com/photo-1552374196-1ab2a1c593e8?w=300&h=300&fit=crop",
+      "imagens": [],
+      "descricao": "Inspirada nas quadras com estilo esportivo moderno"
+    },
+    {
+      "id": "camisa14",
+      "nome": "Camisa Jordan Heritage",
+      "categoria": "camisas",
+      "preco": 349.9,
+      "estoque": 7,
+      "imagem": "https://images.unsplash.com/photo-1551028719-00167b16eac5?w=300&h=300&fit=crop",
+      "imagens": [],
+      "descricao": "Herança Jordan com detalhes clássicos e modernos"
+    },
+    {
+      "id": "camisa15",
+      "nome": "Camisa Jordan Bounce",
+      "categoria": "camisas",
+      "preco": 269.9,
+      "estoque": 19,
+      "imagem": "https://images.unsplash.com/photo-1594032194509-0056023973b2?w=300&h=300&fit=crop",
+      "imagens": [],
+      "descricao": "Tecnologia Bounce para liberdade de movimento"
+    },
+    {
+      "id": "camisa16",
+      "nome": "Camisa Jordan React",
+      "categoria": "camisas",
+      "preco": 389.9,
+      "estoque": 9,
+      "imagem": "https://images.unsplash.com/photo-1523381210434-271e8be1f52b?w=300&h=300&fit=crop",
+      "imagens": [],
+      "descricao": "Conforto React com resposta energética premium"
+    },
+    {
+      "id": "camisa17",
+      "nome": "Camisa Jordan Zoom",
+      "categoria": "camisas",
+      "preco": 319.9,
+      "estoque": 13,
+      "imagem": "https://images.unsplash.com/photo-1544441893-675973e31985?w=300&h=300&fit=crop",
+      "imagens": [],
+      "descricao": "Tecnologia Zoom para velocidade e agilidade"
+    },
+    {
+      "id": "camisa18",
+      "nome": "Camisa Jordan FlyEase",
+      "categoria": "camisas",
+      "preco": 279.9,
+      "estoque": 21,
+      "imagem": "https://images.unsplash.com/photo-1503342394128-c104d54dba01?w=300&h=300&fit=crop",
+      "imagens": [],
+      "descricao": "Sistema FlyEase para fácil uso e máximo conforto"
+    },
+    {
+      "id": "calca1",
+      "nome": "Calça Jeans Jordan Classic",
+      "categoria": "calcas",
+      "preco": 389.9,
+      "estoque": 20,
+      "imagem": "https://images.unsplash.com/photo-1581349488280-6f2a3eb2a1f2?w=300&h=300&fit=crop",
+      "imagens": [],
+      "descricao": "Jeans clássico com elastano para máximo conforto"
+    },
+    {
+      "id": "calca2",
+      "nome": "Calça Cargo Jordan Utility",
+      "categoria": "calcas",
+      "preco": 329.9,
+      "estoque": 15,
+      "imagem": "https://images.unsplash.com/photo-1593032465171-72c54d44c0a6?w=300&h=300&fit=crop",
+      "imagens": [],
+      "descricao": "Cargo prática com múltiplos bolsos e design utilitário"
+    },
+    {
+      "id": "calca3",
+      "nome": "Calça Moletom Jordan Comfort",
+      "categoria": "calcas",
+      "preco": 279.9,
+      "estoque": 25,
+      "imagem": "https://images.unsplash.com/photo-1624378439575-d8705ad7ae80?w=300&h=300&fit=crop",
+      "imagens": [],
+      "descricao": "Moletom ultra confortável para relaxar em estilo"
+    },
+    {
+      "id": "calca4",
+      "nome": "Calça Chino Jordan Executive",
+      "categoria": "calcas",
+      "preco": 349.9,
+      "estoque": 18,
+      "imagem": "https://images.unsplash.com/photo-1582418702059-97ebafb35d09?w=300&h=300&fit=crop",
+      "imagens": [],
+      "descricao": "Chino executivo para ocasiões formais e casuais"
+    },
+    {
+      "id": "calca5",
+      "nome": "Calça Jogger Jordan Sport",
+      "categoria": "calcas",
+      "preco": 299.9,
+      "estoque": 22,
+      "imagem": "https://images.unsplash.com/photo-1473966968600-fa801b869a1a?w=300&h=300&fit=crop",
+      "imagens": [],
+      "descricao": "Jogger esportiva com ajuste perfeito e mobilidade"
+    },
+    {
+      "id": "calca6",
+      "nome": "Calça Social Jordan Premium",
+      "categoria": "calcas",
+      "preco": 429.9,
+      "estoque": 10,
+      "imagem": "https://images.unsplash.com/photo-1542272604-787c3835535d?w=300&h=300&fit=crop",
+      "imagens": [],
+      "descricao": "Social premium com corte italiano e tecido de alta qualidade"
+    },
+    {
+      "id": "calca7",
+      "nome": "Calça Tactel Jordan Performance",
+      "categoria": "calcas",
+      "preco": 319.9,
+      "estoque": 12,
+      "imagem": "https://images.unsplash.com/photo-1475178626620-a4d074967452?w=300&h=300&fit=crop",
+      "imagens": [],
+      "descricao": "Tactel de performance para atividades físicas intensas"
+    },
+    {
+      "id": "calca8",
+      "nome": "Calça Wide Leg Jordan",
+      "categoria": "calcas",
+      "preco": 369.9,
+      "estoque": 8,
+      "imagem": "https://images.unsplash.com/photo-1576995853123-5a10305d93c0?w=300&h=300&fit=crop",
+      "imagens": [],
+      "descricao": "Wide leg fashion com corte moderno e tendência streetwear"
+    },
+    {
+      "id": "calca9",
+      "nome": "Calça Linho Jordan Summer",
+      "categoria": "calcas",
+      "preco": 289.9,
+      "estoque": 16,
+      "imagem": "https://images.unsplash.com/photo-1594633312681-425c7b97ccd1?w=300&h=300&fit=crop",
+      "imagens": [],
+      "descricao": "Linho leve e respirável para os dias mais quentes"
+    },
+    {
+      "id": "calca10",
+      "nome": "Calça Couro Jordan Urban",
+      "categoria": "calcas",
+      "preco": 599.9,
+      "estoque": 1,
+      "imagem": "https://images.unsplash.com/photo-1552374196-c4e7ffc6e126?w=300&h=300&fit=crop",
+      "imagens": [],
+      "descricao": "Couro legítimo com design urbano e estilo ousado"
+    },
+    {
+      "id": "calca11",
+      "nome": "Calça Sarja Jordan Slim",
+      "categoria": "calcas",
+      "preco": 339.9,
+      "estoque": 17,
+      "imagem": "https://images.unsplash.com/photo-1581349488280-6f2a3eb2a1f2?w=300&h=300&fit=crop",
+      "imagens": [],
+      "descricao": "Sarja slim fit com corte moderno e ajuste perfeito"
+    },
+    {
+      "id": "calca12",
+      "nome": "Calça Tactel Jordan Active",
+      "categoria": "calcas",
+      "preco": 299.9,
+      "estoque": 14,
+      "imagem": "https://images.unsplash.com/photo-1593032465171-72c54d44c0a6?w=300&h=300&fit=crop",
+      "imagens": [],
+      "descricao": "Tactel para atividades físicas com máxima liberdade"
+    },
+    {
+      "id": "calca13",
+      "nome": "Calça Moletom Jordan Tech",
+      "categoria": "calcas",
+      "preco": 319.9,
+      "estoque": 11,
+      "imagem": "https://images.unsplash.com/photo-1624378439575-d8705ad7ae80?w=300&h=300&fit=crop",
+      "imagens": [],
+      "descricao": "Moletom tech fleece com tecnologia térmica avançada"
+    },
+    {
+      "id": "calca14",
+      "nome": "Calça Jeans Jordan Skinny",
+      "categoria": "calcas",
+      "preco": 379.9,
+      "estoque": 9,
+      "imagem": "https://images.unsplash.com/photo-1582418702059-97ebafb35d09?w=300&h=300&fit=crop",
+      "imagens": [],
+      "descricao": "Jeans skinny fit com elastano e corte moderno"
+    },
+    {
+      "id": "calca15",
+      "nome": "Calça Cargo Jordan Military",
+      "categoria": "calcas",
+      "preco": 349.9,
+      "estoque": 13,
+      "imagem": "https://images.unsplash.com/photo-1473966968600-fa801b869a1a?w=300&h=300&fit=crop",
+      "imagens": [],
+      "descricao": "Cargo estilo militar com múltiplos bolsos funcionais"
+    },
+    {
+      "id": "calca16",
+      "nome": "Calça Sarja Jordan Regular",
+      "categoria": "calcas",
+      "preco": 289.9,
+      "estoque": 19,
+      "imagem": "https://images.unsplash.com/photo-1542272604-787c3835535d?w=300&h=300&fit=crop",
+      "imagens": [],
+      "descricao": "Sarja regular fit para uso casual e confortável"
+    },
+    {
+      "id": "calca17",
+      "nome": "Calça Tactel Jordan Pro",
+      "categoria": "calcas",
+      "preco": 359.9,
+      "estoque": 7,
+      "imagem": "https://images.unsplash.com/photo-1475178626620-a4d074967452?w=300&h=300&fit=crop",
+      "imagens": [],
+      "descricao": "Tactel profissional para alto rendimento esportivo"
+    },
+    {
+      "id": "calca18",
+      "nome": "Calça Jeans Jordan Relaxed",
+      "categoria": "calcas",
+      "preco": 329.9,
+      "estoque": 15,
+      "imagem": "https://images.unsplash.com/photo-1576995853123-5a10305d93c0?w=300&h=300&fit=crop",
+      "imagens": [],
+      "descricao": "Jeans relaxed fit para máximo conforto no dia a dia"
+    },
+    {
+      "id": "tenis1",
+      "nome": "Air Jordan 1 Retro High OG",
+      "categoria": "tenis",
+      "preco": 1299.9,
+      "estoque": 8,
+      "imagem": "https://images.unsplash.com/photo-1606107557195-0e29a4b5b4aa?w=300&h=300&fit=crop",
+      "imagens": [],
+      "descricao": "Clássico absoluto, edição original com design icônico"
+    },
+    {
+      "id": "tenis2",
+      "nome": "Air Jordan 4 Retro \"Bred\"",
+      "categoria": "tenis",
+      "preco": 1499.9,
+      "estoque": 5,
+      "imagem": "https://images.unsplash.com/photo-1600269452121-4f2416e55c28?w=300&h=300&fit=crop",
+      "imagens": [],
+      "descricao": "Edição Black/Red, uma das mais desejadas da linha"
+    },
+    {
+      "id": "tenis3",
+      "nome": "Air Jordan 11 Retro \"Concord\"",
+      "categoria": "tenis",
+      "preco": 1399.9,
+      "estoque": 7,
+      "imagem": "https://images.unsplash.com/photo-1600185365483-26d7a4cc7519?w=300&h=300&fit=crop",
+      "imagens": [],
+      "descricao": "Design elegante com sola de gel e detalhes em patent leather"
+    },
+    {
+      "id": "tenis4",
+      "nome": "Air Jordan 3 Retro \"White Cement\"",
+      "categoria": "tenis",
+      "preco": 1199.9,
+      "estoque": 10,
+      "imagem": "https://images.unsplash.com/photo-1605348532760-6753d2c43329?w=300&h=300&fit=crop",
+      "imagens": [],
+      "descricao": "Primeiro modelo assinado por Tinker Hatfield"
+    },
+    {
+      "id": "tenis5",
+      "nome": "Air Jordan 6 Retro \"Infrared\"",
+      "categoria": "tenis",
+      "preco": 1249.9,
+      "estoque": 6,
+      "imagem": "https://images.unsplash.com/photo-1606107557195-0e29a4b5b4aa?w=300&h=300&fit=crop",
+      "imagens": [],
+      "descricao": "Modelo usado por MJ na primeira conquista do título da NBA"
+    },
+    {
+      "id": "tenis6",
+      "nome": "Air Jordan 12 Retro \"Flu Game\"",
+      "categoria": "tenis",
+      "preco": 1349.9,
+      "estoque": 9,
+      "imagem": "https://images.unsplash.com/photo-1600269452121-4f2416e55c28?w=300&h=300&fit=crop",
+      "imagens": [],
+      "descricao": "Famoso \"Flu Game\", edição histórica"
+    },
+    {
+      "id": "tenis7",
+      "nome": "Air Jordan 5 Retro \"Grape\"",
+      "categoria": "tenis",
+      "preco": 1149.9,
+      "estoque": 12,
+      "imagem": "https://images.unsplash.com/photo-1600185365483-26d7a4cc7519?w=300&h=300&fit=crop",
+      "imagens": [],
+      "descricao": "Clássico grape com detalhes em roxo e verde"
+    },
+    {
+      "id": "tenis8",
+      "nome": "Air Jordan 13 Retro \"He Got Game\"",
+      "categoria": "tenis",
+      "preco": 1299.9,
+      "estoque": 8,
+      "imagem": "https://images.unsplash.com/photo-1605348532760-6753d2c43329?w=300&h=300&fit=crop",
+      "imagens": [],
+      "descricao": "Inspirado no filme \"He Got Game\", design futurista"
+    },
+    {
+      "id": "tenis9",
+      "nome": "Air Jordan 1 Mid \"Chicago\"",
+      "categoria": "tenis",
+      "preco": 899.9,
+      "estoque": 15,
+      "imagem": "https://images.unsplash.com/photo-1606107557195-0e29a4b5b4aa?w=300&h=300&fit=crop",
+      "imagens": [],
+      "descricao": "Versão Mid do clássico Chicago, mais acessível"
+    },
+    {
+      "id": "tenis10",
+      "nome": "Jordan Why Not Zer0.4",
+      "categoria": "tenis",
+      "preco": 799.9,
+      "estoque": 20,
+      "imagem": "https://images.unsplash.com/photo-1600269452121-4f2416e55c28?w=300&h=300&fit=crop",
+      "imagens": [],
+      "descricao": "Assinatura de Russell Westbrook, design agressivo"
+    },
+    {
+      "id": "tenis11",
+      "nome": "Air Jordan 34 Low",
+      "categoria": "tenis",
+      "preco": 1199.9,
+      "estoque": 11,
+      "imagem": "https://images.unsplash.com/photo-1600185365483-26d7a4cc7519?w=300&h=300&fit=crop",
+      "imagens": [],
+      "descricao": "Tecnologia Eclipse Plate, máximo desempenho"
+    },
+    {
+      "id": "tenis12",
+      "nome": "Jordan Delta 2",
+      "categoria": "tenis",
+      "preco": 699.9,
+      "estoque": 18,
+      "imagem": "https://images.unsplash.com/photo-1605348532760-6753d2c43329?w=300&h=300&fit=crop",
+      "imagens": [],
+      "descricao": "Conforto premium para o dia a dia"
+    },
+    {
+      "id": "tenis13",
+      "nome": "Air Jordan 1 Low OG",
+      "categoria": "tenis",
+      "preco": 849.9,
+      "estoque": 14,
+      "imagem": "https://images.unsplash.com/photo-1606107557195-0e29a4b5b4aa?w=300&h=300&fit=crop",
+      "imagens": [],
+      "descricao": "Versão low do clássico, perfeita para casual"
+    },
+    {
+      "id": "tenis14",
+      "nome": "Jordan React Elevation",
+      "categoria": "tenis",
+      "preco": 749.9,
+      "estoque": 16,
+      "imagem": "https://images.unsplash.com/photo-1600269452121-4f2416e55c28?w=300&h=300&fit=crop",
+      "imagens": [],
+      "descricao": "Tecnologia React para máximo conforto"
+    },
+    {
+      "id": "tenis15",
+      "nome": "Air Jordan 7 Retro \"Hare\"",
+      "categoria": "tenis",
+      "preco": 1249.9,
+      "estoque": 7,
+      "imagem": "https://images.unsplash.com/photo-1600185365483-26d7a4cc7519?w=300&h=300&fit=crop",
+      "imagens": [],
+      "descricao": "Edição especial inspirada no personagem Bugs Bunny"
+    },
+    {
+      "id": "tenis16",
+      "nome": "Jordan Proto-React",
+      "categoria": "tenis",
+      "preco": 599.9,
+      "estoque": 22,
+      "imagem": "https://images.unsplash.com/photo-1605348532760-6753d2c43329?w=300&h=300&fit=crop",
+      "imagens": [],
+      "descricao": "Design moderno com amortecimento React"
+    },
+    {
+      "id": "tenis17",
+      "nome": "Air Jordan 8 Retro \"Playoffs\"",
+      "categoria": "tenis",
+      "preco": 1299.9,
+      "estoque": 6,
+      "imagem": "https://images.unsplash.com/photo-1606107557195-0e29a4b5b4aa?w=300&h=300&fit=crop",
+      "imagens": [],
+      "descricao": "Modelo usado por MJ nos playoffs de 1993"
+    },
+    {
+      "id": "tenis18",
+      "nome": "Jordan Max 200",
+      "categoria": "tenis",
+      "preco": 549.9,
+      "estoque": 25,
+      "imagem": "https://images.unsplash.com/photo-1600269452121-4f2416e55c28?w=300&h=300&fit=crop",
+      "imagens": [],
+      "descricao": "Conforto Air Max a preço acessível"
+    },
+    {
+      "id": "camisa33",
+      "nome": "penis azul",
+      "categoria": "camisas",
+      "preco": 10000,
+      "estoque": 5,
+      "imagem": "https://www.leppsoft.com/soundpad/images/screenshots/home/editor-en.png",
+      "imagens": [],
+      "descricao": "adsa"
+    },
+    {
+      "id": "sad",
+      "nome": "sa",
+      "categoria": "camisas",
+      "preco": 345,
+      "estoque": 3,
+      "imagem": "32",
+      "imagens": [],
+      "descricao": ""
+    }
+  ],
+  "ultimaAtualizacao": "2026-04-12T13:17:30.464Z",
+  "totalProdutos": 56
+}

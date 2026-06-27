@@ -1,0 +1,85 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Jordan Wear Store</title>
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+  <header class="topbar">
+    <div>
+      <h1>Jordan Wear Store</h1>
+      <p>Loja online com Pix automático</p>
+    </div>
+    <button class="cart-button" onclick="abrirCarrinho()">
+      🛒 Carrinho <span id="cartCount">0</span>
+    </button>
+  </header>
+
+  <main>
+    <section class="hero">
+      <h2>Produtos</h2>
+      <p>O pagamento Pix é gerado pelo backend. O estoque só baixa quando o Mercado Pago confirma o pagamento.</p>
+    </section>
+
+    <section class="filters">
+      <input id="busca" type="text" placeholder="Buscar produto..." oninput="renderProdutos()" />
+      <select id="categoria" onchange="renderProdutos()">
+        <option value="all">Todas categorias</option>
+        <option value="camisas">Camisas</option>
+        <option value="calcas">Calças</option>
+        <option value="tenis">Tênis</option>
+      </select>
+    </section>
+
+    <section id="produtosGrid" class="grid"></section>
+  </main>
+
+  <div id="overlay" class="overlay hidden" onclick="fecharModais()"></div>
+
+  <aside id="cartPanel" class="cart-panel hidden">
+    <div class="cart-header">
+      <h2>Meu Carrinho</h2>
+      <button onclick="fecharModais()">×</button>
+    </div>
+    <div id="cartItems" class="cart-items"></div>
+    <div class="cart-footer">
+      <strong>Total: <span id="cartTotal">R$ 0,00</span></strong>
+      <button class="primary" onclick="abrirCheckout()">Finalizar com Pix</button>
+      <button class="secondary" onclick="limparCarrinho()">Limpar</button>
+    </div>
+  </aside>
+
+  <div id="checkoutModal" class="modal hidden">
+    <div class="modal-header">
+      <h2>Finalizar pedido</h2>
+      <button onclick="fecharModais()">×</button>
+    </div>
+
+    <label>Nome</label>
+    <input id="clienteNome" placeholder="Seu nome" />
+
+    <label>Email obrigatório para Pix</label>
+    <input id="clienteEmail" type="email" placeholder="email@exemplo.com" />
+
+    <label>Telefone</label>
+    <input id="clienteTelefone" placeholder="(51) 99999-9999" />
+
+    <label>Endereço / observação</label>
+    <textarea id="clienteEndereco" placeholder="Rua, número, bairro, cidade..."></textarea>
+
+    <button class="primary" onclick="criarPix()">Gerar Pix</button>
+  </div>
+
+  <div id="pixModal" class="modal hidden">
+    <div class="modal-header">
+      <h2>Pagamento Pix</h2>
+      <button onclick="fecharModais()">×</button>
+    </div>
+    <div id="pixContent"></div>
+  </div>
+
+  <script src="script.js"></script>
+</body>
+</html>

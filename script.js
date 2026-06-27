@@ -1,5 +1,4 @@
-// Troque pela URL do seu backend no Render depois do deploy.
-const API_URL = "http://localhost:3000";
+const API_URL = "https://dashboard.render.com/web/srv-d8vjc3cm0tmc73ct7nrg/deploys/dep-d8vjc3sm0tmc73ct7o9g";
 
 let produtos = [];
 let carrinho = JSON.parse(localStorage.getItem("jws_carrinho") || "[]");

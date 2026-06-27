@@ -1,5 +1,4 @@
-// Troque pela URL do seu backend no Render depois do deploy.
-const API_URL = "http://localhost:3000";
+const API_URL = "https://jordan-store-backend.onrender.com";
 
 let produtos = [];
 let carrinho = JSON.parse(localStorage.getItem("jws_carrinho") || "[]");

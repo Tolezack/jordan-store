@@ -1,15 +1,14 @@
 {
   "produtos": [
     {
-      "id": "camisa-brasil-azul-forte",
-      "nome": "Camisa Brasil Azul Forte",
+      "id": "camisa-frança-azul",
+      "nome": "Camisa França Azuk",
       "categoria": "camisa",
       "preco": 60,
       "estoque": 4,
-      "imagem": "https://i.pinimg.com/736x/82/21/f4/8221f40a9e4e84aec32443e0130f5cc6.jpg",
+      "imagem": "https://dcdn-us.mitiendanube.com/stores/007/694/334/products/20260519153953230001-88cd9e4b013f14281017792052534092-1024-1024.webp",
       "imagens": [],
-      "descricao": "Camisa Brasil azul forte, visual streetwear e tecido confortável.",
-      "tamanhos": ["G", "GG"]
+      "descricao": "teste"
     },
     {
       "id": "calca-street-preta",
@@ -19,8 +18,7 @@
       "estoque": 3,
       "imagem": "https://i.pinimg.com/736x/47/9c/46/479c46d2e3a13214638a3d80d9ef2cd3.jpg",
       "imagens": [],
-      "descricao": "Calça preta para montar kit streetwear.",
-      "tamanhos": ["P", "M", "G", "GG"]
+      "descricao": "Calça preta para montar kit streetwear."
     },
     {
       "id": "tenis-jordan-vermelho",
@@ -30,8 +28,9 @@
       "estoque": 2,
       "imagem": "https://i.pinimg.com/736x/55/e8/60/55e8602476052c3b9e3383840c3b3741.jpg",
       "imagens": [],
-      "descricao": "Tênis estilo Jordan para fechar o outfit.",
-      "tamanhos": ["38", "39", "40", "41", "42"]
+      "descricao": "Tênis estilo Jordan para fechar o outfit."
     }
-  ]
+  ],
+  "ultimaAtualizacao": "2026-07-04T03:53:45.121Z",
+  "totalProdutos": 3
 }

@@ -860,8 +860,7 @@
     }
 
     function setAdminImages(index, value) {
-      const imgs = String(value || "").split("
-").map(x => x.trim()).filter(Boolean);
+      const imgs = String(value || "").split("\n").map(x => x.trim()).filter(Boolean);
       adminProdutos[index].imagem = imgs[0] || "";
       adminProdutos[index].imagens = imgs;
     }
@@ -884,8 +883,7 @@
       const obj = {};
 
       String(value || "")
-        .split(/
-|,/)
+        .split(/\n|,/)
         .map(x => x.trim())
         .filter(Boolean)
         .forEach(part => {

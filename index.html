@@ -4,13 +4,20 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Jordan Wear Store</title>
-  <link rel="stylesheet" href="style.css?v=92" />
+  <link rel="stylesheet" href="style.css?v=94" />
   <style>
     .frete-opcoes{display:grid;gap:8px;margin-top:10px}
     .frete-opcao{width:100%;border:1px solid #ccc;background:#fff;min-height:58px;padding:10px 12px;display:flex;justify-content:space-between;align-items:center;gap:12px;text-align:left;cursor:pointer}
     .frete-opcao.active{border-color:#111;outline:2px solid #111}
     .frete-opcao strong{display:block;text-transform:uppercase;font-size:14px;color:#111}
     .frete-opcao small{display:block;color:#666;margin-top:3px;font-size:12px}.frete-opcao span{font-weight:900;white-space:nowrap;color:#111}
+
+    .pedido-status{padding:3px 7px;border-radius:999px;background:#eee;font-size:11px;text-transform:uppercase}
+    .pedido-status.ok{background:#d8f8e4;color:#0a7a36}
+    .pedido-status.warn{background:#fff3cd;color:#8a5a00}
+    .pedido-status.danger{background:#ffd7d7;color:#9b1111}
+    .pedido-status.wait{background:#e8e8e8;color:#555}
+    .admin-toolbar button:disabled{opacity:.45;cursor:not-allowed}
   </style>
 </head>
 <body>
@@ -134,6 +141,8 @@
     let currentCategory = "all";
     let adminToken = localStorage.getItem("jws_admin_token") || "";
     let adminProdutos = [];
+    let adminPedidos = [];
+    let adminAba = "produtos";
     let checkoutFrete = null;
     let checkoutEndereco = null;
     let opcoesFreteAtual = [];
@@ -279,7 +288,7 @@
       }
     }
 
-    function abrirProduto(id, categoria) { window.location.href = `produtos/${normalizarCategoria(categoria)}/?id=${encodeURIComponent(id)}&v=92`; }
+    function abrirProduto(id, categoria) { window.location.href = `produtos/${normalizarCategoria(categoria)}/?id=${encodeURIComponent(id)}&v=94`; }
 
     function renderProducts(list = null) {
       const grid = document.getElementById("productsGrid");
@@ -391,9 +400,9 @@
       if (checkoutFrete === null || !checkoutEndereco || !freteSelecionado) { alert("Calcule o frete pelo CEP e escolha PAC ou SEDEX antes de ir para o Pix."); return; }
       const subtotal = getCarrinhoSubtotal();
       const frete = Number(freteSelecionado.valor || 0);
-      const pedido = { id:`PED-${Date.now()}`, tipo:"carrinho", cliente:{ nome:document.getElementById("nome").value, telefone:document.getElementById("telefone").value, endereco:document.getElementById("endereco").value }, itens:carrinho, subtotal, frete, total:subtotal + frete, freteTipo:freteSelecionado.tipo, freteNome:freteSelecionado.nome, fretePrazo:freteSelecionado.prazo, cep:checkoutEndereco.cep, enderecoFrete:checkoutEndereco, imagem:carrinho[0]?.imagem || "", nome:`Pedido com ${carrinho.length} item(ns)`, tamanho:"", quantidade:carrinho.reduce((s,i)=>s+Number(i.quantidade||0),0) };
+      const pedido = { id:`PED-${Date.now()}`, tipo:"carrinho", status:"pendente", criadoEm:new Date().toISOString(), cliente:{ nome:document.getElementById("nome").value, telefone:document.getElementById("telefone").value, endereco:document.getElementById("endereco").value }, itens:carrinho, subtotal, frete, total:subtotal + frete, freteTipo:freteSelecionado.tipo, freteNome:freteSelecionado.nome, fretePrazo:freteSelecionado.prazo, cep:checkoutEndereco.cep, enderecoFrete:checkoutEndereco, imagem:carrinho[0]?.imagem || "", nome:`Pedido com ${carrinho.length} item(ns)`, tamanho:"", quantidade:carrinho.reduce((s,i)=>s+Number(i.quantidade||0),0) };
       localStorage.setItem("pedido_pix_manual", JSON.stringify(pedido));
-      window.location.href = "pix/index.html?v=92";
+      window.location.href = "pix/index.html?v=94";
     }
 
     function toggleSidebar(force) { const sidebar=document.getElementById("sidebar"), overlay=document.querySelector(".overlay"); if (force===false) { sidebar.classList.remove("active"); overlay.classList.remove("active"); return; } sidebar.classList.toggle("active"); overlay.classList.toggle("active"); }
@@ -404,7 +413,7 @@
     function notify(text, type="success") { const n=document.createElement("div"); n.className=`notification ${type}`; n.textContent=text; document.body.appendChild(n); setTimeout(()=>n.remove(),3100); }
 
     function showAdminLogin(){ document.getElementById("adminBody").innerHTML = `<form onsubmit="adminLogin(event)"><div class="form-group"><label>Senha admin</label><input id="adminSenha" type="password" required autocomplete="off" /></div><button class="submit" type="submit">Entrar</button></form>`; }
-    function openAdmin(){ document.getElementById("adminModal").classList.add("active"); adminToken ? loadAdminProducts() : showAdminLogin(); }
+    function openAdmin(){ document.getElementById("adminModal").classList.add("active"); adminToken ? loadAdminData() : showAdminLogin(); }
     function closeAdmin(){ document.getElementById("adminModal").classList.remove("active"); }
     async function adminLogin(event){
       event.preventDefault();
@@ -417,7 +426,7 @@
         if(!data.ok){ showAdminLogin(); return notify(data.erro||"Senha incorreta","error"); }
         adminToken=data.token;
         localStorage.setItem("jws_admin_token", adminToken);
-        loadAdminProducts();
+        loadAdminData();
       }catch(err){
         console.error(err);
         showAdminLogin();
@@ -425,24 +434,89 @@
       }
     }
 
-    async function loadAdminProducts(){
+    async function loadAdminData(){
+      adminAba = adminAba || "produtos";
       const body=document.getElementById("adminBody");
       body.innerHTML=`<div class="loading"><div><div class="spinner"></div><p>Carregando painel...</p></div></div>`;
       try{
-        const res=await fetchComTempo(`${API_URL}/api/admin/produtos?cache=${Date.now()}`, {headers:{Authorization:`Bearer ${adminToken}`}}, 15000);
-        const data=await res.json();
-        if(!data.ok){ adminLogout(); return notify(data.erro||"Login expirou","error"); }
-        adminProdutos=(Array.isArray(data.produtos)?data.produtos:[]).map(normalizarProduto);
+        const [prodRes, pedRes] = await Promise.all([
+          fetchComTempo(`${API_URL}/api/admin/produtos?cache=${Date.now()}`, {headers:{Authorization:`Bearer ${adminToken}`}}, 15000),
+          fetchComTempo(`${API_URL}/api/admin/pedidos?cache=${Date.now()}`, {headers:{Authorization:`Bearer ${adminToken}`}}, 15000)
+        ]);
+        const prodData=await prodRes.json();
+        const pedData=await pedRes.json();
+        if(!prodData.ok){ adminLogout(); return notify(prodData.erro||"Login expirou","error"); }
+        if(!pedData.ok){ adminLogout(); return notify(pedData.erro||"Login expirou","error"); }
+        adminProdutos=(Array.isArray(prodData.produtos)?prodData.produtos:[]).map(normalizarProduto);
+        adminPedidos=Array.isArray(pedData.pedidos)?pedData.pedidos:[];
         renderAdmin();
       }catch(err){
         console.error(err);
-        body.innerHTML=`<div class="erro"><div><h1>Erro no painel</h1><p>O backend não respondeu. Espera o Render acordar e tenta de novo.</p><button class="submit" onclick="loadAdminProducts()">Tentar novamente</button><button class="clear" onclick="adminLogout()">Entrar de novo</button></div></div>`;
+        body.innerHTML=`<div class="erro"><div><h1>Erro no painel</h1><p>O backend não respondeu. Espera o Render acordar e tenta de novo.</p><button class="submit" onclick="loadAdminData()">Tentar novamente</button><button class="clear" onclick="adminLogout()">Entrar de novo</button></div></div>`;
         notify("Erro ao carregar admin","error");
       }
     }
+    async function loadAdminProducts(){ return loadAdminData(); }
     function formatEstoqueTamanhos(estoqueTamanhos,tamanhos){ const estoque=estoqueTamanhos&&typeof estoqueTamanhos==="object"?estoqueTamanhos:{}; const lista=Object.keys(estoque).length?Object.keys(estoque):(Array.isArray(tamanhos)&&tamanhos.length?tamanhos:["P","M","G","GG"]); return lista.map(t=>{const tam=normalizarTamanho(t); return `${tam}: ${Number(estoque[tam] ?? estoque[t] ?? 0)}`;}).join("\n"); }
     function parseEstoqueTamanhos(texto){ const obj={}; const regex=/([A-Za-z0-9À-ÿ]+)\s*:\s*([0-9]+)/g; let match; while((match=regex.exec(String(texto||"")))!==null){ const tamanho=normalizarTamanho(match[1]); const quantidade=Number(match[2]||0); if(tamanho) obj[tamanho]=quantidade; } return obj; }
-    function renderAdmin(){ document.getElementById("adminBody").innerHTML = `<div class="admin-toolbar"><button class="submit" onclick="addAdminProduct()">+ Produto</button><button class="submit" onclick="saveAdminProducts()">Salvar tudo</button><button class="clear" onclick="adminLogout()">Sair</button></div><div class="admin-list">${adminProdutos.map((p,i)=>adminProductHtml(p,i)).join("")}</div>`; }
+    function setAdminAba(aba){ adminAba=aba; renderAdmin(); }
+    function statusPedidoLabel(status){
+      if(status === "aprovado" || status === "pago") return "Aprovado / estoque baixado";
+      if(status === "recusado" || status === "negado") return "Recusado";
+      if(status === "pendente" || status === "comprovante_enviado") return "Pendente";
+      return "Aguardando Pix";
+    }
+    function statusPedidoClass(status){
+      if(status === "aprovado" || status === "pago") return "ok";
+      if(status === "recusado" || status === "negado") return "danger";
+      if(status === "pendente" || status === "comprovante_enviado") return "warn";
+      return "wait";
+    }
+    function renderAdmin(){
+      const pendentes = adminPedidos.filter(p=>!["aprovado","pago","recusado","negado"].includes(String(p.status||""))).length;
+      document.getElementById("adminBody").innerHTML = `
+        <div class="admin-toolbar">
+          <button class="submit" onclick="setAdminAba('produtos')">Produtos</button>
+          <button class="submit" onclick="setAdminAba('pedidos')">Pedidos${pendentes ? ` (${pendentes})` : ""}</button>
+          <button class="submit" onclick="loadAdminData()">Atualizar</button>
+          <button class="clear" onclick="adminLogout()">Sair</button>
+        </div>
+        ${adminAba === "pedidos" ? renderAdminPedidos() : renderAdminProdutos()}
+      `;
+    }
+    function renderAdminProdutos(){ return `<div class="admin-toolbar"><button class="submit" onclick="addAdminProduct()">+ Produto</button><button class="submit" onclick="saveAdminProducts()">Salvar tudo</button></div><div class="admin-list">${adminProdutos.map((p,i)=>adminProductHtml(p,i)).join("")}</div>`; }
+    function renderAdminPedidos(){
+      const pedidos = [...adminPedidos].sort((a,b)=>String(b.criadoEm||b.atualizadoEm||"").localeCompare(String(a.criadoEm||a.atualizadoEm||"")));
+      if(!pedidos.length) return `<div class="erro"><div><h1>Sem pedidos</h1><p>Nenhum pedido Pix foi criado ainda.</p></div></div>`;
+      return `<div class="admin-list">${pedidos.map(adminPedidoHtml).join("")}</div>`;
+    }
+    function adminPedidoHtml(p){
+      const itens = Array.isArray(p.itens) ? p.itens : [];
+      const itensHtml = itens.length ? itens.map(i=>`<small>• ${escapeHtml(i.nome||"Produto")} ${i.tamanho?`Tam. ${escapeHtml(i.tamanho)} `:""}x${Number(i.quantidade||1)} — R$ ${money(Number(i.preco||0)*Number(i.quantidade||1))}</small>`).join("") : `<small>${escapeHtml(p.nome||"Pedido")}</small>`;
+      const comprovante = p.comprovanteLink ? `<a href="${escapeHtml(p.comprovanteLink)}" target="_blank" rel="noopener" style="color:#111;font-weight:900">Abrir comprovante</a>` : `<span style="color:#d63031;font-weight:900">Sem link de comprovante</span>`;
+      return `<div class="admin-product">
+        <div class="admin-product-top">
+          <img src="${escapeHtml(p.imagem || itens[0]?.imagem || "https://via.placeholder.com/120")}" onerror="this.src='https://via.placeholder.com/120'" />
+          <div>
+            <b>${escapeHtml(p.id || "Pedido")}</b>
+            <small>Status: <b class="pedido-status ${statusPedidoClass(p.status)}">${statusPedidoLabel(p.status)}</b></small>
+            <small>Cliente: ${escapeHtml(p.cliente?.nome || "-")} • ${escapeHtml(p.cliente?.telefone || "-")}</small>
+            <small>Total: R$ ${money(p.total)} • Frete: ${p.freteNome ? escapeHtml(p.freteNome) : "-"}</small>
+          </div>
+        </div>
+        <div style="display:grid;gap:6px;margin:10px 0">${itensHtml}</div>
+        <div class="order-summary">
+          <div class="order-item"><span>CEP</span><strong>${escapeHtml(p.cep || "-")}</strong></div>
+          <div class="order-item"><span>Endereço</span><strong>${escapeHtml(p.cliente?.endereco || "-")}</strong></div>
+          <div class="order-item"><span>Cidade</span><strong>${escapeHtml(p.enderecoFrete?.cidade || "-")}/${escapeHtml(p.enderecoFrete?.uf || "-")}</strong></div>
+          <div class="order-item"><span>Comprovante</span><strong>${comprovante}</strong></div>
+        </div>
+        <div class="admin-toolbar" style="margin-top:12px">
+          <button class="submit" onclick="confirmarPedido('${escapeHtml(String(p.id||"")).replace(/'/g,"\\'")}')" ${["aprovado","pago"].includes(String(p.status||"")) ? "disabled" : ""}>Aceitar / baixar estoque</button>
+          <button class="clear danger" onclick="negarPedido('${escapeHtml(String(p.id||"")).replace(/'/g,"\\'")}')" ${["recusado","negado"].includes(String(p.status||"")) ? "disabled" : ""}>Recusar</button>
+        </div>
+      </div>`;
+    }
     function adminProductHtml(p,i){ const fotos=getFotosProduto(p); const estoque=getEstoqueTamanhos(p); return `<div class="admin-product"><div class="admin-product-top"><img src="${fotos[0]||"https://via.placeholder.com/120"}" onerror="this.src='https://via.placeholder.com/120'" /><div><b>${escapeHtml(p.nome)}</b><small>${escapeHtml(p.id)}</small><small>${fotos.length} foto(s) • estoque total ${getEstoqueTotal(p)}</small></div></div><div class="admin-grid"><div class="form-group"><label>ID</label><input value="${escapeHtml(p.id)}" oninput="adminProdutos[${i}].id=this.value" /></div><div class="form-group"><label>Nome</label><input value="${escapeHtml(p.nome)}" oninput="adminProdutos[${i}].nome=this.value" /></div><div class="form-group"><label>Categoria</label><select onchange="adminProdutos[${i}].categoria=this.value"><option value="camisa" ${p.categoria==='camisa'?'selected':''}>Camisa</option><option value="calca" ${p.categoria==='calca'?'selected':''}>Calça</option><option value="tenis" ${p.categoria==='tenis'?'selected':''}>Tênis</option><option value="bermuda" ${p.categoria==='bermuda'?'selected':''}>Bermuda</option><option value="moletom" ${p.categoria==='moletom'?'selected':''}>Moletom</option></select></div><div class="form-group"><label>Preço</label><input type="number" step="0.01" value="${Number(p.preco||0)}" oninput="adminProdutos[${i}].preco=Number(this.value)" /></div></div><div class="form-group"><label>Fotos do produto / miniatura</label><textarea class="admin-big-textarea" oninput="atualizarFotosAdmin(${i}, this.value)">${escapeHtml(fotos.join("\n"))}</textarea></div><div class="admin-grid"><div class="form-group"><label>Tamanhos separados por vírgula</label><input value="${escapeHtml(getTamanhosProduto(p).join(", "))}" onchange="atualizarTamanhosAdmin(${i}, this.value)" /></div><div class="form-group"><label>Estoque por tamanho</label><textarea oninput="atualizarEstoqueAdmin(${i}, this.value)">${formatEstoqueTamanhos(estoque,getTamanhosProduto(p))}</textarea></div></div><div class="form-group"><label>Descrição</label><textarea oninput="adminProdutos[${i}].descricao=this.value">${escapeHtml(p.descricao)}</textarea></div><button class="clear danger" onclick="deleteAdminProduct(${i})">Excluir produto</button></div>`; }
     function atualizarFotosAdmin(index,texto){ const fotos=String(texto||"").split("\n").map(x=>x.trim()).filter(Boolean); adminProdutos[index].imagem=fotos[0]||""; adminProdutos[index].imagens=fotos; }
     function atualizarTamanhosAdmin(index,texto){ const tamanhos=String(texto||"").split(",").map(normalizarTamanho).filter(Boolean); const antigos=getEstoqueTamanhos(adminProdutos[index]); const novo={}; tamanhos.forEach(t=>novo[t]=Number(antigos[t]||0)); adminProdutos[index].tamanhos=tamanhos; adminProdutos[index].estoqueTamanhos=novo; adminProdutos[index].estoque_tamanhos=novo; adminProdutos[index].estoque=getEstoqueTotal(adminProdutos[index]); renderAdmin(); }
@@ -467,6 +541,34 @@
         console.error(err);
         notify("Erro ao salvar produtos. Confere Render/GITHUB_TOKEN.","error");
       }
+    }
+    async function confirmarPedido(id){
+      const pedido = adminPedidos.find(p=>String(p.id)===String(id));
+      if(!pedido) return;
+      if(!pedido.comprovanteLink && !confirm("Esse pedido não tem link de comprovante. Aceitar mesmo assim?")) return;
+      if(!confirm(`Aceitar pagamento do pedido ${id} e baixar o estoque?`)) return;
+      try{
+        notify("Confirmando pedido...","success");
+        const res=await fetchComTempo(`${API_URL}/api/admin/pedidos/${encodeURIComponent(id)}/confirmar`,{method:"POST",headers:{Authorization:`Bearer ${adminToken}`}}, 20000);
+        const data=await res.json();
+        if(!data.ok) return notify(data.erro||"Erro ao confirmar pedido","error");
+        adminPedidos=Array.isArray(data.pedidos)?data.pedidos:adminPedidos;
+        adminProdutos=(Array.isArray(data.produtos)?data.produtos:adminProdutos).map(normalizarProduto);
+        produtos=[...adminProdutos]; produtosRender=[...produtos];
+        renderAdmin(); renderProducts(); updateCart();
+        notify("Pedido aceito e estoque baixado.","success");
+      }catch(err){ console.error(err); notify("Erro ao confirmar pedido.","error"); }
+    }
+    async function negarPedido(id){
+      if(!confirm(`Recusar pedido ${id}?`)) return;
+      try{
+        const res=await fetchComTempo(`${API_URL}/api/admin/pedidos/${encodeURIComponent(id)}/negar`,{method:"POST",headers:{Authorization:`Bearer ${adminToken}`}}, 15000);
+        const data=await res.json();
+        if(!data.ok) return notify(data.erro||"Erro ao negar pedido","error");
+        adminPedidos=Array.isArray(data.pedidos)?data.pedidos:adminPedidos;
+        renderAdmin();
+        notify("Pedido negado.","success");
+      }catch(err){ console.error(err); notify("Erro ao negar pedido.","error"); }
     }
     function adminLogout(){ adminToken=""; localStorage.removeItem("jws_admin_token"); showAdminLogin(); }
   </script>

@@ -4,353 +4,627 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Produto - Jordan Wear</title>
-  <link rel="stylesheet" href="../../style.css" />
-</head>
-<body class="product-page-body">
-  <header class="product-header-v2"><!DOCTYPE html>
-<html lang="pt-BR">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Produto - Jordan Wear</title>
-  <link rel="stylesheet" href="../../style.css?v=produto-fix-2" />
-</head>
-<body class="produto-body">
-  <header class="produto-topbar">
-    <a class="produto-voltar" href="../../index.html" aria-label="Voltar">←</a>
 
-    <a class="produto-logo" href="../../index.html">jordanwear</a>
+  <style>
+    :root {
+      --bg: #eeeeee;
+      --card: #f7f7f7;
+      --text: #050505;
+      --muted: #6f6f6f;
+      --line: #cfcfcf;
+      --black: #000000;
+      --white: #ffffff;
+      --red: #e01818;
+      --green: #16a34a;
+    }
 
-    <a class="produto-carrinho" href="../../index.html#cart" aria-label="Carrinho">
-      <img src="../../Carrinho.svg" alt="Carrinho" onerror="this.style.display='none';this.parentElement.classList.add('cart-fallback')" />
-      <span id="cartCount">0</span>
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      font-family: Arial, Helvetica, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      overflow-x: hidden;
+    }
+
+    button,
+    input,
+    select {
+      font: inherit;
+    }
+
+    button {
+      border: 0;
+      background: none;
+      cursor: pointer;
+      color: inherit;
+    }
+
+    a {
+      color: inherit;
+    }
+
+    .topbar {
+      position: sticky;
+      top: 0;
+      z-index: 50;
+      height: 84px;
+      background: #f4f4f4;
+      border-bottom: 1px solid var(--line);
+      display: grid;
+      grid-template-columns: 90px 1fr 90px;
+      align-items: center;
+      padding: 0 18px;
+    }
+
+    .back-btn {
+      width: 52px;
+      height: 52px;
+      display: grid;
+      place-items: center;
+      border: 1px solid transparent;
+      text-decoration: none;
+      font-size: 34px;
+      font-weight: 900;
+      line-height: 1;
+    }
+
+    .brand {
+      justify-self: center;
+      text-decoration: none;
+      font-size: 20px;
+      font-weight: 900;
+      text-transform: lowercase;
+      letter-spacing: -0.05em;
+    }
+
+    .cart-link {
+      justify-self: end;
+      position: relative;
+      width: 52px;
+      height: 52px;
+      display: grid;
+      place-items: center;
+      text-decoration: none;
+    }
+
+    .cart-link img {
+      width: 34px;
+      height: 34px;
+      object-fit: contain;
+    }
+
+    .cart-link .cart-emoji {
+      font-size: 31px;
+    }
+
+    .cart-count {
+      position: absolute;
+      top: 2px;
+      right: 0;
+      min-width: 21px;
+      height: 21px;
+      border-radius: 999px;
+      background: #111;
+      color: #fff;
+      font-size: 11px;
+      font-weight: 900;
+      display: grid;
+      place-items: center;
+    }
+
+    .wrap {
+      width: min(1220px, calc(100% - 28px));
+      margin: 24px auto 70px;
+    }
+
+    .product-layout {
+      display: grid;
+      grid-template-columns: minmax(0, 1.05fr) minmax(390px, 0.95fr);
+      gap: 38px;
+      align-items: start;
+    }
+
+    .gallery {
+      position: sticky;
+      top: 104px;
+      min-width: 0;
+    }
+
+    .photo-box {
+      position: relative;
+      width: 100%;
+      background: #dedede;
+      border: 1px solid var(--line);
+      overflow: hidden;
+    }
+
+    .photo-box img {
+      width: 100%;
+      aspect-ratio: 4 / 5;
+      object-fit: cover;
+      display: block;
+    }
+
+    .photo-counter {
+      position: absolute;
+      right: 14px;
+      bottom: 14px;
+      padding: 8px 12px;
+      background: rgba(0, 0, 0, 0.78);
+      color: #fff;
+      font-size: 12px;
+      font-weight: 900;
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+    }
+
+    .gallery-arrow {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      width: 46px;
+      height: 58px;
+      background: rgba(255, 255, 255, 0.84);
+      border: 1px solid rgba(0, 0, 0, 0.18);
+      font-size: 32px;
+      font-weight: 900;
+      display: grid;
+      place-items: center;
+    }
+
+    .gallery-arrow.left {
+      left: 12px;
+    }
+
+    .gallery-arrow.right {
+      right: 12px;
+    }
+
+    .thumbs {
+      margin-top: 12px;
+      display: grid;
+      grid-template-columns: repeat(6, 1fr);
+      gap: 9px;
+    }
+
+    .thumbs button {
+      border: 1px solid var(--line);
+      background: #fff;
+      overflow: hidden;
+      opacity: 0.68;
+    }
+
+    .thumbs button.active {
+      border-color: #000;
+      opacity: 1;
+      outline: 2px solid #000;
+    }
+
+    .thumbs img {
+      width: 100%;
+      aspect-ratio: 1 / 1;
+      object-fit: cover;
+      display: block;
+    }
+
+    .info {
+      min-width: 0;
+      padding-top: 4px;
+    }
+
+    .breadcrumb {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-bottom: 10px;
+      color: var(--muted);
+      font-size: 15px;
+    }
+
+    .breadcrumb a {
+      color: var(--muted);
+      text-decoration: none;
+    }
+
+    .product-small-name {
+      font-size: 15px;
+      color: #111;
+      text-transform: uppercase;
+      letter-spacing: 0.02em;
+      margin-bottom: 12px;
+    }
+
+    h1 {
+      font-size: clamp(42px, 6vw, 72px);
+      line-height: 0.94;
+      letter-spacing: -0.07em;
+      text-transform: uppercase;
+      margin-bottom: 26px;
+    }
+
+    .price-row {
+      display: flex;
+      align-items: baseline;
+      gap: 18px;
+      flex-wrap: wrap;
+      margin-bottom: 8px;
+    }
+
+    .price {
+      font-size: clamp(42px, 5.4vw, 66px);
+      font-weight: 900;
+      letter-spacing: -0.05em;
+    }
+
+    .old-price {
+      color: #777;
+      font-size: 26px;
+      text-decoration: line-through;
+    }
+
+    .pix-price {
+      color: var(--red);
+      font-size: clamp(23px, 3vw, 34px);
+      font-weight: 900;
+      margin-bottom: 28px;
+    }
+
+    .desc {
+      color: #333;
+      font-size: 16px;
+      line-height: 1.7;
+      margin-bottom: 28px;
+      max-width: 650px;
+      white-space: pre-wrap;
+    }
+
+    .field {
+      margin-bottom: 20px;
+    }
+
+    .field-title {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 10px;
+      margin-bottom: 10px;
+      font-size: 17px;
+    }
+
+    .field-title small {
+      color: var(--muted);
+      font-size: 13px;
+    }
+
+    .sizes {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 8px;
+    }
+
+    .size-btn {
+      min-height: 56px;
+      border: 1px solid #aaa;
+      background: #f5f5f5;
+      display: grid;
+      place-items: center;
+      gap: 2px;
+      padding: 7px;
+    }
+
+    .size-btn b {
+      font-size: 18px;
+    }
+
+    .size-btn small {
+      font-size: 11px;
+      color: #777;
+    }
+
+    .size-btn.active {
+      background: #000;
+      color: #fff;
+      border-color: #000;
+    }
+
+    .size-btn.active small {
+      color: #ddd;
+    }
+
+    .size-btn.disabled {
+      opacity: 0.36;
+      cursor: not-allowed;
+      text-decoration: line-through;
+    }
+
+    .buy-row {
+      display: grid;
+      grid-template-columns: 200px 1fr;
+      gap: 16px;
+      align-items: center;
+      margin-top: 24px;
+      margin-bottom: 18px;
+    }
+
+    .qty {
+      height: 64px;
+      display: grid;
+      grid-template-columns: 1fr 1fr 1fr;
+      align-items: center;
+      border: 1px solid #aaa;
+      background: #f5f5f5;
+    }
+
+    .qty button {
+      height: 100%;
+      font-size: 35px;
+      font-weight: 900;
+    }
+
+    .qty span {
+      text-align: center;
+      font-size: 23px;
+    }
+
+    .buy {
+      height: 64px;
+      border-radius: 0;
+      background: #000;
+      color: #fff;
+      font-size: 16px;
+      font-weight: 900;
+      text-transform: uppercase;
+      letter-spacing: 0.23em;
+    }
+
+    .buy.disabled {
+      background: #d0d0d0;
+      color: #777;
+      cursor: not-allowed;
+    }
+
+    .stock-line {
+      margin-bottom: 28px;
+      color: #555;
+      font-size: 14px;
+    }
+
+    .details-box {
+      border-top: 1px solid var(--line);
+      padding-top: 22px;
+    }
+
+    .details-box h2 {
+      font-size: 25px;
+      margin-bottom: 10px;
+    }
+
+    .details-box p {
+      color: #555;
+      line-height: 1.7;
+    }
+
+    .error-box {
+      min-height: 420px;
+      background: #fff;
+      border: 1px solid var(--line);
+      display: grid;
+      place-items: center;
+      text-align: center;
+      padding: 30px;
+    }
+
+    .error-box h1 {
+      font-size: 44px;
+      margin-bottom: 10px;
+    }
+
+    .error-box a {
+      margin-top: 18px;
+      display: inline-flex;
+      padding: 14px 18px;
+      background: #111;
+      color: #fff;
+      text-decoration: none;
+      font-weight: 900;
+      text-transform: uppercase;
+    }
+
+    .toast {
+      position: fixed;
+      right: 18px;
+      bottom: 18px;
+      z-index: 100;
+      background: #111;
+      color: #fff;
+      padding: 14px 18px;
+      font-weight: 800;
+      max-width: 340px;
+      box-shadow: 0 12px 35px rgba(0, 0, 0, 0.22);
+    }
+
+    @media (max-width: 900px) {
+      .topbar {
+        height: 76px;
+        grid-template-columns: 70px 1fr 70px;
+        padding: 0 10px;
+      }
+
+      .back-btn {
+        width: 48px;
+        height: 48px;
+      }
+
+      .wrap {
+        width: calc(100% - 18px);
+        margin-top: 12px;
+      }
+
+      .product-layout {
+        grid-template-columns: 1fr;
+        gap: 20px;
+      }
+
+      .gallery {
+        position: relative;
+        top: auto;
+        margin-left: -9px;
+        width: calc(100% + 18px);
+      }
+
+      .photo-box {
+        border-left: 0;
+        border-right: 0;
+      }
+
+      .photo-box img {
+        aspect-ratio: 1 / 1.12;
+      }
+
+      .thumbs {
+        display: flex;
+        overflow-x: auto;
+        gap: 8px;
+        padding: 0 9px 4px;
+      }
+
+      .thumbs button {
+        min-width: 70px;
+      }
+
+      .info {
+        padding: 0 8px;
+      }
+
+      .breadcrumb {
+        font-size: 14px;
+      }
+
+      .product-small-name {
+        font-size: 14px;
+      }
+
+      h1 {
+        font-size: 43px;
+        margin-bottom: 22px;
+      }
+
+      .price {
+        font-size: 48px;
+      }
+
+      .pix-price {
+        font-size: 25px;
+      }
+
+      .sizes {
+        grid-template-columns: repeat(3, 1fr);
+      }
+
+      .buy-row {
+        grid-template-columns: 0.85fr 1.7fr;
+        gap: 10px;
+      }
+
+      .qty,
+      .buy {
+        height: 60px;
+      }
+
+      .buy {
+        font-size: 13px;
+        letter-spacing: 0.18em;
+      }
+    }
+
+    @media (max-width: 430px) {
+      .brand {
+        font-size: 18px;
+      }
+
+      .cart-link img {
+        width: 31px;
+        height: 31px;
+      }
+
+      h1 {
+        font-size: 36px;
+      }
+
+      .price {
+        font-size: 40px;
+      }
+
+      .old-price {
+        font-size: 20px;
+      }
+
+      .pix-price {
+        font-size: 22px;
+      }
+
+      .desc {
+        font-size: 15px;
+      }
+
+      .sizes {
+        grid-template-columns: repeat(2, 1fr);
+      }
+
+      .buy-row {
+        grid-template-columns: 92px 1fr;
+      }
+
+      .qty button {
+        font-size: 28px;
+      }
+
+      .qty span {
+        font-size: 19px;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <header class="topbar">
+    <a class="back-btn" href="../../index.html" aria-label="Voltar">‹</a>
+
+    <a class="brand" href="../../index.html">jordanwear</a>
+
+    <a class="cart-link" href="../../index.html#cart" aria-label="Carrinho">
+      <img src="../../Carrinho.svg" alt="Carrinho" onerror="this.style.display='none';this.nextElementSibling.style.display='block'" />
+      <span class="cart-emoji" style="display:none">🛒</span>
+      <span class="cart-count" id="cartCount">0</span>
     </a>
   </header>
 
-  <main class="produto-main">
-    <section id="produtoView" class="produto-shell">
-      <div class="produto-loading">
-        <div class="spinner"></div>
-        <p>Carregando produto...</p>
+  <main class="wrap" id="app">
+    <div class="error-box">
+      <div>
+        <h1>Carregando</h1>
+        <p>Buscando produto...</p>
       </div>
-    </section>
+    </div>
   </main>
 
   <script>
     let produtoAtual = null;
-    let fotos = [];
-    let fotoAtual = 0;
-    let autoSlide = null;
-    let quantidade = 1;
-    let tamanhoSelecionado = "";
-    let estoqueSelecionado = 0;
-
-    function money(value) {
-      return Number(value || 0).toFixed(2).replace(".", ",");
-    }
-
-    function idUrl() {
-      return new URLSearchParams(location.search).get("id");
-    }
-
-    function normalizarCategoria(categoria) {
-      const c = String(categoria || "")
-        .toLowerCase()
-        .normalize("NFD")
-        .replace(/[\u0300-\u036f]/g, "")
-        .trim();
-
-      if (c.includes("camisa") || c.includes("camiseta")) return "camisa";
-      if (c.includes("calca")) return "calca";
-      if (c.includes("tenis") || c.includes("sapato")) return "tenis";
-      return c || "camisa";
-    }
-
-    function getTamanhos(produto) {
-      if (Array.isArray(produto.tamanhosEstoque) && produto.tamanhosEstoque.length) {
-        return produto.tamanhosEstoque.map(t => ({
-          tamanho: String(t.tamanho || t.nome || "").trim(),
-          estoque: Number(t.estoque || 0)
-        })).filter(t => t.tamanho);
-      }
-
-      if (produto.estoqueTamanhos && typeof produto.estoqueTamanhos === "object") {
-        return Object.entries(produto.estoqueTamanhos).map(([tamanho, estoque]) => ({
-          tamanho: String(tamanho).trim(),
-          estoque: Number(estoque || 0)
-        })).filter(t => t.tamanho);
-      }
-
-      if (Array.isArray(produto.tamanhos) && produto.tamanhos.length) {
-        return produto.tamanhos.map(t => ({
-          tamanho: String(t).trim(),
-          estoque: Number(produto.estoque || 0)
-        })).filter(t => t.tamanho);
-      }
-
-      return ["P", "M", "G", "GG"].map(t => ({
-        tamanho: t,
-        estoque: Number(produto.estoque || 0)
-      }));
-    }
-
-    async function carregarProduto() {
-      const view = document.getElementById("produtoView");
-      const id = idUrl();
-
-      try {
-        const res = await fetch(`../../produtos.json?v=${Date.now()}`);
-        if (!res.ok) throw new Error("produtos.json não encontrado");
-
-        const data = await res.json();
-        const produtos = Array.isArray(data) ? data : data.produtos || [];
-        produtoAtual = produtos.find(p => String(p.id) === String(id));
-
-        if (!produtoAtual) {
-          view.innerHTML = `
-            <div class="produto-erro">
-              <h1>Produto não encontrado</h1>
-              <p>Confere se o ID desse produto existe no produtos.json.</p>
-              <a href="../../index.html">Voltar para loja</a>
-            </div>
-          `;
-          return;
-        }
-
-        produtoAtual.preco = Number(produtoAtual.preco || 0);
-        produtoAtual.categoria = normalizarCategoria(produtoAtual.categoria);
-
-        fotos = [
-          produtoAtual.imagem,
-          ...(Array.isArray(produtoAtual.imagens) ? produtoAtual.imagens : [])
-        ].filter(Boolean);
-
-        if (!fotos.length) fotos = ["https://via.placeholder.com/900"];
-
-        const tamanhos = getTamanhos(produtoAtual);
-        const primeiroDisponivel = tamanhos.find(t => t.estoque > 0) || tamanhos[0];
-        tamanhoSelecionado = primeiroDisponivel.tamanho;
-        estoqueSelecionado = Number(primeiroDisponivel.estoque || 0);
-
-        document.title = `${produtoAtual.nome} - Jordan Wear`;
-        renderProduto(tamanhos);
-        atualizarCarrinhoTop();
-        iniciarAutoSlide();
-      } catch (err) {
-        console.error(err);
-        view.innerHTML = `
-          <div class="produto-erro">
-            <h1>Erro ao carregar</h1>
-            <p>O caminho ../../produtos.json precisa existir.</p>
-            <a href="../../index.html">Voltar para loja</a>
-          </div>
-        `;
-      }
-    }
-
-    function renderProduto(tamanhos) {
-      const view = document.getElementById("produtoView");
-      const temEstoque = estoqueSelecionado > 0;
-
-      view.innerHTML = `
-        <section class="produto-galeria">
-          <div class="produto-foto-box">
-            <button class="foto-nav foto-prev" onclick="mudarFoto(-1)" aria-label="Foto anterior">‹</button>
-
-            <img id="fotoPrincipal" src="${fotos[fotoAtual]}" alt="${produtoAtual.nome}" onerror="this.src='https://via.placeholder.com/900'" />
-
-            <button class="foto-nav foto-next" onclick="mudarFoto(1)" aria-label="Próxima foto">›</button>
-
-            <div class="foto-count" id="fotoCount">${fotoAtual + 1}/${fotos.length}</div>
-          </div>
-
-          <div class="produto-thumbs">
-            ${fotos.map((foto, i) => `
-              <button class="${i === fotoAtual ? "active" : ""}" onclick="irFoto(${i})" aria-label="Foto ${i + 1}">
-                <img src="${foto}" onerror="this.src='https://via.placeholder.com/200'" />
-              </button>
-            `).join("")}
-          </div>
-        </section>
-
-        <section class="produto-info-nova">
-          <div class="produto-breadcrumb">
-            <a href="../../index.html">Início</a>
-            <span>›</span>
-            <span>${produtoAtual.categoria}</span>
-          </div>
-
-          <h1>${produtoAtual.nome}</h1>
-
-          <div class="produto-preco-novo">R$ ${money(produtoAtual.preco)}</div>
-          <div class="produto-pix-novo">R$ ${money(produtoAtual.preco * 0.97)} no Pix</div>
-
-          <p class="produto-desc-nova">${produtoAtual.descricao || "Produto selecionado da Jordan Wear Store."}</p>
-
-          <div class="produto-campo">
-            <label>Tamanho</label>
-            <select onchange="selecionarTamanho(this.value)">
-              ${tamanhos.map(t => `
-                <option value="${t.tamanho}" ${t.tamanho === tamanhoSelecionado ? "selected" : ""}>
-                  ${t.tamanho} - ${t.estoque} em estoque
-                </option>
-              `).join("")}
-            </select>
-          </div>
-
-          <div class="produto-tamanhos-lista">
-            ${tamanhos.map(t => `
-              <button class="${t.tamanho === tamanhoSelecionado ? "active" : ""} ${t.estoque <= 0 ? "off" : ""}" onclick="selecionarTamanho('${t.tamanho}')">
-                <strong>${t.tamanho}</strong>
-                <span>${t.estoque}</span>
-              </button>
-            `).join("")}
-          </div>
-
-          <div class="produto-compra-linha">
-            <div class="produto-quantidade">
-              <button onclick="mudarQuantidade(-1)">−</button>
-              <span id="qtdText">${quantidade}</span>
-              <button onclick="mudarQuantidade(1)">+</button>
-            </div>
-
-            ${temEstoque
-              ? `<button class="produto-comprar" onclick="comprarProduto()">Comprar</button>`
-              : `<button class="produto-comprar off" disabled>Indisponível</button>`
-            }
-          </div>
-
-          <div class="produto-estoque-info">
-            Tamanho <b id="tamAtual">${tamanhoSelecionado}</b> • <b id="estAtual">${estoqueSelecionado}</b> em estoque
-          </div>
-
-          <details class="produto-detalhes-box" open>
-            <summary>Sobre a peça</summary>
-            <p>Pagamento via Pix. O pedido é separado depois da confirmação do pagamento. Escolha o tamanho antes de comprar.</p>
-          </details>
-        </section>
-      `;
-    }
-
-    function iniciarAutoSlide() {
-      clearInterval(autoSlide);
-      if (fotos.length <= 1) return;
-      autoSlide = setInterval(() => mudarFoto(1, true), 4500);
-    }
-
-    function atualizarFoto() {
-      const img = document.getElementById("fotoPrincipal");
-      const count = document.getElementById("fotoCount");
-      if (!img || !count) return;
-
-      img.src = fotos[fotoAtual];
-      count.textContent = `${fotoAtual + 1}/${fotos.length}`;
-
-      document.querySelectorAll(".produto-thumbs button").forEach((btn, i) => {
-        btn.classList.toggle("active", i === fotoAtual);
-      });
-    }
-
-    function mudarFoto(dir, auto = false) {
-      if (!fotos.length) return;
-      fotoAtual = (fotoAtual + dir + fotos.length) % fotos.length;
-      atualizarFoto();
-      if (!auto) iniciarAutoSlide();
-    }
-
-    function irFoto(index) {
-      fotoAtual = index;
-      atualizarFoto();
-      iniciarAutoSlide();
-    }
-
-    function selecionarTamanho(tamanho) {
-      const tamanhos = getTamanhos(produtoAtual);
-      const item = tamanhos.find(t => t.tamanho === tamanho);
-      if (!item) return;
-
-      tamanhoSelecionado = item.tamanho;
-      estoqueSelecionado = Number(item.estoque || 0);
-      if (quantidade > estoqueSelecionado) quantidade = Math.max(1, estoqueSelecionado);
-      if (quantidade < 1) quantidade = 1;
-
-      renderProduto(tamanhos);
-      iniciarAutoSlide();
-    }
-
-    function mudarQuantidade(valor) {
-      const nova = quantidade + valor;
-      if (nova < 1) return;
-      if (nova > estoqueSelecionado) return;
-      quantidade = nova;
-      document.getElementById("qtdText").textContent = quantidade;
-    }
-
-    function comprarProduto() {
-      if (!produtoAtual || estoqueSelecionado <= 0) return;
-
-      const carrinho = JSON.parse(localStorage.getItem("jws_cart") || "[]");
-      const cartId = `${produtoAtual.id}-${tamanhoSelecionado}`;
-      const item = carrinho.find(i => i.cartId === cartId);
-
-      if (item) {
-        item.quantidade += quantidade;
-      } else {
-        carrinho.push({
-          cartId,
-          id: produtoAtual.id,
-          nome: `${produtoAtual.nome} - Tam. ${tamanhoSelecionado}`,
-          tamanho: tamanhoSelecionado,
-          preco: produtoAtual.preco,
-          imagem: fotos[0],
-          quantidade
-        });
-      }
-
-      localStorage.setItem("jws_cart", JSON.stringify(carrinho));
-      atualizarCarrinhoTop();
-      alert("Produto adicionado ao carrinho.");
-    }
-
-    function atualizarCarrinhoTop() {
-      const carrinho = JSON.parse(localStorage.getItem("jws_cart") || "[]");
-      const total = carrinho.reduce((s, i) => s + Number(i.quantidade || 0), 0);
-      document.getElementById("cartCount").textContent = total;
-    }
-
-    carregarProduto();
-  </script>
-</body>
-</html>
-
-    <a href="../../index.html" class="product-back-v2">←</a>
-
-    <a href="../../index.html" class="product-logo-v2">jordanwear</a>
-
-    <button class="product-cart-v2" onclick="voltarCarrinho()" aria-label="Abrir carrinho">
-      <img src="../../Carrinho.svg" alt="Carrinho" />
-      <span id="productCartCount">0</span>
-    </button>
-  </header>
-
-  <main class="product-main-v2">
-    <section class="product-detail-v2" id="produtoView">
-      <div class="loading">
-        <div>
-          <div class="spinner"></div>
-          <p>Carregando produto...</p>
-        </div>
-      </div>
-    </section>
-  </main>
-
-  <script>
-    let produtoAtual = null;
-    let quantidade = 1;
-    let tamanhoSelecionado = "";
     let imagens = [];
     let imagemAtual = 0;
-    let autoSlideTimer = null;
+    let autoSlide = null;
+    let tamanhoSelecionado = "";
+    let quantidade = 1;
 
     function money(value) {
       return Number(value || 0).toFixed(2).replace(".", ",");
@@ -370,30 +644,27 @@
       if (c.includes("camisa") || c.includes("camiseta")) return "camisa";
       if (c.includes("calca")) return "calca";
       if (c.includes("tenis") || c.includes("sapato")) return "tenis";
-      return c || "camisa";
+      if (c.includes("bermuda") || c.includes("short")) return "bermuda";
+      if (c.includes("moletom") || c.includes("blusa")) return "moletom";
+
+      return c || "produto";
     }
 
-    function getImagensProduto(p) {
-      const lista = [];
-
-      if (p.imagem) lista.push(p.imagem);
-
-      if (Array.isArray(p.imagens)) {
-        p.imagens.forEach(img => {
-          if (img && !lista.includes(img)) lista.push(img);
-        });
-      }
-
-      return lista.length ? lista : ["https://via.placeholder.com/900"];
+    function getEstoqueMap(produto) {
+      const camel = produto && produto.estoqueTamanhos && typeof produto.estoqueTamanhos === "object" ? produto.estoqueTamanhos : null;
+      const snake = produto && produto.estoque_tamanhos && typeof produto.estoque_tamanhos === "object" ? produto.estoque_tamanhos : null;
+      return camel || snake || {};
     }
 
-    function getTamanhosProduto(p) {
-      if (p.estoqueTamanhos && typeof p.estoqueTamanhos === "object") {
-        return Object.keys(p.estoqueTamanhos).filter(Boolean);
+    function getTamanhos(produto) {
+      const map = getEstoqueMap(produto);
+
+      if (Object.keys(map).length) {
+        return Object.keys(map).filter(Boolean);
       }
 
-      if (Array.isArray(p.tamanhos) && p.tamanhos.length) {
-        return p.tamanhos;
+      if (Array.isArray(produto.tamanhos) && produto.tamanhos.length) {
+        return produto.tamanhos;
       }
 
       return ["P", "M", "G", "GG"];
@@ -402,29 +673,36 @@
     function getEstoqueTamanho(tamanho) {
       if (!produtoAtual) return 0;
 
-      if (produtoAtual.estoqueTamanhos && typeof produtoAtual.estoqueTamanhos === "object") {
-        return Number(produtoAtual.estoqueTamanhos[tamanho] || 0);
+      const map = getEstoqueMap(produtoAtual);
+
+      if (Object.keys(map).length) {
+        return Number(map[tamanho] || 0);
       }
 
       return Number(produtoAtual.estoque || 0);
     }
 
-    function getEstoqueTotal(p) {
-      if (p.estoqueTamanhos && typeof p.estoqueTamanhos === "object") {
-        return Object.values(p.estoqueTamanhos).reduce((s, n) => s + Number(n || 0), 0);
+    function getEstoqueTotal(produto) {
+      const map = getEstoqueMap(produto);
+      const valores = Object.values(map);
+
+      if (valores.length) {
+        return valores.reduce((s, n) => s + Number(n || 0), 0);
       }
 
-      return Number(p.estoque || 0);
+      return Number(produto.estoque || 0);
     }
 
     async function carregarProduto() {
-      const view = document.getElementById("produtoView");
       const id = getIdProduto();
+      const app = document.getElementById("app");
 
       try {
-        const res = await fetch("../../produtos.json");
+        const res = await fetch("../../produtos.json?cache=" + Date.now());
 
-        if (!res.ok) throw new Error("produtos.json não encontrado");
+        if (!res.ok) {
+          throw new Error("Não achei o produtos.json na raiz do site.");
+        }
 
         const data = await res.json();
         const produtos = Array.isArray(data) ? data : data.produtos || [];
@@ -432,224 +710,215 @@
         produtoAtual = produtos.find(p => String(p.id) === String(id));
 
         if (!produtoAtual) {
-          view.innerHTML = `
-            <div class="single-product-error">
-              <h1>Produto não encontrado</h1>
-              <p>Volte para a loja e escolha outro produto.</p>
-              <a href="../../index.html">Voltar para loja</a>
+          app.innerHTML = `
+            <div class="error-box">
+              <div>
+                <h1>Produto não encontrado</h1>
+                <p>Confere se o id da URL existe no produtos.json.</p>
+                <a href="../../index.html">Voltar para loja</a>
+              </div>
             </div>
           `;
           return;
         }
 
-        produtoAtual.preco = Number(produtoAtual.preco || 0);
         produtoAtual.categoria = normalizarCategoria(produtoAtual.categoria);
+        produtoAtual.preco = Number(produtoAtual.preco || 0);
+        const estoqueMap = getEstoqueMap(produtoAtual);
+        produtoAtual.estoqueTamanhos = estoqueMap;
+        produtoAtual.estoque_tamanhos = estoqueMap;
         produtoAtual.estoque = getEstoqueTotal(produtoAtual);
 
-        imagens = getImagensProduto(produtoAtual);
-        tamanhoSelecionado = getTamanhosProduto(produtoAtual)[0] || "Único";
+        imagens = [
+          produtoAtual.imagem,
+          ...(Array.isArray(produtoAtual.imagens) ? produtoAtual.imagens : [])
+        ].filter(Boolean);
+
+        if (!imagens.length) {
+          imagens = ["https://via.placeholder.com/900"];
+        }
+
+        const tamanhos = getTamanhos(produtoAtual);
+        tamanhoSelecionado = tamanhos.find(t => getEstoqueTamanho(t) > 0) || tamanhos[0] || "P";
 
         document.title = `${produtoAtual.nome} - Jordan Wear`;
 
         renderProduto();
-        atualizarContadorCarrinho();
-        startAutoSlide();
+        atualizarCarrinhoCount();
+        iniciarAutoSlide();
       } catch (err) {
-        console.error(err);
-
-        view.innerHTML = `
-          <div class="single-product-error">
-            <h1>Erro ao carregar</h1>
-            <p>Verifique se o produtos.json está na raiz do site.</p>
-            <a href="../../index.html">Voltar para loja</a>
+        app.innerHTML = `
+          <div class="error-box">
+            <div>
+              <h1>Erro</h1>
+              <p>${err.message}</p>
+              <a href="../../index.html">Voltar para loja</a>
+            </div>
           </div>
         `;
       }
     }
 
     function renderProduto() {
-      const view = document.getElementById("produtoView");
-      const tamanhos = getTamanhosProduto(produtoAtual);
+      const app = document.getElementById("app");
+      const tamanhos = getTamanhos(produtoAtual);
       const estoqueSelecionado = getEstoqueTamanho(tamanhoSelecionado);
+      const semEstoque = estoqueSelecionado <= 0;
 
-      view.innerHTML = `
-        <section class="product-gallery-v2">
-          <div class="image-count-v2" id="imageCounter">${imagemAtual + 1}/${imagens.length}</div>
+      app.innerHTML = `
+        <section class="product-layout">
+          <div class="gallery">
+            <div class="photo-box">
+              <img id="mainImage" src="${imagens[imagemAtual]}" alt="${produtoAtual.nome}" onerror="this.src='https://via.placeholder.com/900'" />
 
-          <button class="gallery-arrow-v2 left" onclick="mudarImagem(-1)" aria-label="Imagem anterior">‹</button>
+              ${imagens.length > 1 ? `
+                <button class="gallery-arrow left" onclick="mudarImagem(-1)">‹</button>
+                <button class="gallery-arrow right" onclick="mudarImagem(1)">›</button>
+              ` : ""}
 
-          <div class="gallery-scroll-v2" id="galleryScroll">
-            ${imagens.map((img, index) => `
-              <div class="gallery-slide-v2">
-                <img
-                  src="${img}"
-                  alt="${produtoAtual.nome} ${index + 1}"
-                  onerror="this.src='https://via.placeholder.com/900'"
-                />
-              </div>
-            `).join("")}
-          </div>
-
-          <button class="gallery-arrow-v2 right" onclick="mudarImagem(1)" aria-label="Próxima imagem">›</button>
-
-          ${imagens.length > 1 ? `
-            <div class="gallery-dots-v2">
-              ${imagens.map((_, index) => `
-                <button class="${index === imagemAtual ? "active" : ""}" onclick="irImagem(${index})"></button>
-              `).join("")}
-            </div>
-          ` : ""}
-        </section>
-
-        <section class="product-info-v2">
-          <div class="product-path-v2">
-            <a href="../../index.html">Início</a>
-            <span>/</span>
-            <a href="../../index.html">${produtoAtual.categoria}</a>
-          </div>
-
-          <h1>${produtoAtual.nome}</h1>
-
-          <div class="product-price-v2">R$ ${money(produtoAtual.preco)}</div>
-          <div class="product-pix-v2">R$ ${money(produtoAtual.preco * 0.97)} no Pix</div>
-
-          <p class="product-desc-v2">
-            ${produtoAtual.descricao || "Produto selecionado da Jordan Wear Store."}
-          </p>
-
-          <div class="product-size-block-v2">
-            <div class="product-label-row-v2">
-              <label>Tamanho</label>
-              <span id="stockText">${estoqueSelecionado} em estoque</span>
+              <div class="photo-counter" id="photoCounter">${imagemAtual + 1}/${imagens.length}</div>
             </div>
 
-            <div class="size-list-v2">
-              ${tamanhos.map(tamanho => {
-                const estoque = getEstoqueTamanho(tamanho);
-                const ativo = tamanho === tamanhoSelecionado;
-                const semEstoque = estoque <= 0;
-
-                return `
-                  <button
-                    class="${ativo ? "active" : ""} ${semEstoque ? "disabled" : ""}"
-                    onclick="selecionarTamanho('${tamanho}')"
-                    ${semEstoque ? "disabled" : ""}
-                  >
-                    <b>${tamanho}</b>
-                    <small>${estoque}</small>
+            ${imagens.length > 1 ? `
+              <div class="thumbs">
+                ${imagens.map((img, i) => `
+                  <button class="${i === imagemAtual ? "active" : ""}" onclick="selecionarImagem(${i})">
+                    <img src="${img}" onerror="this.src='https://via.placeholder.com/160'" />
                   </button>
-                `;
-              }).join("")}
-            </div>
+                `).join("")}
+              </div>
+            ` : ""}
           </div>
 
-          <div class="product-action-row-v2">
-            <div class="qty-v2">
-              <button onclick="mudarQuantidade(-1)">−</button>
-              <span id="qtyText">${quantidade}</span>
-              <button onclick="mudarQuantidade(1)">+</button>
+          <div class="info">
+            <div class="breadcrumb">
+              <a href="../../index.html">Início</a>
+              <span>›</span>
+              <span>${produtoAtual.categoria}</span>
             </div>
 
-            ${estoqueSelecionado > 0
-              ? `<button class="buy-v2" onclick="comprarProduto()">Comprar</button>`
-              : `<button class="buy-v2 disabled" disabled>Esgotado</button>`
-            }
-          </div>
+            <div class="product-small-name">${produtoAtual.nome}</div>
 
-          <div class="product-box-v2">
-            <h3>Sobre a peça</h3>
-            <p>Pagamento via Pix. O pedido é separado depois da confirmação do pagamento. Escolha o tamanho antes de comprar.</p>
+            <h1>${produtoAtual.nome}</h1>
+
+            <div class="price-row">
+              <div class="price">R$ ${money(produtoAtual.preco)}</div>
+            </div>
+
+            <div class="pix-price">R$ ${money(produtoAtual.preco * 0.97)} no Pix</div>
+
+            <div class="desc">${produtoAtual.descricao || "Produto selecionado da Jordan Wear Store."}</div>
+
+            <div class="field">
+              <div class="field-title">
+                <span>Tamanho</span>
+                <small>${estoqueSelecionado} em estoque</small>
+              </div>
+
+              <div class="sizes">
+                ${tamanhos.map(t => {
+                  const estoque = getEstoqueTamanho(t);
+                  return `
+                    <button
+                      class="size-btn ${t === tamanhoSelecionado ? "active" : ""} ${estoque <= 0 ? "disabled" : ""}"
+                      onclick="selecionarTamanho('${t}')"
+                      ${estoque <= 0 ? "disabled" : ""}
+                    >
+                      <b>${t}</b>
+                      <small>${estoque} un.</small>
+                    </button>
+                  `;
+                }).join("")}
+              </div>
+            </div>
+
+            <div class="buy-row">
+              <div class="qty">
+                <button onclick="mudarQuantidade(-1)">−</button>
+                <span id="qtyText">${quantidade}</span>
+                <button onclick="mudarQuantidade(1)">+</button>
+              </div>
+
+              <button class="buy ${semEstoque ? "disabled" : ""}" onclick="comprarProduto()" ${semEstoque ? "disabled" : ""}>
+                Comprar
+              </button>
+            </div>
+
+            <div class="stock-line">
+              Estoque total: <b>${produtoAtual.estoque}</b> unidades
+            </div>
+
+            <div class="details-box">
+              <h2>Sobre a peça</h2>
+              <p>Pagamento via Pix. O pedido é separado depois da confirmação. Escolha o tamanho antes de comprar.</p>
+            </div>
           </div>
         </section>
       `;
-
-      const scroll = document.getElementById("galleryScroll");
-
-      if (scroll) {
-        scroll.addEventListener("scroll", onGalleryScroll, { passive: true });
-      }
     }
 
-    function onGalleryScroll() {
-      const scroll = document.getElementById("galleryScroll");
-      if (!scroll) return;
+    function atualizarImagem() {
+      const img = document.getElementById("mainImage");
+      const counter = document.getElementById("photoCounter");
 
-      const index = Math.round(scroll.scrollLeft / scroll.clientWidth);
-
-      if (index !== imagemAtual) {
-        imagemAtual = Math.max(0, Math.min(imagens.length - 1, index));
-        atualizarImagemUI();
-      }
-    }
-
-    function atualizarImagemUI() {
-      const counter = document.getElementById("imageCounter");
+      if (img) img.src = imagens[imagemAtual];
       if (counter) counter.textContent = `${imagemAtual + 1}/${imagens.length}`;
 
-      document.querySelectorAll(".gallery-dots-v2 button").forEach((btn, i) => {
+      document.querySelectorAll(".thumbs button").forEach((btn, i) => {
         btn.classList.toggle("active", i === imagemAtual);
       });
     }
 
-    function irImagem(index) {
-      const scroll = document.getElementById("galleryScroll");
-      if (!scroll) return;
-
-      imagemAtual = Math.max(0, Math.min(imagens.length - 1, index));
-      scroll.scrollTo({ left: scroll.clientWidth * imagemAtual, behavior: "smooth" });
-      atualizarImagemUI();
-      startAutoSlide();
+    function selecionarImagem(index) {
+      imagemAtual = index;
+      atualizarImagem();
+      reiniciarAutoSlide();
     }
 
-    function mudarImagem(direcao) {
-      let index = imagemAtual + direcao;
-
-      if (index < 0) index = imagens.length - 1;
-      if (index >= imagens.length) index = 0;
-
-      irImagem(index);
+    function mudarImagem(dir) {
+      imagemAtual = (imagemAtual + dir + imagens.length) % imagens.length;
+      atualizarImagem();
+      reiniciarAutoSlide();
     }
 
-    function startAutoSlide() {
-      clearInterval(autoSlideTimer);
-
+    function iniciarAutoSlide() {
+      if (autoSlide) clearInterval(autoSlide);
       if (imagens.length <= 1) return;
 
-      autoSlideTimer = setInterval(() => {
-        mudarImagem(1);
+      autoSlide = setInterval(() => {
+        imagemAtual = (imagemAtual + 1) % imagens.length;
+        atualizarImagem();
       }, 4500);
     }
 
+    function reiniciarAutoSlide() {
+      iniciarAutoSlide();
+    }
+
     function selecionarTamanho(tamanho) {
+      if (getEstoqueTamanho(tamanho) <= 0) return;
+
       tamanhoSelecionado = tamanho;
       quantidade = 1;
       renderProduto();
-      startAutoSlide();
     }
 
     function mudarQuantidade(valor) {
-      const estoque = getEstoqueTamanho(tamanhoSelecionado);
+      const max = getEstoqueTamanho(tamanhoSelecionado);
       const nova = quantidade + valor;
 
       if (nova < 1) return;
-      if (nova > estoque) return;
+      if (nova > max) return;
 
       quantidade = nova;
       document.getElementById("qtyText").textContent = quantidade;
     }
 
     function comprarProduto() {
-      if (!produtoAtual) return;
-
       const estoque = getEstoqueTamanho(tamanhoSelecionado);
 
       if (estoque <= 0) {
-        alert("Produto indisponível nesse tamanho.");
-        return;
-      }
-
-      if (quantidade > estoque) {
-        alert("Quantidade maior que o estoque desse tamanho.");
+        toast("Esse tamanho está sem estoque.");
         return;
       }
 
@@ -658,20 +927,18 @@
       const item = carrinho.find(i => i.cartId === cartId);
 
       if (item) {
-        const novaQuantidade = Number(item.quantidade || 0) + quantidade;
-
-        if (novaQuantidade > estoque) {
-          alert("Você já colocou o máximo desse tamanho no carrinho.");
+        if (Number(item.quantidade || 0) + quantidade > estoque) {
+          toast("Quantidade maior que o estoque desse tamanho.");
           return;
         }
 
-        item.quantidade = novaQuantidade;
+        item.quantidade += quantidade;
       } else {
         carrinho.push({
           cartId,
           id: produtoAtual.id,
+          nome: produtoAtual.nome,
           tamanho: tamanhoSelecionado,
-          nome: `${produtoAtual.nome} - Tam. ${tamanhoSelecionado}`,
           preco: produtoAtual.preco,
           imagem: imagens[0],
           quantidade
@@ -679,18 +946,26 @@
       }
 
       localStorage.setItem("jws_cart", JSON.stringify(carrinho));
-      atualizarContadorCarrinho();
-      alert("Produto adicionado ao carrinho.");
+      atualizarCarrinhoCount();
+      toast("Produto adicionado ao carrinho.");
     }
 
-    function atualizarContadorCarrinho() {
+    function atualizarCarrinhoCount() {
       const carrinho = JSON.parse(localStorage.getItem("jws_cart") || "[]");
       const total = carrinho.reduce((s, i) => s + Number(i.quantidade || 0), 0);
-      document.getElementById("productCartCount").textContent = total;
+      document.getElementById("cartCount").textContent = total;
     }
 
-    function voltarCarrinho() {
-      window.location.href = "../../index.html#carrinho";
+    function toast(texto) {
+      const old = document.querySelector(".toast");
+      if (old) old.remove();
+
+      const div = document.createElement("div");
+      div.className = "toast";
+      div.textContent = texto;
+      document.body.appendChild(div);
+
+      setTimeout(() => div.remove(), 2600);
     }
 
     carregarProduto();

@@ -1,6 +1,16 @@
 {
   "produtos": [
     {
+      "id": "produto-1783180253740",
+      "nome": "cagada",
+      "categoria": "camisa",
+      "preco": 324,
+      "estoque": 4,
+      "imagem": "",
+      "imagens": [],
+      "descricao": ""
+    },
+    {
       "id": "camisa-frança-azul",
       "nome": "Camisa França Azuk",
       "categoria": "camisa",
@@ -37,6 +47,6 @@
       "descricao": "Tênis estilo Jordan para fechar o outfit."
     }
   ],
-  "ultimaAtualizacao": "2026-07-04T16:50:21.735Z",
-  "totalProdutos": 3
+  "ultimaAtualizacao": "2026-07-04T16:51:15.508Z",
+  "totalProdutos": 4
 }

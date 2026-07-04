@@ -4,8 +4,8 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Jordan Wear Store</title>
-  <!-- VERSAO REAL V30 - estoque por tamanho corrigido -->
-  <link rel="stylesheet" href="style.css?v=20" />
+  <!-- VERSAO V40 - estoque por tamanho real e carrinho alinhado -->
+  <link rel="stylesheet" href="style.css?v=40" />
 </head>
 <body>
   <div class="promo-strip">
@@ -52,8 +52,7 @@
     />
 
     <button class="cart-btn" onclick="toggleCart()" aria-label="Abrir carrinho">
-      <img src="Carrinho.svg" alt="Carrinho" onerror="this.style.display='none'; this.parentElement.classList.add('cart-fallback')" />
-      <span class="cart-fallback-icon">🛒</span>
+      <img src="Carrinho.svg" alt="Carrinho" />
       <span class="cart-count">0</span>
     </button>
   </header>
@@ -339,11 +338,13 @@
       const estoqueMapOriginal = getEstoqueMap(p);
       const temEstoquePorTamanho = Object.keys(estoqueMapOriginal).length > 0;
 
-      const tamanhos = temEstoquePorTamanho
+      let tamanhos = temEstoquePorTamanho
         ? Object.keys(estoqueMapOriginal).map(t => String(t).trim()).filter(Boolean)
         : Array.isArray(p.tamanhos) && p.tamanhos.length
           ? p.tamanhos.map(t => String(t).trim()).filter(Boolean)
           : ["P", "M", "G", "GG"];
+
+      if (!tamanhos.length) tamanhos = ["P", "M", "G", "GG"];
 
       const estoqueTamanhos = {};
       let estoque = numeroEstoque(p.estoque);
@@ -354,6 +355,16 @@
         });
 
         estoque = Object.values(estoqueTamanhos).reduce((s, v) => s + numeroEstoque(v), 0);
+      } else if (estoque > 0) {
+        // Produto antigo só tinha "estoque" total.
+        // Para não aparecer o mesmo estoque em todos os tamanhos, joga o total no primeiro tamanho.
+        tamanhos.forEach((t, index) => {
+          estoqueTamanhos[t] = index === 0 ? estoque : 0;
+        });
+      } else {
+        tamanhos.forEach(t => {
+          estoqueTamanhos[t] = 0;
+        });
       }
 
       return {
@@ -787,41 +798,47 @@
     }
 
     function adminProductHtml(p, i) {
-      const imagensTexto = getProdutoImagens(p).join("\n");
-      const tamanhosTexto = (p.tamanhos || []).join(", ");
-      const estoqueMap = getEstoqueMap(p);
-      const estoqueTexto = (p.tamanhos || []).map(t => `${t}: ${numeroEstoque(estoqueMap[t] || 0)}`).join("\n");
+      const produtoSeguro = sanitizeProduto(p);
+      adminProdutos[i] = produtoSeguro;
+
+      const imagensTexto = getProdutoImagens(produtoSeguro).join("\n");
+      const tamanhosTexto = (produtoSeguro.tamanhos || []).join(", ");
+      const estoqueMap = getEstoqueMap(produtoSeguro);
+      const estoqueTexto = (produtoSeguro.tamanhos || [])
+        .map(t => `${t}: ${numeroEstoque(estoqueMap[t] || 0)}`)
+        .join("\n");
 
       return `
         <div class="admin-product">
           <div class="admin-product-top">
-            <img src="${p.imagem || "https://via.placeholder.com/120"}" onerror="this.src='https://via.placeholder.com/120'" />
+            <img src="${produtoSeguro.imagem || "https://via.placeholder.com/120"}" onerror="this.src='https://via.placeholder.com/120'" />
             <div>
-              <b>${escapeHtml(p.nome || "Sem nome")}</b>
-              <small>${escapeHtml(p.id || "")}</small>
-              <small>${getProdutoImagens(p).length} foto(s) • estoque total ${estoqueTotal(p)}</small>
+              <b>${escapeHtml(produtoSeguro.nome || "Sem nome")}</b>
+              <small>${escapeHtml(produtoSeguro.id || "")}</small>
+              <small>${getProdutoImagens(produtoSeguro).length} foto(s) • estoque total ${estoqueTotal(produtoSeguro)}</small>
             </div>
           </div>
 
           <div class="admin-grid">
-            <div class="form-group"><label>ID</label><input value="${escapeAttr(p.id || "")}" onchange="adminProdutos[${i}].id=this.value" /></div>
-            <div class="form-group"><label>Nome</label><input value="${escapeAttr(p.nome || "")}" onchange="adminProdutos[${i}].nome=this.value" /></div>
+            <div class="form-group"><label>ID</label><input value="${escapeAttr(produtoSeguro.id || "")}" oninput="adminProdutos[${i}].id=this.value" /></div>
+            <div class="form-group"><label>Nome</label><input value="${escapeAttr(produtoSeguro.nome || "")}" oninput="adminProdutos[${i}].nome=this.value" /></div>
             <div class="form-group">
               <label>Categoria</label>
               <select onchange="adminProdutos[${i}].categoria=this.value">
-                <option value="camisa" ${p.categoria === "camisa" ? "selected" : ""}>Camisa</option>
-                <option value="calca" ${p.categoria === "calca" ? "selected" : ""}>Calça</option>
-                <option value="tenis" ${p.categoria === "tenis" ? "selected" : ""}>Tênis</option>
-                <option value="bermuda" ${p.categoria === "bermuda" ? "selected" : ""}>Bermuda</option>
-                <option value="moletom" ${p.categoria === "moletom" ? "selected" : ""}>Moletom</option>
+                <option value="camisa" ${produtoSeguro.categoria === "camisa" ? "selected" : ""}>Camisa</option>
+                <option value="calca" ${produtoSeguro.categoria === "calca" ? "selected" : ""}>Calça</option>
+                <option value="tenis" ${produtoSeguro.categoria === "tenis" ? "selected" : ""}>Tênis</option>
+                <option value="bermuda" ${produtoSeguro.categoria === "bermuda" ? "selected" : ""}>Bermuda</option>
+                <option value="moletom" ${produtoSeguro.categoria === "moletom" ? "selected" : ""}>Moletom</option>
               </select>
             </div>
-            <div class="form-group"><label>Preço</label><input type="number" step="0.01" value="${Number(p.preco || 0)}" onchange="adminProdutos[${i}].preco=Number(this.value)" /></div>
+            <div class="form-group"><label>Preço</label><input type="number" step="0.01" value="${Number(produtoSeguro.preco || 0)}" oninput="adminProdutos[${i}].preco=Number(this.value)" /></div>
           </div>
 
           <div class="form-group">
             <label>Fotos do produto / miniatura</label>
-            <textarea rows="6" onchange="setAdminImages(${i}, this.value)">${escapeHtml(imagensTexto)}</textarea>
+            <textarea rows="6" oninput="setAdminImages(${i}, this.value)">${escapeHtml(imagensTexto)}</textarea>
+            <small class="admin-help">Uma foto por linha. A primeira foto vira a miniatura.</small>
           </div>
 
           <div class="admin-grid">
@@ -831,21 +848,22 @@
             </div>
             <div class="form-group">
               <label>Estoque por tamanho</label>
-              <textarea rows="5" onchange="setAdminStockSizes(${i}, this.value)" placeholder="P: 2&#10;M: 3&#10;G: 1">${escapeHtml(estoqueTexto)}</textarea>
+              <textarea rows="5" oninput="setAdminStockSizes(${i}, this.value)" placeholder="P: 0&#10;M: 0&#10;G: 3&#10;GG: 0">${escapeHtml(estoqueTexto)}</textarea>
+              <small class="admin-help">Exemplo: se só tiver G, deixe P: 0, M: 0, G: 3, GG: 0.</small>
             </div>
           </div>
 
-          <div class="form-group"><label>Descrição</label><textarea onchange="adminProdutos[${i}].descricao=this.value">${escapeHtml(p.descricao || "")}</textarea></div>
+          <div class="form-group"><label>Descrição</label><textarea oninput="adminProdutos[${i}].descricao=this.value">${escapeHtml(produtoSeguro.descricao || "")}</textarea></div>
           <button class="clear danger" onclick="deleteAdminProduct(${i})">Excluir produto</button>
         </div>
       `;
     }
 
     function setAdminImages(index, value) {
-      const imgs = value.split("\n").map(x => x.trim()).filter(Boolean);
+      const imgs = String(value || "").split("
+").map(x => x.trim()).filter(Boolean);
       adminProdutos[index].imagem = imgs[0] || "";
       adminProdutos[index].imagens = imgs;
-      renderAdmin();
     }
 
     function setAdminSizes(index, value) {
@@ -866,7 +884,8 @@
       const obj = {};
 
       String(value || "")
-        .split(/\n|,/)
+        .split(/
+|,/)
         .map(x => x.trim())
         .filter(Boolean)
         .forEach(part => {
@@ -880,18 +899,19 @@
       adminProdutos[index].estoque_tamanhos = obj;
       adminProdutos[index].tamanhos = Object.keys(obj).length ? Object.keys(obj) : adminProdutos[index].tamanhos;
       adminProdutos[index].estoque = Object.values(obj).reduce((s, v) => s + numeroEstoque(v), 0);
-      renderAdmin();
     }
 
     function addAdminProduct() {
+      const estoquePadrao = { P: 0, M: 0, G: 0, GG: 0 };
+
       adminProdutos.unshift({
         id: `produto-${Date.now()}`,
         nome: "Novo produto",
         categoria: "camisa",
         preco: 0,
-        estoque: 4,
-        estoqueTamanhos: { P: 1, M: 1, G: 1, GG: 1 },
-        estoque_tamanhos: { P: 1, M: 1, G: 1, GG: 1 },
+        estoque: 0,
+        estoqueTamanhos: estoquePadrao,
+        estoque_tamanhos: estoquePadrao,
         imagem: "",
         imagens: [],
         descricao: "",

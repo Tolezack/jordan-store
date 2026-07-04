@@ -1873,3 +1873,82 @@ footer p {
     width: 100vw;
   }
 }
+
+
+/* ===== V40 - ajustes finais: carrinho só SVG e alinhamento ===== */
+.cart-btn {
+  position: absolute !important;
+  right: 22px !important;
+  top: 50% !important;
+  transform: translateY(-50%) !important;
+  width: 52px !important;
+  height: 52px !important;
+  display: grid !important;
+  place-items: center !important;
+  font-size: 0 !important;
+  background: transparent !important;
+}
+
+.cart-btn::before,
+.cart-btn::after,
+.cart-fallback-icon {
+  content: "" !important;
+  display: none !important;
+}
+
+.cart-btn img {
+  width: 36px !important;
+  height: 36px !important;
+  display: block !important;
+  object-fit: contain !important;
+}
+
+.cart-count {
+  position: absolute !important;
+  top: 2px !important;
+  right: -2px !important;
+  min-width: 21px !important;
+  height: 21px !important;
+  border-radius: 999px !important;
+  background: #111 !important;
+  color: #fff !important;
+  display: grid !important;
+  place-items: center !important;
+  font-size: 11px !important;
+  font-weight: 900 !important;
+  line-height: 1 !important;
+}
+
+.header-search {
+  position: absolute !important;
+  right: 84px !important;
+  top: 50% !important;
+  transform: translateY(-50%) rotate(-12deg) !important;
+  width: 48px !important;
+  height: 48px !important;
+  display: grid !important;
+  place-items: center !important;
+  line-height: 1 !important;
+}
+
+.admin-product textarea {
+  min-height: 110px;
+}
+
+.admin-help {
+  display: block;
+  margin-top: 6px;
+  color: #777;
+  font-size: 12px;
+  line-height: 1.45;
+}
+
+@media (max-width: 760px) {
+  .header-search {
+    right: 70px !important;
+  }
+
+  .cart-btn {
+    right: 12px !important;
+  }
+}

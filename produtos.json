@@ -5,7 +5,7 @@
       "nome": "cagada",
       "categoria": "camisa",
       "preco": 324,
-      "estoque": 4,
+      "estoque": 34,
       "imagem": "",
       "imagens": [],
       "descricao": ""
@@ -47,6 +47,6 @@
       "descricao": "Tênis estilo Jordan para fechar o outfit."
     }
   ],
-  "ultimaAtualizacao": "2026-07-04T17:28:17.035Z",
+  "ultimaAtualizacao": "2026-07-04T17:29:35.804Z",
   "totalProdutos": 4
 }

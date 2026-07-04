@@ -5,69 +5,24 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Pagamento Pix - Jordan Wear</title>
   <style>
-    :root{--bg:#eeeeee;--text:#050505;--line:#cccccc;--muted:#666;--black:#000;--white:#fff;--green:#15934f;--red:#e01818}
-    *{margin:0;padding:0;box-sizing:border-box}body{font-family:Arial,Helvetica,sans-serif;background:var(--bg);color:var(--text)}button,input,textarea{font:inherit}button{cursor:pointer;border:0}.pix-top{height:82px;background:#f6f6f6;border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:center;position:sticky;top:0;z-index:10}.pix-back{position:absolute;left:18px;color:#111;text-decoration:none;font-size:36px;font-weight:900}.pix-logo{font-weight:900;text-transform:lowercase;font-size:19px}.pix-main{width:min(860px,calc(100% - 24px));margin:28px auto 60px}.pix-card{background:#fff;border:1px solid var(--line);padding:28px}.pix-card h1{font-size:clamp(34px,7vw,64px);line-height:.95;text-transform:uppercase;letter-spacing:-.06em}.pix-card p{color:#444;line-height:1.6;margin-top:12px}.pix-total{margin:24px 0;padding:20px;background:#111;color:#fff}.pix-total span{display:block;font-size:13px;text-transform:uppercase;letter-spacing:.08em;color:#ccc}.pix-total strong{font-size:42px}.pix-key{margin-top:18px}.pix-key label{display:block;font-size:12px;font-weight:900;text-transform:uppercase;letter-spacing:.08em;margin-bottom:8px}.pix-key textarea{width:100%;min-height:86px;border:1px solid var(--line);padding:14px;resize:none;background:#f8f8f8}.pix-actions{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:14px}.pix-btn{min-height:52px;background:#111;color:#fff;font-weight:900;text-transform:uppercase;letter-spacing:.08em}.pix-btn.secondary{background:#fff;color:#111;border:1px solid #111}.pix-list{margin-top:22px;border-top:1px solid var(--line);padding-top:18px}.pix-list h2{font-size:22px;margin-bottom:12px}.pix-item{display:flex;justify-content:space-between;gap:12px;padding:10px 0;border-bottom:1px solid #eee}.pix-item span{color:#333}.pix-customer{margin-top:22px;border-top:1px solid var(--line);padding-top:18px}.pix-customer h2{font-size:22px;margin-bottom:12px}.pix-warn{background:#fff7dd;border:1px solid #e8cf86;padding:14px;margin-top:18px;color:#5f4300}.toast{position:fixed;left:50%;bottom:22px;transform:translateX(-50%);background:#111;color:#fff;padding:14px 18px;font-size:13px;font-weight:900;text-transform:uppercase;letter-spacing:.08em}@media(max-width:620px){.pix-card{padding:18px}.pix-actions{grid-template-columns:1fr}.pix-total strong{font-size:34px}.pix-item{display:block}.pix-item strong{display:block;margin-top:4px}}
+    :root{--bg:#eee;--text:#050505;--line:#ccc;--green:#15934f}*{margin:0;padding:0;box-sizing:border-box}body{font-family:Arial,Helvetica,sans-serif;background:var(--bg);color:var(--text);min-height:100vh}button,textarea,input{font:inherit}button{cursor:pointer;border:0}.pix-topbar{height:82px;background:#f6f6f6;border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:center;position:sticky;top:0;z-index:20}.pix-back{position:absolute;left:18px;color:#111;text-decoration:none;font-size:36px;font-weight:900}.pix-logo{color:#111;text-decoration:none;font-size:19px;font-weight:900;text-transform:lowercase}.pix-main{width:min(980px,calc(100% - 24px));margin:28px auto 60px;display:grid;grid-template-columns:1fr 1fr;gap:24px;align-items:start}.pix-card{background:#fff;border:1px solid var(--line);padding:22px}.pix-card h1{font-size:clamp(32px,5vw,52px);line-height:.95;text-transform:uppercase;letter-spacing:-.06em;margin-bottom:16px}.pix-card p{color:#555;line-height:1.6;margin-bottom:12px}.pedido-box{display:grid;grid-template-columns:86px 1fr;gap:12px;align-items:center;border:1px solid var(--line);background:#f7f7f7;padding:12px;margin-bottom:16px}.pedido-box img{width:86px;height:106px;object-fit:cover;background:#ddd}.pedido-box b{display:block;text-transform:uppercase;line-height:1.2;margin-bottom:5px}.pedido-box small{color:#666;display:block;margin-top:3px}.valores{border-top:1px solid var(--line);margin-top:16px;padding-top:16px;display:grid;gap:8px}.linha-valor{display:flex;justify-content:space-between;gap:12px;color:#555}.linha-valor strong{color:#111}.total{border-top:1px solid var(--line);margin-top:10px;padding-top:14px;font-size:36px;font-weight:900;letter-spacing:-.05em;display:flex;justify-content:space-between;gap:14px}.pix-chave{background:#f7f7f7;border:1px solid var(--line);padding:14px;word-break:break-all;font-size:14px;margin:12px 0}.qr-box{display:grid;place-items:center;background:#f7f7f7;border:1px solid var(--line);padding:16px;margin-bottom:12px}.qr-box img{width:260px;max-width:100%;image-rendering:crisp-edges}.pix-code{width:100%;min-height:150px;border:1px solid var(--line);background:#f7f7f7;padding:14px;resize:none;outline:0;font-size:13px;line-height:1.5}.btn{width:100%;min-height:52px;background:#111;color:#fff;font-weight:900;text-transform:uppercase;letter-spacing:.12em;margin-top:10px}.btn.whats{background:#15934f}.aviso{margin-top:12px;font-size:13px;color:#666}.erro{grid-column:1/-1;background:#fff;border:1px solid var(--line);padding:30px;text-align:center}.erro h1{font-size:34px;text-transform:uppercase;margin-bottom:10px}.erro a{display:inline-flex;margin-top:16px;background:#111;color:#fff;text-decoration:none;padding:14px 18px;font-weight:900;text-transform:uppercase}@media(max-width:760px){.pix-main{grid-template-columns:1fr;margin-top:16px}.pix-card{padding:18px}.total{font-size:30px}}
   </style>
 </head>
 <body>
-  <header class="pix-top">
-    <a class="pix-back" href="../index.html">‹</a>
-    <div class="pix-logo">jordanwear</div>
-  </header>
-
-  <main class="pix-main">
-    <section class="pix-card" id="pixView">
-      <h1>Carregando Pix...</h1>
-    </section>
-  </main>
-
+  <header class="pix-topbar"><a href="../index.html" class="pix-back">‹</a><a href="../index.html" class="pix-logo">jordanwear</a></header>
+  <main class="pix-main" id="pixMain"></main>
   <script>
-    const PIX_CHAVE_PADRAO = "0505667003";
-    const WHATSAPP_PADRAO = "556993306882";
-
-    function money(value){return Number(value||0).toFixed(2).replace('.', ',')}
-    function esc(text){return String(text||'').replaceAll('&','&amp;').replaceAll('<','&lt;').replaceAll('>','&gt;').replaceAll('"','&quot;')}
-    function getPedidoId(){return new URLSearchParams(location.search).get('pedido') || localStorage.getItem('jws_ultimo_pedido') || ''}
-    function carregarPedido(){
-      const id=getPedidoId();
-      if(!id) return null;
-      try{return JSON.parse(localStorage.getItem(`jws_pedido_${id}`)||'null')}catch(e){return null}
-    }
-    function textoWhatsapp(pedido){
-      const itens=(pedido.itens||[]).map(i=>`- ${i.nome} x${i.quantidade} = R$ ${money(Number(i.preco||0)*Number(i.quantidade||0))}`).join('%0A');
-      return `Olá, fiz um pedido na Jordan Wear.%0A%0APedido: ${pedido.id}%0ATotal: R$ ${money(pedido.total)}%0A%0AItens:%0A${itens}%0A%0ANome: ${encodeURIComponent(pedido.cliente?.nome||'')}%0AWhatsApp: ${encodeURIComponent(pedido.cliente?.telefone||'')}%0AEndereço: ${encodeURIComponent(pedido.cliente?.endereco||'')}%0A%0AVou enviar o comprovante do Pix.`;
-    }
-    function render(){
-      const view=document.getElementById('pixView');
-      const pedido=carregarPedido();
-      if(!pedido){
-        view.innerHTML=`<h1>Pedido não encontrado</h1><p>Volte para a loja e finalize o carrinho de novo.</p><div class="pix-actions"><a class="pix-btn secondary" style="display:grid;place-items:center;text-decoration:none" href="../index.html">Voltar para loja</a></div>`;
-        return;
-      }
-      const chave=pedido.pixChave || PIX_CHAVE_PADRAO;
-      const whats=pedido.whatsappLoja || WHATSAPP_PADRAO;
-      const linkWhats=`https://wa.me/${whats}?text=${textoWhatsapp(pedido)}`;
-      view.innerHTML=`
-        <h1>Pagamento Pix</h1>
-        <p>Pedido <b>${esc(pedido.id)}</b>. Copie a chave Pix, pague no app do banco e depois envie o comprovante pelo WhatsApp.</p>
-        <div class="pix-total"><span>Total do pedido</span><strong>R$ ${money(pedido.total)}</strong></div>
-        <div class="pix-key"><label>Chave Pix</label><textarea id="pixKey" readonly>${esc(chave)}</textarea></div>
-        <div class="pix-actions">
-          <button class="pix-btn" onclick="copyPix()">Copiar Pix</button>
-          <a class="pix-btn secondary" style="display:grid;place-items:center;text-decoration:none" href="${linkWhats}" target="_blank">Enviar comprovante</a>
-        </div>
-        <div class="pix-warn"><b>Atenção:</b> o estoque só é separado depois que você enviar o comprovante e a loja confirmar o pagamento.</div>
-        <div class="pix-list"><h2>Itens</h2>${(pedido.itens||[]).map(i=>`<div class="pix-item"><span>${esc(i.nome)} x${i.quantidade}</span><strong>R$ ${money(Number(i.preco||0)*Number(i.quantidade||0))}</strong></div>`).join('')}<div class="pix-item"><span>Frete</span><strong>${Number(pedido.frete||0)===0?'Grátis':'R$ '+money(pedido.frete)}</strong></div></div>
-        <div class="pix-customer"><h2>Dados</h2><p><b>Nome:</b> ${esc(pedido.cliente?.nome||'')}</p><p><b>WhatsApp:</b> ${esc(pedido.cliente?.telefone||'')}</p><p><b>Endereço:</b> ${esc(pedido.cliente?.endereco||'')}</p></div>
-      `;
-    }
-    function copyPix(){
-      const text=document.getElementById('pixKey')?.value||'';
-      navigator.clipboard.writeText(text);
-      toast('Pix copiado');
-    }
-    function toast(text){const old=document.querySelector('.toast'); if(old)old.remove(); const el=document.createElement('div'); el.className='toast'; el.textContent=text; document.body.appendChild(el); setTimeout(()=>el.remove(),2200)}
-    render();
+    const PIX_CHAVE="0505667003";
+    const PIX_NOME="JORDAN";
+    const PIX_CIDADE="Rio Grande do Sul";
+    const WHATSAPP_LOJA="556993306882";
+    let pedidoAtual=null, pixCodeAtual="";
+    function money(v){return Number(v||0).toFixed(2).replace(".",",")}function numero(v){return Number(v||0)}function limparTextoPix(t){return String(t||"").normalize("NFD").replace(/[\u0300-\u036f]/g,"").replace(/[^A-Za-z0-9 ]/g,"").trim().substring(0,25).toUpperCase()}function montarCampo(id,valor){return `${id}${String(valor.length).padStart(2,"0")}${valor}`}function crc16(payload){let crc=0xffff;for(let i=0;i<payload.length;i++){crc^=payload.charCodeAt(i)<<8;for(let j=0;j<8;j++){crc=(crc&0x8000)!==0?(crc<<1)^0x1021:crc<<1;crc&=0xffff}}return crc.toString(16).toUpperCase().padStart(4,"0")}
+    function gerarPixCopiaCola({chave,nome,cidade,valor,pedidoId}){const valorFormatado=Number(valor||0).toFixed(2), gui=montarCampo("00","br.gov.bcb.pix"), chavePix=montarCampo("01",chave), merchant=montarCampo("26",gui+chavePix);const payload=montarCampo("00","01")+merchant+montarCampo("52","0000")+montarCampo("53","986")+montarCampo("54",valorFormatado)+montarCampo("58","BR")+montarCampo("59",limparTextoPix(nome))+montarCampo("60",limparTextoPix(cidade).substring(0,15))+montarCampo("62",montarCampo("05",String(pedidoId||"PEDIDO").substring(0,25)))+"6304";return payload+crc16(payload)}
+    function abrirWhatsApp(){const p=pedidoAtual;const itens=Array.isArray(p.itens)?p.itens.map(i=>`- ${i.nome} x${i.quantidade}`).join("%0A"):`- ${p.nome} x${p.quantidade}`;const texto=`Olá, fiz um pedido na Jordan Wear.%0A%0APedido: ${p.id}%0A${itens}%0ASubtotal: R$ ${money(p.subtotal||p.total)}%0AFrete: ${numero(p.frete)===0?"Grátis":`R$ ${money(p.frete)}`}%0ATotal: R$ ${money(p.total)}%0A${p.cep?`CEP: ${p.cep}%0A`:""}${p.enderecoFrete?`Cidade: ${p.enderecoFrete.cidade}/${p.enderecoFrete.uf}%0A`:""}%0AVou enviar o comprovante do Pix.`;window.open(`https://wa.me/${WHATSAPP_LOJA}?text=${texto}`,"_blank")}
+    function copiarPix(){const campo=document.getElementById("pixCode");if(!campo)return;campo.select();campo.setSelectionRange(0,99999);navigator.clipboard.writeText(campo.value);const btn=document.getElementById("copyBtn");btn.textContent="Pix copiado";setTimeout(()=>btn.textContent="Copiar Pix",1600)}
+    function renderPix(){const main=document.getElementById("pixMain"), p=pedidoAtual, subtotal=numero(p.subtotal||p.total), frete=numero(p.frete||0), total=numero(p.total||subtotal+frete);pixCodeAtual=gerarPixCopiaCola({chave:PIX_CHAVE,nome:PIX_NOME,cidade:PIX_CIDADE,valor:total,pedidoId:p.id});const qrUrl=`https://api.qrserver.com/v1/create-qr-code/?size=260x260&data=${encodeURIComponent(pixCodeAtual)}`;const listaItens=Array.isArray(p.itens)?p.itens.map(i=>`<small>${i.nome} x${i.quantidade}</small>`).join(""):`<small>${p.nome} x${p.quantidade}</small>`;main.innerHTML=`<section class="pix-card"><h1>Pagamento Pix</h1><p>Escaneie o QR Code ou copie o Pix. Depois envie o comprovante no WhatsApp.</p><div class="pedido-box"><img src="${p.imagem||p.itens?.[0]?.imagem||"https://via.placeholder.com/200"}"/><div><b>${p.nome||"Pedido"}</b>${listaItens}<small>Pedido: ${p.id}</small>${p.enderecoFrete?`<small>Entrega: ${p.enderecoFrete.cidade}/${p.enderecoFrete.uf}</small>`:""}</div></div><div class="valores"><div class="linha-valor"><span>Subtotal</span><strong>R$ ${money(subtotal)}</strong></div><div class="linha-valor"><span>Frete</span><strong>${frete===0?"Grátis":`R$ ${money(frete)}`}</strong></div><div class="total"><span>Total</span><strong>R$ ${money(total)}</strong></div></div></section><section class="pix-card"><h1>QR Code Pix</h1><div class="qr-box"><img src="${qrUrl}" alt="QR Code Pix" /></div><p>Chave Pix:</p><div class="pix-chave">${PIX_CHAVE}</div><textarea class="pix-code" id="pixCode" readonly>${pixCodeAtual}</textarea><button class="btn" id="copyBtn" onclick="copiarPix()">Copiar Pix</button><button class="btn whats" onclick="abrirWhatsApp()">Enviar comprovante no WhatsApp</button><p class="aviso">Esse pagamento é manual. O pedido será confirmado depois que o comprovante for conferido.</p></section>`}
+    function carregarPix(){const main=document.getElementById("pixMain"), p=JSON.parse(localStorage.getItem("pedido_pix_manual")||"null");if(!p){main.innerHTML=`<div class="erro"><div><h1>Nenhum pedido encontrado</h1><p>Volte para a loja e escolha um produto.</p><a href="../index.html">Voltar para loja</a></div></div>`;return}pedidoAtual=p;renderPix()}carregarPix();
   </script>
 </body>
 </html>

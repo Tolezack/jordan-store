@@ -1,6 +1,34 @@
 {
   "produtos": [
     {
+      "id": "produto-1783196473601",
+      "nome": "zsdg",
+      "categoria": "camisa",
+      "preco": 0.1,
+      "estoque": 0,
+      "imagem": "",
+      "imagens": [],
+      "descricao": "",
+      "tamanhos": [
+        "P",
+        "M",
+        "G",
+        "GG"
+      ],
+      "estoqueTamanhos": {
+        "P": 0,
+        "M": 0,
+        "G": 0,
+        "GG": 0
+      },
+      "estoque_tamanhos": {
+        "P": 0,
+        "M": 0,
+        "G": 0,
+        "GG": 0
+      }
+    },
+    {
       "id": "produto-1783180253740",
       "nome": "cagada",
       "categoria": "camisa",

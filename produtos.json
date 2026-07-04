@@ -6,9 +6,12 @@
       "categoria": "camisa",
       "preco": 324,
       "estoque": 14,
-      "imagem": "",
-      "imagens": [],
-      "descricao": "",
+      "imagem": "https://i.pinimg.com/736x/36/b5/9c/36b59ca555262a203a8415083d9c3f63.jpg",
+      "imagens": [
+        "https://i.pinimg.com/736x/36/b5/9c/36b59ca555262a203a8415083d9c3f63.jpg",
+        "https://i.pinimg.com/736x/0a/7d/34/0a7d349e5ae089af53ad3fd3549904ef.jpg"
+      ],
+      "descricao": "a\na\na\na\na\na\na\na\na\na\na",
       "tamanhos": [
         "P",
         "M",

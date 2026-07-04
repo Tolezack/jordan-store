@@ -4,6 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Produto - Jordan Wear</title>
+  <!-- VERSAO REAL V30 - produto com estoque por tamanho robusto -->
 
   <style>
     :root {
@@ -650,10 +651,43 @@
       return c || "produto";
     }
 
+    function numeroEstoque(valor) {
+      if (typeof valor === "number") return Number.isFinite(valor) ? valor : 0;
+
+      const limpo = String(valor ?? "0")
+        .replace(",", ".")
+        .replace(/[^0-9.-]/g, "")
+        .trim();
+
+      const n = Number(limpo || 0);
+      return Number.isFinite(n) ? n : 0;
+    }
+
     function getEstoqueMap(produto) {
-      const camel = produto && produto.estoqueTamanhos && typeof produto.estoqueTamanhos === "object" ? produto.estoqueTamanhos : null;
-      const snake = produto && produto.estoque_tamanhos && typeof produto.estoque_tamanhos === "object" ? produto.estoque_tamanhos : null;
-      return camel || snake || {};
+      if (!produto || typeof produto !== "object") return {};
+
+      const candidatos = [
+        produto.estoqueTamanhos,
+        produto.estoque_tamanhos,
+        produto.estoquePorTamanho,
+        produto.estoque_por_tamanho,
+        produto.estoque_por_tamanhos,
+        produto.tamanhosEstoque,
+        produto.estoques
+      ];
+
+      for (const item of candidatos) {
+        if (item && typeof item === "object" && !Array.isArray(item) && Object.keys(item).length > 0) {
+          const limpo = {};
+          Object.entries(item).forEach(([tamanho, qtd]) => {
+            const tam = String(tamanho || "").trim();
+            if (tam) limpo[tam] = numeroEstoque(qtd);
+          });
+          return limpo;
+        }
+      }
+
+      return {};
     }
 
     function getTamanhos(produto) {
@@ -676,10 +710,10 @@
       const map = getEstoqueMap(produtoAtual);
 
       if (Object.keys(map).length) {
-        return Number(map[tamanho] || 0);
+        return numeroEstoque(map[tamanho]);
       }
 
-      return Number(produtoAtual.estoque || 0);
+      return numeroEstoque(produtoAtual.estoque);
     }
 
     function getEstoqueTotal(produto) {
@@ -687,10 +721,10 @@
       const valores = Object.values(map);
 
       if (valores.length) {
-        return valores.reduce((s, n) => s + Number(n || 0), 0);
+        return valores.reduce((s, n) => s + numeroEstoque(n), 0);
       }
 
-      return Number(produto.estoque || 0);
+      return numeroEstoque(produto && produto.estoque);
     }
 
     async function carregarProduto() {

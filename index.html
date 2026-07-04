@@ -4,7 +4,8 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Jordan Wear Store</title>
-  <link rel="stylesheet" href="style.css?v=80" />
+  <!-- INDEX PRINCIPAL V81: botão único + sem carregamento infinito -->
+  <link rel="stylesheet" href="style.css?v=81" />
 </head>
 <body>
   <div class="promo-strip">Comprando a partir de <b>R$ 400,00</b>, o frete fica grátis.</div>
@@ -40,7 +41,7 @@
         <img class="banner" src="https://i.pinimg.com/736x/47/9c/46/479c46d2e3a13214638a3d80d9ef2cd3.jpg" alt="Banner" />
         <div class="dots"><button class="dot active" onclick="goBanner(0)"></button><button class="dot" onclick="goBanner(1)"></button><button class="dot" onclick="goBanner(2)"></button></div>
       </div>
-      <div class="hero-text"><span class="tag">nova coleção</span><h1>jordan wear store</h1><p>Loja streetwear com camisas, calças, tênis, bermudas e moletons.</p><div class="hero-actions"><button onclick="scrollToShop()">Ver produtos</button><button class="ghost" onclick="openCategoryPage('calca')">Ver calças</button></div></div>
+      <div class="hero-text"><span class="tag">nova coleção</span><h1>jordan wear store</h1><p>Loja streetwear com camisas, calças, tênis, bermudas e moletons.</p><div class="hero-actions"><button onclick="scrollToShop()">Ver produtos</button></div></div>
     </section>
 
     <section class="category-showcase">
@@ -72,7 +73,7 @@
     let currentCategory = "all", currentBanner = 0, adminToken = localStorage.getItem("jws_admin_token") || "", adminProdutos = [];
     const categoriaNomes = { all:"todos os produtos", camisa:"camisas", calca:"calças", tenis:"tênis", bermuda:"bermudas", moletom:"moletons" };
 
-    document.addEventListener("DOMContentLoaded", () => { carregarProdutos(); updateCart(); startBanner(); });
+    document.addEventListener("DOMContentLoaded", () => { carregarProdutos(); updateCart(); });
     document.addEventListener("keydown", e => { if (e.ctrlKey && e.altKey && e.key === "8") { e.preventDefault(); openAdmin(); } });
 
     function normalizarTexto(texto){ return String(texto||"").toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g,"").trim(); }
@@ -111,8 +112,25 @@
       try{
         status.textContent="carregando..."; status.className="api-status";
         let data=null;
-        try{ const res=await fetch(`${API_URL}/api/produtos?cache=${Date.now()}`); if(!res.ok) throw new Error("Backend offline"); data=await res.json(); }
-        catch(e){ const local=await fetch(`produtos.json?cache=${Date.now()}`); if(!local.ok) throw new Error("Não achei produtos.json"); data=await local.json(); }
+        try{
+          const local = await fetch("produtos.json?v=81", { cache: "no-store" });
+          if(!local.ok) throw new Error("Não achei produtos.json");
+          data = await local.json();
+        }
+        catch(e){
+          const controller = new AbortController();
+          const timeout = setTimeout(() => controller.abort(), 4500);
+
+          try {
+            const res = await fetch(`${API_URL}/api/produtos`, { signal: controller.signal });
+            clearTimeout(timeout);
+            if(!res.ok) throw new Error("Backend offline");
+            data = await res.json();
+          } catch(errBackend) {
+            clearTimeout(timeout);
+            throw new Error("Não foi possível carregar produtos.");
+          }
+        }
         const lista=Array.isArray(data)?data:(data.produtos||[]);
         produtos=lista.map(normalizarProduto); produtosRender=[...produtos];
         status.textContent=`online • ${produtos.length} produtos`; status.className="api-status ok"; renderProducts();
@@ -148,7 +166,7 @@
     function scrollToShop(){ document.getElementById("shop")?.scrollIntoView({behavior:"smooth"}); toggleSidebar(false); }
     function goHome(){ currentCategory="all"; setCategory("all"); window.scrollTo({top:0,behavior:"smooth"}); toggleSidebar(false); }
     function openCategoryPage(category){ setCategory(category); document.getElementById("shop")?.scrollIntoView({behavior:"smooth"}); toggleSidebar(false); }
-    function startBanner(){ setInterval(()=>{ const banners=document.querySelectorAll(".banner"), dots=document.querySelectorAll(".dot"); if(!banners.length)return; currentBanner=(currentBanner+1)%banners.length; banners.forEach((b,i)=>b.classList.toggle("active",i===currentBanner)); dots.forEach((d,i)=>d.classList.toggle("active",i===currentBanner)); },5000); }
+    function startBanner(){ /* desativado para o navegador não ficar trabalhando toda hora */ }
     function goBanner(index){ currentBanner=index; document.querySelectorAll(".banner").forEach((b,i)=>b.classList.toggle("active",i===index)); document.querySelectorAll(".dot").forEach((d,i)=>d.classList.toggle("active",i===index)); }
     function notify(text,type="success"){ const n=document.createElement("div"); n.className=`notification ${type}`; n.textContent=text; document.body.appendChild(n); setTimeout(()=>n.remove(),3100); }
 

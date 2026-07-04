@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Produto - Jordan Wear</title>
+  <link rel="stylesheet" href="../../style.css" />
+</head>
+<body>
+  <div class="promo-strip">A partir de <b>R$ 400,00</b>, o frete fica <b>grátis</b>.</div>
+  <header>
+    <a href="../../index.html" class="back-link">← voltar</a>
+    <img class="logo" src="https://i.pinimg.com/736x/97/20/a6/9720a60b3796f5660a5e12c771775a02.jpg" alt="Jordan Wear" />
+    <button class="cart-btn" onclick="location.href='../../index.html#shop'">🛒<span class="cart-count">0</span></button>
+  </header>
+
+  <main class="produto-page">
+    <section id="produtoView" class="produto-view">
+      <div class="loading"><div><div class="spinner"></div><p>Carregando produto...</p></div></div>
+    </section>
+  </main>
+
+<script>
+const API_URL = "https://jordan-store-backend.onrender.com";
+let produtoAtual = null;
+let tamanhoSelecionado = "";
+
+function money(value){ return Number(value || 0).toFixed(2).replace(".", ","); }
+function getIdProduto(){ return new URLSearchParams(location.search).get("id"); }
+function normalizarCategoria(categoria){
+  const c = String(categoria || "").toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").trim();
+  if(c.includes("camisa") || c.includes("camiseta")) return "camisa";
+  if(c.includes("calca")) return "calca";
+  if(c.includes("tenis") || c.includes("sapato")) return "tenis";
+  return c || "camisa";
+}
+function pastaAtual(){
+  const partes = location.pathname.split("/").filter(Boolean);
+  return partes[partes.length - 1] || "produto";
+}
+function updateCount(){
+  const carrinho = JSON.parse(localStorage.getItem("jws_cart") || "[]");
+  document.querySelector(".cart-count").textContent = carrinho.reduce((s,i)=>s+(i.quantidade||0),0);
+}
+
+async function buscarProdutos(){
+  try{
+    const res = await fetch(`${API_URL}/api/produtos`);
+    if(!res.ok) throw new Error("api");
+    const data = await res.json();
+    return Array.isArray(data) ? data : data.produtos || [];
+  }catch(e){
+    const local = await fetch("../../produtos.json");
+    const data = await local.json();
+    return Array.isArray(data) ? data : data.produtos || [];
+  }
+}
+
+async function carregarProduto(){
+  const view = document.getElementById("produtoView");
+  const id = getIdProduto();
+  try{
+    const produtos = await buscarProdutos();
+    const pasta = normalizarCategoria(pastaAtual());
+    produtoAtual = produtos.find(p => String(p.id) === String(id));
+
+    if(!produtoAtual && !id){
+      const lista = produtos.filter(p => normalizarCategoria(p.categoria) === pasta);
+      view.innerHTML = `<div style="grid-column:1/-1"><div class="section-head"><span class="tag dark">produtos/${pasta}</span><h2>${pasta === "calca" ? "calças" : pasta === "tenis" ? "tênis" : "camisas"}</h2></div><div class="grid">${lista.map(p => `<article class="product-card"><div class="product-image-container" onclick="location.href='?id=${encodeURIComponent(p.id)}'"><img class="product-image" src="${p.imagem || "https://via.placeholder.com/600"}" onerror="this.src='https://via.placeholder.com/600'"></div><div class="product-info"><h3 class="product-name">${p.nome}</h3><div class="product-price">R$ ${money(p.preco)}</div><div class="product-buttons"><button class="product-btn details-btn" onclick="location.href='?id=${encodeURIComponent(p.id)}'">Ver produto</button></div></div></article>`).join("")}</div></div>`;
+      return;
+    }
+
+    if(!produtoAtual){
+      view.innerHTML = `<div class="loading"><div><h2>Produto não encontrado</h2><p>Volte para a loja e escolha outro produto.</p><a class="submit produto-link" href="../../index.html">Voltar para loja</a></div></div>`;
+      return;
+    }
+
+    document.title = `${produtoAtual.nome} - Jordan Wear`;
+    const imagens = [produtoAtual.imagem, ...(produtoAtual.imagens || [])].filter(Boolean);
+    const categoria = normalizarCategoria(produtoAtual.categoria);
+    const nomeCat = categoria === "calca" ? "calça" : categoria === "tenis" ? "tênis" : "camisa";
+
+    view.innerHTML = `
+      <div>
+        <div class="produto-foto"><img id="mainProductImage" src="${imagens[0] || "https://via.placeholder.com/700"}" alt="${produtoAtual.nome}" onerror="this.src='https://via.placeholder.com/700'" /></div>
+        ${imagens.length > 1 ? `<div class="produto-thumbs">${imagens.map((img,i)=>`<img class="${i===0 ? "active" : ""}" src="${img}" onclick="trocarImagem(this,'${img.replaceAll("'", "")}')">`).join("")}</div>` : ""}
+      </div>
+      <div class="produto-info-page">
+        <span class="tag dark">${nomeCat}</span>
+        <h1>${produtoAtual.nome}</h1>
+        <div class="produto-preco">R$ ${money(produtoAtual.preco)}<small>com Pix</small></div>
+        <p>${produtoAtual.descricao || "Produto selecionado da Jordan Wear Store."}</p>
+        <div class="produto-tamanhos"><strong>Tamanho</strong><div>${(produtoAtual.tamanhos || ["P","M","G","GG"]).map(t => `<button onclick="selecionarTamanho(this,'${t}')">${t}</button>`).join("")}</div></div>
+        <p class="produto-estoque">Estoque: <b>${Number(produtoAtual.estoque || 0)}</b></p>
+        ${Number(produtoAtual.estoque || 0) > 0 ? `<button class="submit" onclick="adicionarCarrinho()">Adicionar ao carrinho</button>` : `<button class="clear" disabled>Produto esgotado</button>`}
+      </div>`;
+  }catch(err){
+    console.error(err);
+    view.innerHTML = `<div class="loading"><div><h2>Erro ao carregar produto</h2><p>Confira o backend ou o arquivo produtos.json.</p></div></div>`;
+  }
+}
+
+function trocarImagem(el, src){
+  document.getElementById("mainProductImage").src = src;
+  document.querySelectorAll(".produto-thumbs img").forEach(img => img.classList.remove("active"));
+  el.classList.add("active");
+}
+function selecionarTamanho(btn,tamanho){
+  tamanhoSelecionado = tamanho;
+  document.querySelectorAll(".produto-tamanhos button").forEach(b=>b.classList.remove("active-size"));
+  btn.classList.add("active-size");
+}
+function adicionarCarrinho(){
+  if(!produtoAtual) return;
+  if(!tamanhoSelecionado){ alert("Escolha um tamanho primeiro."); return; }
+  const carrinho = JSON.parse(localStorage.getItem("jws_cart") || "[]");
+  const cartId = `${produtoAtual.id}-${tamanhoSelecionado}`;
+  const item = carrinho.find(i => i.cartId === cartId);
+  if(item) item.quantidade++;
+  else carrinho.push({ cartId, id: produtoAtual.id, nome: `${produtoAtual.nome} - Tam. ${tamanhoSelecionado}`, preco: Number(produtoAtual.preco || 0), imagem: produtoAtual.imagem, quantidade: 1 });
+  localStorage.setItem("jws_cart", JSON.stringify(carrinho));
+  updateCount();
+  alert("Produto adicionado ao carrinho.");
+}
+updateCount();
+carregarProduto();
+</script>
+</body>
+</html>

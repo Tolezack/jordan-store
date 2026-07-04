@@ -6,6 +6,8 @@
   <title>Produto - Jordan Wear</title>
   <style>
     *{margin:0;padding:0;box-sizing:border-box}body{font-family:Arial,Helvetica,sans-serif;background:#eee;color:#050505}.produto-topbar{position:sticky;top:0;z-index:100;height:78px;background:#f6f6f6;border-bottom:1px solid #cfcfcf;display:flex;align-items:center;justify-content:center;padding:0 78px}.produto-voltar{position:absolute;left:10px;top:50%;transform:translateY(-50%);width:54px;height:54px;display:grid;place-items:center;color:#111;text-decoration:none;font-size:38px;font-weight:900;line-height:1}.produto-logo{color:#111;text-decoration:none;font-size:18px;font-weight:900;text-transform:lowercase;letter-spacing:-.04em}.produto-carrinho{position:absolute;right:12px;top:50%;transform:translateY(-50%);width:52px;height:52px;display:grid;place-items:center;text-decoration:none;font-size:0}.produto-carrinho img{width:36px;height:36px;object-fit:contain}.produto-carrinho span{position:absolute;top:1px;right:0;min-width:21px;height:21px;border-radius:999px;background:#111;color:#fff;display:grid;place-items:center;font-size:11px;font-weight:900}.produto-main{width:min(1180px,calc(100% - 28px));margin:26px auto 60px}.produto-shell{display:grid;grid-template-columns:minmax(0,1fr) minmax(360px,.85fr);gap:34px;align-items:start}.produto-loading,.produto-erro{grid-column:1/-1;min-height:360px;background:#fff;border:1px solid #d0d0d0;display:grid;place-items:center;text-align:center;padding:28px}.produto-erro h1{font-size:38px;text-transform:uppercase;letter-spacing:-.05em}.produto-erro p{color:#666;margin-top:10px}.produto-erro a{margin-top:18px;display:inline-flex;background:#111;color:#fff;text-decoration:none;padding:14px 18px;font-weight:900;text-transform:uppercase}.produto-galeria{min-width:0}.produto-foto-box{position:relative;width:100%;background:#dfdfdf;border:1px solid #cfcfcf;overflow:hidden}.produto-foto-box img{width:100%;aspect-ratio:3/4;object-fit:cover;display:block}.foto-count{position:absolute;left:14px;bottom:14px;background:rgba(0,0,0,.82);color:#fff;padding:8px 12px;font-size:12px;font-weight:900;letter-spacing:.08em}.foto-nav{position:absolute;top:50%;transform:translateY(-50%);z-index:3;width:46px;height:60px;background:rgba(255,255,255,.82);color:#111;border:1px solid rgba(0,0,0,.18);font-size:42px;line-height:1;display:grid;place-items:center}.foto-prev{left:10px}.foto-next{right:10px}.produto-thumbs{display:grid;grid-template-columns:repeat(6,1fr);gap:8px;margin-top:10px}.produto-thumbs button{background:#fff;border:1px solid #d0d0d0;padding:0;overflow:hidden}.produto-thumbs button.active{border-color:#111;outline:2px solid #111}.produto-thumbs img{width:100%;aspect-ratio:1/1;object-fit:cover;display:block}.produto-info-nova{min-width:0;padding-top:6px}.produto-breadcrumb{display:flex;flex-wrap:wrap;gap:8px;align-items:center;color:#777;font-size:15px;margin-bottom:12px}.produto-breadcrumb a{color:#777;text-decoration:none}.produto-info-nova h1{font-size:clamp(38px,5vw,66px);line-height:.96;letter-spacing:-.06em;text-transform:uppercase;margin-bottom:22px}.produto-preco-novo{font-size:clamp(34px,4vw,54px);line-height:1;font-weight:900;letter-spacing:-.05em}.produto-pix-novo{margin-top:8px;color:#e01818;font-size:clamp(20px,2.5vw,30px);font-weight:900}.produto-desc-nova{margin:26px 0;max-width:620px;color:#333;line-height:1.65;font-size:15px}.produto-tamanhos-lista{display:flex;flex-wrap:wrap;gap:8px;margin-bottom:22px}.produto-tamanhos-lista button{min-width:72px;min-height:52px;border:1px solid #bcbcbc;background:#f7f7f7;color:#111;display:grid;place-items:center;padding:6px 10px}.produto-tamanhos-lista button strong{font-size:15px;line-height:1}.produto-tamanhos-lista button span{margin-top:2px;font-size:11px;color:#666}.produto-tamanhos-lista button.active{background:#111;color:#fff;border-color:#111}.produto-tamanhos-lista button.active span{color:#ddd}.produto-tamanhos-lista button.off{opacity:.4}.produto-compra-linha{display:grid;grid-template-columns:210px 1fr;gap:18px;align-items:center;margin-bottom:14px}.produto-quantidade{height:62px;border:1px solid #aaa;background:#eee;display:grid;grid-template-columns:1fr 1fr 1fr;align-items:center}.produto-quantidade button{height:100%;color:#000;font-size:34px;font-weight:900;line-height:1;border:0;background:transparent}.produto-quantidade span{text-align:center;font-size:24px}.produto-comprar{height:62px;background:#000;color:#fff;border:0;border-radius:0;font-size:15px;font-weight:900;text-transform:uppercase;letter-spacing:.22em}.produto-comprar.off{background:#d1d1d1;color:#777;cursor:not-allowed}.produto-estoque-info{color:#555;font-size:14px;margin-bottom:26px}.produto-detalhes-box{border-top:1px solid #cfcfcf;padding-top:20px}.produto-detalhes-box summary{font-size:22px;font-weight:900;cursor:pointer}.produto-detalhes-box p{margin-top:12px;color:#555;line-height:1.7}@media(max-width:880px){.produto-main{width:100%;margin:0 auto 42px}.produto-shell{display:block}.produto-foto-box{border-left:0;border-right:0}.produto-foto-box img{aspect-ratio:4/5}.produto-thumbs{display:flex;overflow-x:auto;padding:10px 12px 0;gap:8px;scroll-snap-type:x mandatory}.produto-thumbs button{min-width:72px;scroll-snap-align:start}.produto-info-nova{padding:18px 18px 0}.produto-info-nova h1{font-size:42px}.produto-preco-novo{font-size:42px}.produto-pix-novo{font-size:24px}.produto-compra-linha{grid-template-columns:.85fr 1.65fr;gap:12px}.produto-quantidade,.produto-comprar{height:58px}.foto-nav{width:40px;height:54px;font-size:36px}}@media(max-width:480px){.produto-info-nova{padding:16px 14px 0}.produto-info-nova h1{font-size:34px}.produto-preco-novo{font-size:36px}.produto-pix-novo{font-size:21px}.produto-desc-nova{margin:20px 0}.produto-tamanhos-lista button{min-width:62px}.produto-compra-linha{grid-template-columns:.75fr 1.6fr;gap:10px}.produto-quantidade button{font-size:28px}.produto-quantidade span{font-size:20px}.produto-comprar{font-size:13px;letter-spacing:.16em}}
+  
+    .add-cart-pop{position:fixed;right:18px;top:86px;z-index:9999;background:#111;color:#fff;border:1px solid #222;padding:14px 16px;font-size:13px;font-weight:900;text-transform:uppercase;letter-spacing:.06em;box-shadow:0 12px 30px rgba(0,0,0,.25);animation:cartPop .9s ease forwards}.fly-cart-img{position:fixed;z-index:9998;width:70px;height:90px;object-fit:cover;border:1px solid #111;pointer-events:none;animation:flyToCart .75s ease-in forwards}.produto-carrinho.bump{animation:cartBump .45s ease}@keyframes cartPop{0%{transform:translateY(-14px);opacity:0}20%{transform:translateY(0);opacity:1}75%{transform:translateY(0);opacity:1}100%{transform:translateY(-8px);opacity:0}}@keyframes cartBump{0%{transform:translateY(-50%) scale(1)}45%{transform:translateY(-50%) scale(1.22)}100%{transform:translateY(-50%) scale(1)}}@keyframes flyToCart{0%{transform:translate(0,0) scale(1);opacity:1}100%{transform:translate(var(--dx),var(--dy)) scale(.18);opacity:.15}}@media(max-width:600px){.add-cart-pop{left:12px;right:12px;top:82px;text-align:center}.fly-cart-img{width:54px;height:72px}}
   </style>
 </head>
 <body>
@@ -28,25 +30,84 @@
     function escapeHtml(text) { return String(text || "").replaceAll("&", "&amp;").replaceAll("<", "&lt;").replaceAll(">", "&gt;").replaceAll('"', "&quot;"); }
     function getIdProduto() { return new URLSearchParams(location.search).get("id"); }
 
-    function getEstoqueTamanhos(produto) {
-      const estoque = produto.estoqueTamanhos || produto.estoque_tamanhos || produto.estoques || {};
-      if (estoque && typeof estoque === "object" && !Array.isArray(estoque) && Object.keys(estoque).length > 0) {
-        const limpo = {};
-        Object.entries(estoque).forEach(([tamanho, quantidade]) => {
-          const tam = String(tamanho || "").trim().toUpperCase();
-          if (tam) limpo[tam] = Number(quantidade || 0);
-        });
-        return limpo;
+    function parseEstoqueTextoFlex(texto) {
+      const obj = {};
+      const raw = String(texto || "").trim();
+      if (!raw) return obj;
+
+      const regex = /([^:\n,;]+?)\s*:\s*(-?\d+(?:[\.,]\d+)?)/g;
+      let match;
+
+      while ((match = regex.exec(raw)) !== null) {
+        const tamanho = String(match[1] || "").trim().toUpperCase();
+        const quantidade = Number(String(match[2] || "0").replace(",", "."));
+        if (tamanho) obj[tamanho] = Math.max(0, Math.floor(quantidade || 0));
       }
+
+      return obj;
+    }
+
+    function getEstoqueTamanhos(produto) {
+      const fontes = [
+        produto.estoqueTamanhos,
+        produto.estoque_tamanhos,
+        produto.estoquePorTamanho,
+        produto.estoque_por_tamanho,
+        produto.estoques
+      ];
+
+      for (const fonte of fontes) {
+        if (!fonte) continue;
+
+        if (typeof fonte === "string") {
+          const parsed = parseEstoqueTextoFlex(fonte);
+          if (Object.keys(parsed).length > 0) return parsed;
+        }
+
+        if (Array.isArray(fonte)) {
+          const obj = {};
+          fonte.forEach(item => {
+            if (!item) return;
+            const tamanho = String(item.tamanho || item.nome || item.size || "").trim().toUpperCase();
+            const quantidade = Number(item.quantidade ?? item.qtd ?? item.estoque ?? item.stock ?? 0);
+            if (tamanho) obj[tamanho] = Math.max(0, Math.floor(quantidade || 0));
+          });
+          if (Object.keys(obj).length > 0) return obj;
+        }
+
+        if (typeof fonte === "object") {
+          const obj = {};
+          Object.entries(fonte).forEach(([tamanho, quantidade]) => {
+            const tam = String(tamanho || "").trim().toUpperCase();
+            const qtd = Number(quantidade || 0);
+            if (tam) obj[tam] = Math.max(0, Math.floor(qtd || 0));
+          });
+          if (Object.keys(obj).length > 0) return obj;
+        }
+      }
+
       return {};
     }
 
     function getTamanhosProduto(produto) {
       const estoque = getEstoqueTamanhos(produto);
-      const tamanhosDoEstoque = Object.keys(estoque);
-      if (tamanhosDoEstoque.length > 0) return tamanhosDoEstoque;
-      if (Array.isArray(produto.tamanhos) && produto.tamanhos.length > 0) return produto.tamanhos.map(t => String(t || "").trim().toUpperCase()).filter(Boolean);
-      return ["P", "M", "G", "GG"];
+      const tamanhosEstoque = Object.keys(estoque);
+      const base = tamanhosEstoque.length > 0
+        ? tamanhosEstoque
+        : Array.isArray(produto.tamanhos) && produto.tamanhos.length > 0
+          ? produto.tamanhos
+          : ["P", "M", "G", "GG"];
+
+      const normalizados = [...new Set(base.map(t => String(t || "").trim().toUpperCase()).filter(Boolean))];
+      const ordem = ["PP", "P", "M", "G", "GG", "XG", "XGG", "36", "38", "40", "42", "44", "46"];
+      return normalizados.sort((a, b) => {
+        const ia = ordem.indexOf(a);
+        const ib = ordem.indexOf(b);
+        if (ia >= 0 && ib >= 0) return ia - ib;
+        if (ia >= 0) return -1;
+        if (ib >= 0) return 1;
+        return a.localeCompare(b);
+      });
     }
 
     function getEstoqueTotal(produto) {
@@ -143,14 +204,56 @@
       const estoqueAtual = getEstoqueDoTamanho(tamanhoSelecionado);
       if (!produtoAtual || estoqueAtual <= 0) return alert("Produto indisponível.");
       if (quantidade > estoqueAtual) return alert("Quantidade maior que o estoque desse tamanho.");
+
       const carrinho = JSON.parse(localStorage.getItem("jws_cart") || "[]");
       const cartId = `${produtoAtual.id}-${tamanhoSelecionado}`;
       const item = carrinho.find(i => i.cartId === cartId);
+
       if (item) item.quantidade += quantidade;
-      else carrinho.push({ cartId, id: produtoAtual.id, tamanho: tamanhoSelecionado, nome: `${produtoAtual.nome} - Tam. ${tamanhoSelecionado}`, preco: produtoAtual.preco, imagem: fotosProduto[0], quantidade });
+      else carrinho.push({
+        cartId,
+        id: produtoAtual.id,
+        tamanho: tamanhoSelecionado,
+        nome: `${produtoAtual.nome} - Tam. ${tamanhoSelecionado}`,
+        preco: produtoAtual.preco,
+        imagem: fotosProduto[0],
+        quantidade
+      });
+
       localStorage.setItem("jws_cart", JSON.stringify(carrinho));
       atualizarContadorCarrinho();
-      alert("Produto adicionado ao carrinho.");
+      animarProdutoNoCarrinho();
+    }
+
+    function animarProdutoNoCarrinho() {
+      const cart = document.querySelector(".produto-carrinho");
+      const img = document.getElementById("produtoFotoPrincipal");
+
+      if (cart) {
+        cart.classList.remove("bump");
+        void cart.offsetWidth;
+        cart.classList.add("bump");
+      }
+
+      const pop = document.createElement("div");
+      pop.className = "add-cart-pop";
+      pop.textContent = "Adicionado ao carrinho";
+      document.body.appendChild(pop);
+      setTimeout(() => pop.remove(), 950);
+
+      if (!img || !cart) return;
+
+      const imgRect = img.getBoundingClientRect();
+      const cartRect = cart.getBoundingClientRect();
+      const fly = document.createElement("img");
+      fly.className = "fly-cart-img";
+      fly.src = img.src;
+      fly.style.left = `${imgRect.left + imgRect.width / 2 - 35}px`;
+      fly.style.top = `${imgRect.top + imgRect.height / 2 - 45}px`;
+      fly.style.setProperty("--dx", `${cartRect.left - imgRect.left}px`);
+      fly.style.setProperty("--dy", `${cartRect.top - imgRect.top}px`);
+      document.body.appendChild(fly);
+      setTimeout(() => fly.remove(), 800);
     }
 
     function atualizarContadorCarrinho() { const carrinho = JSON.parse(localStorage.getItem("jws_cart") || "[]"); const total = carrinho.reduce((s, i) => s + Number(i.quantidade || 0), 0); document.getElementById("produtoCartCount").textContent = total; }

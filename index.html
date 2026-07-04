@@ -6,887 +6,258 @@
   <title>Jordan Wear Store</title>
   <link rel="stylesheet" href="style.css" />
 </head>
-
 <body>
-  <div class="bg"></div>
+  <div class="promo-strip">A partir de <b>R$ 400,00</b>, o frete fica <b>grátis</b>.</div>
 
-  <!-- AVISO SUPERIOR -->
-  <div class="promo-strip">
-    Aproveite: comprando a partir de <b>R$ 400,00</b>, você ganha <b>FRETE GRÁTIS NA SUA COMPRA!</b> 🚚
-  </div>
-
-  <!-- MENU LATERAL -->
-  <button class="hamburger" onclick="toggleSidebar()" aria-label="Abrir menu">
-    <span></span>
-    <span></span>
-    <span></span>
-  </button>
-
-  <div class="overlay" onclick="toggleSidebar()"></div>
+  <button class="hamburger" onclick="toggleSidebar()" aria-label="Abrir menu"><span></span><span></span><span></span></button>
+  <div class="overlay" onclick="toggleSidebar(false)"></div>
 
   <aside class="sidebar" id="sidebar">
     <div class="sidebar-top">
-      <div>
-        <b>jordanwear</b>
-        <small>streetwear store</small>
-      </div>
-      <button onclick="toggleSidebar()">×</button>
+      <div><b>jordanwear</b><small>streetwear store</small></div>
+      <button onclick="toggleSidebar(false)">×</button>
     </div>
-
     <nav>
-      <button class="side-link active" onclick="goHome()">Início</button>
-      <button class="side-link" onclick="openCategoryPage('camisas')">Camisas</button>
-      <button class="side-link" onclick="openCategoryPage('calcas')">Calças</button>
-      <button class="side-link" onclick="openCategoryPage('tenis')">Tênis</button>
-      <button class="side-link" onclick="scrollToShop()">Todos os produtos</button>
+      <button class="side-link active" onclick="setCategory('all'); toggleSidebar(false); scrollToShop();">Início</button>
+      <button class="side-link" onclick="openCategory('camisa')">Camisas</button>
+      <button class="side-link" onclick="openCategory('calca')">Calças</button>
+      <button class="side-link" onclick="openCategory('tenis')">Tênis</button>
+      <button class="side-link" onclick="scrollToShop(); toggleSidebar(false);">Todos os produtos</button>
     </nav>
-
-    <div class="safe-note">
-      Pagamento via Pix. Produtos separados somente após confirmação do pagamento.
-    </div>
+    <div class="safe-note">Pagamento via Pix. O pedido é confirmado pelo backend após o pagamento.</div>
   </aside>
 
-  <!-- HEADER -->
   <header>
     <button class="header-search" onclick="focusSearch()" aria-label="Buscar">⌕</button>
-
-    <img
-      class="logo"
-      src="https://i.pinimg.com/736x/97/20/a6/9720a60b3796f5660a5e12c771775a02.jpg"
-      alt="Jordan Wear Store"
-    />
-
-    <button class="cart-btn" onclick="toggleCart()" aria-label="Abrir carrinho">
-      🛒
-      <span class="cart-count">0</span>
-    </button>
+    <img class="logo" src="https://i.pinimg.com/736x/97/20/a6/9720a60b3796f5660a5e12c771775a02.jpg" alt="Jordan Wear Store" />
+    <button class="cart-btn" onclick="toggleCart()" aria-label="Abrir carrinho">🛒<span class="cart-count">0</span></button>
   </header>
 
-  <!-- PÁGINA PRINCIPAL -->
-  <main id="app">
+  <main>
     <section class="hero">
       <div class="hero-banner">
-        <img
-          class="banner active"
-          src="https://i.pinimg.com/736x/82/21/f4/8221f40a9e4e84aec32443e0130f5cc6.jpg"
-          alt="Banner Jordan Wear Store"
-        />
-        <img
-          class="banner"
-          src="https://i.pinimg.com/736x/47/9c/46/479c46d2e3a13214638a3d80d9ef2cd3.jpg"
-          alt="Banner streetwear"
-        />
-        <img
-          class="banner"
-          src="https://i.pinimg.com/736x/55/e8/60/55e8602476052c3b9e3383840c3b3741.jpg"
-          alt="Banner roupas"
-        />
-
-        <div class="dots">
-          <button class="dot active" onclick="goBanner(0)"></button>
-          <button class="dot" onclick="goBanner(1)"></button>
-          <button class="dot" onclick="goBanner(2)"></button>
-        </div>
+        <img class="banner active" src="https://i.pinimg.com/736x/82/21/f4/8221f40a9e4e84aec32443e0130f5cc6.jpg" alt="Jordan Wear Store" />
+        <img class="banner" src="https://i.pinimg.com/736x/47/9c/46/479c46d2e3a13214638a3d80d9ef2cd3.jpg" alt="Streetwear" />
+        <img class="banner" src="https://i.pinimg.com/736x/55/e8/60/55e8602476052c3b9e3383840c3b3741.jpg" alt="Roupas" />
+        <div class="dots"><button class="dot active" onclick="goBanner(0)"></button><button class="dot" onclick="goBanner(1)"></button><button class="dot" onclick="goBanner(2)"></button></div>
       </div>
-
       <div class="hero-text">
         <span class="tag">nova coleção</span>
         <h1>jordan wear store</h1>
-        <p>
-          Loja feita pra rapaziada que quer se vestir bem sem pagar absurdo.
-          Camisas, calças e tênis selecionados no estilo streetwear.
-        </p>
-
-        <div class="hero-actions">
-          <button onclick="scrollToShop()">Ver produtos</button>
-          <button class="ghost" onclick="openCategoryPage('calcas')">Ver calças</button>
-        </div>
+        <p>Peças selecionadas no estilo streetwear. Camisas, calças e tênis com visual limpo, direto e sem enrolação.</p>
+        <div class="hero-actions"><button onclick="scrollToShop()">Ver produtos</button><button class="ghost" onclick="openCategory('calca')">Ver calças</button></div>
       </div>
     </section>
 
-    <!-- CATEGORIAS GRANDES, PARECENDO LINKS DE LOJA -->
     <section class="category-showcase">
-      <button class="category-tile category-calcas" onclick="openCategoryPage('calcas')">
-        <span>coleção</span>
-        <strong>calças</strong>
-        <small>abrir loja/produtos/calcas</small>
-      </button>
-
-      <button class="category-tile category-camisas" onclick="openCategoryPage('camisas')">
-        <span>drop</span>
-        <strong>camisas</strong>
-        <small>abrir loja/produtos/camisas</small>
-      </button>
-
-      <button class="category-tile category-tenis" onclick="openCategoryPage('tenis')">
-        <span>seleção</span>
-        <strong>tênis</strong>
-        <small>abrir loja/produtos/tenis</small>
-      </button>
+      <button class="category-tile" onclick="openCategory('calca')"><span>coleção</span><strong>calças</strong><small>produtos/calca</small></button>
+      <button class="category-tile" onclick="openCategory('camisa')"><span>drop</span><strong>camisas</strong><small>produtos/camisa</small></button>
+      <button class="category-tile" onclick="openCategory('tenis')"><span>seleção</span><strong>tênis</strong><small>produtos/tenis</small></button>
     </section>
 
-    <!-- BENEFÍCIOS -->
     <section class="features">
-      <article>
-        <div>🛒</div>
-        <h3>Frete grátis</h3>
-        <p>acima de R$ 400,00</p>
-      </article>
-
-      <article>
-        <div>💳</div>
-        <h3>Pix</h3>
-        <p>pagamento rápido e seguro</p>
-      </article>
-
-      <article>
-        <div>📦</div>
-        <h3>Envio</h3>
-        <p>pedido separado após confirmação</p>
-      </article>
-
-      <article>
-        <div>🛡️</div>
-        <h3>Loja segura</h3>
-        <p>pedido enviado direto para conferência</p>
-      </article>
+      <article><div>🚚</div><h3>Frete grátis</h3><p>acima de R$ 400,00</p></article>
+      <article><div>💳</div><h3>Pix</h3><p>pagamento rápido</p></article>
+      <article><div>📦</div><h3>Envio</h3><p>pedido separado após confirmar</p></article>
+      <article><div>🛡️</div><h3>Seguro</h3><p>dados enviados ao backend</p></article>
     </section>
 
-    <!-- LOJA -->
     <section class="shop" id="shop">
       <div class="section-head">
-        <div>
-          <span class="tag dark">produtos</span>
-          <h2>todos os produtos</h2>
-        </div>
-
+        <div><span class="tag dark">produtos</span><h2>todos os produtos</h2></div>
         <div class="api-status" id="apiStatus">conectando...</div>
       </div>
-
       <div class="tabs">
-        <button class="tab active" onclick="setCategory('all')">Todos</button>
-        <button class="tab" onclick="openCategoryPage('camisas')">Camisas</button>
-        <button class="tab" onclick="openCategoryPage('calcas')">Calças</button>
-        <button class="tab" onclick="openCategoryPage('tenis')">Tênis</button>
+        <button class="tab active" data-cat="all" onclick="setCategory('all')">Todos</button>
+        <button class="tab" data-cat="camisa" onclick="setCategory('camisa')">Camisas</button>
+        <button class="tab" data-cat="calca" onclick="setCategory('calca')">Calças</button>
+        <button class="tab" data-cat="tenis" onclick="setCategory('tenis')">Tênis</button>
       </div>
-
       <div class="filters">
-        <label class="search">
-          <span>⌕</span>
-          <input id="searchInput" type="text" placeholder="Buscar produto..." oninput="searchProducts()" />
-        </label>
-
-        <select id="sortSelect" onchange="sortProducts()">
-          <option value="default">Ordenar</option>
-          <option value="price-asc">Menor preço</option>
-          <option value="price-desc">Maior preço</option>
-          <option value="name-asc">A-Z</option>
-          <option value="stock">Mais estoque</option>
-        </select>
+        <label class="search"><span>⌕</span><input id="searchInput" type="text" placeholder="Buscar produto..." oninput="searchProducts()" /></label>
+        <select id="sortSelect" onchange="sortProducts()"><option value="default">Ordenar</option><option value="price-asc">Menor preço</option><option value="price-desc">Maior preço</option><option value="name-asc">A-Z</option><option value="stock">Mais estoque</option></select>
       </div>
-
-      <div class="grid" id="productsGrid">
-        <div class="loading">
-          <div>
-            <div class="spinner"></div>
-            <p>Carregando produtos...</p>
-          </div>
-        </div>
-      </div>
+      <div class="grid" id="productsGrid"><div class="loading"><div><div class="spinner"></div><p>Carregando produtos...</p></div></div></div>
     </section>
   </main>
 
-  <!-- CARRINHO -->
   <aside class="cart" id="cart">
-    <div class="cart-head">
-      <h3>Meu carrinho</h3>
-      <button onclick="toggleCart()">×</button>
-    </div>
-
-    <div class="cart-items" id="cartItems">
-      <div class="empty-cart">
-        <div>🛍️</div>
-        <p>Carrinho vazio</p>
-      </div>
-    </div>
-
+    <div class="cart-head"><h3>Meu carrinho</h3><button onclick="toggleCart()">×</button></div>
+    <div class="cart-items" id="cartItems"><div class="empty-cart"><div>🛍️</div><p>Carrinho vazio</p></div></div>
     <div class="cart-footer">
-      <div class="cart-summary" id="cartSummary" style="display:none">
-        <div>
-          <span>Subtotal</span>
-          <strong id="cartSubtotal">R$ 0,00</strong>
-        </div>
-
-        <div>
-          <span>Frete</span>
-          <strong id="cartFrete">R$ 9,90</strong>
-        </div>
-
-        <div class="total">
-          <span>Total</span>
-          <strong id="cartTotal">R$ 0,00</strong>
-        </div>
-      </div>
-
-      <button class="checkout" id="checkoutBtn" style="display:none" onclick="openCheckout()">
-        Finalizar compra
-      </button>
-
-      <button class="clear" id="clearCartBtn" style="display:none" onclick="clearCart()">
-        Limpar carrinho
-      </button>
+      <div class="cart-summary" id="cartSummary" style="display:none"><div><span>Subtotal</span><strong id="cartSubtotal">R$ 0,00</strong></div><div><span>Frete</span><strong id="cartFrete">R$ 9,90</strong></div><div class="total"><span>Total</span><strong id="cartTotal">R$ 0,00</strong></div></div>
+      <button class="checkout" id="checkoutBtn" style="display:none" onclick="openCheckout()">Finalizar compra</button>
+      <button class="clear" id="clearCartBtn" style="display:none" onclick="clearCart()">Limpar carrinho</button>
     </div>
   </aside>
 
-  <!-- MODAL CHECKOUT -->
-  <section class="modal" id="checkoutModal">
-    <div class="modal-card">
-      <div class="modal-head">
-        <h3>Finalizar pedido</h3>
-        <button onclick="closeCheckout()">×</button>
-      </div>
+  <section class="modal" id="checkoutModal"><div class="modal-card"><div class="modal-head"><h3>Finalizar pedido</h3><button onclick="closeCheckout()">×</button></div><div class="modal-body" id="checkoutBody"></div></div></section>
+  <section class="modal" id="pixModal"><div class="modal-card"><div class="modal-head"><h3>Pagamento Pix</h3><button onclick="closePix()">×</button></div><div class="pix-box" id="pixBody"></div></div></section>
 
-      <div class="modal-body" id="checkoutBody"></div>
-    </div>
-  </section>
+  <footer><b>jordan<span>wear</span></b><p>Streetwear selecionado. Pedidos via Pix. Atendimento pelo WhatsApp.</p></footer>
 
-  <!-- MODAL PIX -->
-  <section class="modal" id="pixModal">
-    <div class="modal-card">
-      <div class="modal-head">
-        <h3>Pagamento Pix</h3>
-        <button onclick="closePix()">×</button>
-      </div>
+<script>
+const API_URL = "https://jordan-store-backend.onrender.com";
+let produtos = [];
+let carrinho = JSON.parse(localStorage.getItem("jws_cart") || "[]");
+let currentCategory = "all";
+let currentBanner = 0;
 
-      <div class="pix-box" id="pixBody"></div>
-    </div>
-  </section>
+document.addEventListener("DOMContentLoaded", () => { carregarProdutos(); updateCart(); startBanner(); });
 
-  <!-- MODAL DETALHES -->
-  <section class="modal" id="detailsModal">
-    <div class="modal-card">
-      <div class="modal-head">
-        <h3>Produto</h3>
-        <button onclick="closeDetails()">×</button>
-      </div>
+function normalizarCategoria(categoria) {
+  const c = String(categoria || "").toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").trim();
+  if (c.includes("camisa") || c.includes("camiseta")) return "camisa";
+  if (c.includes("calca")) return "calca";
+  if (c.includes("tenis") || c.includes("sapato")) return "tenis";
+  return c || "camisa";
+}
+function money(value) { return Number(value || 0).toFixed(2).replace(".", ","); }
 
-      <div class="modal-body" id="detailsBody"></div>
-    </div>
-  </section>
-
-  <footer>
-    <b>jordan<span>wear</span></b>
-    <p>Streetwear selecionado. Pedidos via Pix. Atendimento pelo WhatsApp.</p>
-  </footer>
-
-  <script>
-    const API_URL = "https://jordan-store-backend.onrender.com";
-
-    let produtos = [];
-    let carrinho = JSON.parse(localStorage.getItem("jws_cart") || "[]");
-    let currentCategory = "all";
-    let currentBanner = 0;
-
-    const categoriaNomes = {
-      all: "todos os produtos",
-      camisas: "camisas",
-      calcas: "calças",
-      tenis: "tênis"
-    };
-
-    const categoriaTexto = {
-      camisas: "Peças selecionadas para montar o kit no estilo streetwear.",
-      calcas: "Calças para completar o outfit, com foco em visual pesado e confortável.",
-      tenis: "Tênis para fechar o kit com presença."
-    };
-
-    document.addEventListener("DOMContentLoaded", () => {
-      carregarProdutos();
-      updateCart();
-      startBanner();
-      handleRoute();
-      window.addEventListener("hashchange", handleRoute);
-    });
-
-    async function carregarProdutos() {
-      const status = document.getElementById("apiStatus");
-
-      try {
-        const res = await fetch(`${API_URL}/api/produtos`);
-        const data = await res.json();
-
-        produtos = Array.isArray(data) ? data : data.produtos || [];
-
-        produtos = produtos.map(p => ({
-          ...p,
-          preco: Number(p.preco || 0),
-          estoque: Number(p.estoque || 0),
-          imagens: p.imagens || []
-        }));
-
-        status.textContent = "online";
-        status.className = "api-status ok";
-
-        renderProducts();
-      } catch (err) {
-        console.error(err);
-        status.textContent = "erro na api";
-        status.className = "api-status err";
-
-        document.getElementById("productsGrid").innerHTML = `
-          <div class="loading">
-            <div>
-              <p>Não foi possível carregar os produtos.</p>
-              <button class="submit" onclick="carregarProdutos()">Tentar novamente</button>
-            </div>
-          </div>
-        `;
-      }
-    }
-
-    function handleRoute() {
-      const hash = location.hash.replace("#", "");
-
-      if (hash.startsWith("/loja/produtos/")) {
-        const cat = hash.split("/").pop();
-        if (["camisas", "calcas", "tenis"].includes(cat)) {
-          renderCategoryPage(cat);
-          return;
-        }
-      }
-
-      renderHome();
-    }
-
-    function renderHome() {
-      document.body.classList.remove("category-mode");
-
-      const app = document.getElementById("app");
-      const home = document.querySelector(".hero");
-
-      if (home) return;
-
-      location.reload();
-    }
-
-    function openCategoryPage(category) {
-      location.hash = `/loja/produtos/${category}`;
-      toggleSidebar(false);
-      window.scrollTo({ top: 0, behavior: "smooth" });
-    }
-
-    function renderCategoryPage(category) {
-      currentCategory = category;
-      document.body.classList.add("category-mode");
-
-      const nome = categoriaNomes[category];
-      const texto = categoriaTexto[category];
-
-      document.getElementById("app").innerHTML = `
-        <section class="category-page">
-          <div class="category-hero">
-            <button class="back-btn" onclick="goHome()">← voltar</button>
-            <span class="tag">loja/produtos/${category}</span>
-            <h1>${nome}</h1>
-            <p>${texto}</p>
-          </div>
-
-          <section class="shop category-shop" id="shop">
-            <div class="section-head">
-              <div>
-                <span class="tag dark">coleção</span>
-                <h2>${nome}</h2>
-              </div>
-
-              <div class="api-status ok">online</div>
-            </div>
-
-            <div class="tabs">
-              <button class="tab ${category === "camisas" ? "active" : ""}" onclick="openCategoryPage('camisas')">Camisas</button>
-              <button class="tab ${category === "calcas" ? "active" : ""}" onclick="openCategoryPage('calcas')">Calças</button>
-              <button class="tab ${category === "tenis" ? "active" : ""}" onclick="openCategoryPage('tenis')">Tênis</button>
-              <button class="tab" onclick="goHome()">Início</button>
-            </div>
-
-            <div class="filters">
-              <label class="search">
-                <span>⌕</span>
-                <input id="searchInput" type="text" placeholder="Buscar em ${nome}..." oninput="searchProducts()" />
-              </label>
-
-              <select id="sortSelect" onchange="sortProducts()">
-                <option value="default">Ordenar</option>
-                <option value="price-asc">Menor preço</option>
-                <option value="price-desc">Maior preço</option>
-                <option value="name-asc">A-Z</option>
-                <option value="stock">Mais estoque</option>
-              </select>
-            </div>
-
-            <div class="grid" id="productsGrid"></div>
-          </section>
-        </section>
-      `;
-
+async function carregarProdutos() {
+  const status = document.getElementById("apiStatus");
+  const grid = document.getElementById("productsGrid");
+  try {
+    const res = await fetch(`${API_URL}/api/produtos`);
+    if (!res.ok) throw new Error(`Erro ${res.status}`);
+    const data = await res.json();
+    produtos = Array.isArray(data) ? data : data.produtos || [];
+    produtos = produtos.map(p => ({ ...p, categoria: normalizarCategoria(p.categoria), preco: Number(p.preco || 0), estoque: Number(p.estoque || 0), imagens: p.imagens || [] }));
+    status.textContent = `online • ${produtos.length} produtos`;
+    status.className = "api-status ok";
+    renderProducts();
+  } catch (err) {
+    console.warn("Backend falhou, tentando produtos.json", err);
+    try {
+      const resLocal = await fetch("produtos.json");
+      const dataLocal = await resLocal.json();
+      produtos = Array.isArray(dataLocal) ? dataLocal : dataLocal.produtos || [];
+      produtos = produtos.map(p => ({ ...p, categoria: normalizarCategoria(p.categoria), preco: Number(p.preco || 0), estoque: Number(p.estoque || 0), imagens: p.imagens || [] }));
+      status.textContent = `local • ${produtos.length} produtos`;
+      status.className = "api-status ok";
       renderProducts();
+    } catch (errLocal) {
+      status.textContent = "erro na api";
+      status.className = "api-status err";
+      grid.innerHTML = `<div class="loading"><div><p><b>Não foi possível carregar os produtos.</b></p><p style="margin-top:8px;color:#777;font-size:13px">Confira o backend ou produtos.json.</p><button class="submit" onclick="carregarProdutos()">Tentar novamente</button></div></div>`;
     }
-
-    function goHome() {
-      location.hash = "";
-      location.reload();
-    }
-
-    function scrollToShop() {
-      document.getElementById("shop")?.scrollIntoView({ behavior: "smooth" });
-      toggleSidebar(false);
-    }
-
-    function setCategory(category) {
-      currentCategory = category;
-
-      document.querySelectorAll(".tab").forEach(btn => btn.classList.remove("active"));
-      event?.target?.classList.add("active");
-
-      renderProducts();
-    }
-
-    function renderProducts(list = null) {
-      const grid = document.getElementById("productsGrid");
-      if (!grid) return;
-
-      let arr = list || produtos;
-
-      if (currentCategory !== "all") {
-        arr = arr.filter(p => p.categoria === currentCategory);
-      }
-
-      if (!arr.length) {
-        grid.innerHTML = `
-          <div class="loading">
-            <p>Nenhum produto encontrado.</p>
-          </div>
-        `;
-        return;
-      }
-
-      grid.innerHTML = arr.map(p => {
-        const stockClass =
-          p.estoque <= 0 ? "stock-out" :
-          p.estoque <= 3 ? "stock-low" :
-          p.estoque <= 10 ? "stock-medium" : "stock-high";
-
-        const stockText =
-          p.estoque <= 0 ? "esgotado" :
-          p.estoque <= 3 ? `últimas ${p.estoque}` :
-          p.estoque <= 10 ? "estoque baixo" : "em estoque";
-
-        return `
-          <article class="product-card">
-            ${p.estoque > 0 && p.estoque <= 3 ? `<span class="product-badge">últimas</span>` : ""}
-
-            <div class="product-image-container" onclick="showDetails('${p.id}')">
-              <img
-                class="product-image"
-                src="${p.imagem || "https://via.placeholder.com/600"}"
-                alt="${p.nome}"
-                loading="lazy"
-                onerror="this.src='https://via.placeholder.com/600'"
-              />
-            </div>
-
-            <div class="product-info">
-              <h3 class="product-name">${p.nome}</h3>
-              <div class="product-price">R$ ${money(p.preco)}</div>
-              <div class="stock-info ${stockClass}">${stockText}</div>
-
-              <div class="product-buttons">
-                ${
-                  p.estoque > 0
-                    ? `<button class="product-btn buy-btn" onclick="addToCart('${p.id}')">Comprar</button>`
-                    : `<button class="product-btn disabled-btn" disabled>Esgotado</button>`
-                }
-                <button class="product-btn details-btn" onclick="showDetails('${p.id}')">Detalhes</button>
-              </div>
-            </div>
-          </article>
-        `;
-      }).join("");
-    }
-
-    function searchProducts() {
-      const term = document.getElementById("searchInput")?.value.toLowerCase() || "";
-
-      let arr = produtos;
-
-      if (currentCategory !== "all") {
-        arr = arr.filter(p => p.categoria === currentCategory);
-      }
-
-      if (term) {
-        arr = arr.filter(p =>
-          p.nome?.toLowerCase().includes(term) ||
-          p.descricao?.toLowerCase().includes(term)
-        );
-      }
-
-      renderProducts(arr);
-    }
-
-    function sortProducts() {
-      const value = document.getElementById("sortSelect")?.value;
-
-      let arr = produtos.filter(p => currentCategory === "all" || p.categoria === currentCategory);
-
-      if (value === "price-asc") arr.sort((a, b) => a.preco - b.preco);
-      if (value === "price-desc") arr.sort((a, b) => b.preco - a.preco);
-      if (value === "name-asc") arr.sort((a, b) => a.nome.localeCompare(b.nome));
-      if (value === "stock") arr.sort((a, b) => b.estoque - a.estoque);
-
-      renderProducts(arr);
-    }
-
-    function addToCart(id) {
-      const produto = produtos.find(p => p.id === id);
-      if (!produto || produto.estoque <= 0) return notify("Produto indisponível", "error");
-
-      const item = carrinho.find(i => i.id === id);
-
-      if (item) {
-        if (item.quantidade >= produto.estoque) {
-          return notify("Quantidade máxima em estoque", "warning");
-        }
-
-        item.quantidade++;
-      } else {
-        carrinho.push({
-          id: produto.id,
-          nome: produto.nome,
-          preco: produto.preco,
-          imagem: produto.imagem,
-          quantidade: 1
-        });
-      }
-
-      saveCart();
-      updateCart();
-      notify("Produto adicionado ao carrinho", "success");
-    }
-
-    function updateCart() {
-      const count = carrinho.reduce((s, i) => s + i.quantidade, 0);
-      document.querySelector(".cart-count").textContent = count;
-
-      const items = document.getElementById("cartItems");
-      const summary = document.getElementById("cartSummary");
-      const checkout = document.getElementById("checkoutBtn");
-      const clear = document.getElementById("clearCartBtn");
-
-      if (!carrinho.length) {
-        items.innerHTML = `
-          <div class="empty-cart">
-            <div>🛍️</div>
-            <p>Carrinho vazio</p>
-          </div>
-        `;
-
-        summary.style.display = "none";
-        checkout.style.display = "none";
-        clear.style.display = "none";
-        return;
-      }
-
-      summary.style.display = "grid";
-      checkout.style.display = "block";
-      clear.style.display = "block";
-
-      items.innerHTML = carrinho.map(item => `
-        <div class="cart-item">
-          <img class="cart-item-image" src="${item.imagem}" onerror="this.src='https://via.placeholder.com/200'" />
-
-          <div>
-            <div class="cart-item-name">${item.nome}</div>
-            <div class="cart-item-price">R$ ${money(item.preco * item.quantidade)}</div>
-
-            <div class="cart-item-actions">
-              <div class="quantity-control">
-                <button class="quantity-btn" onclick="changeQty('${item.id}', -1)">-</button>
-                <span>${item.quantidade}</span>
-                <button class="quantity-btn" onclick="changeQty('${item.id}', 1)">+</button>
-              </div>
-
-              <button class="remove-item" onclick="removeItem('${item.id}')">remover</button>
-            </div>
-          </div>
-        </div>
-      `).join("");
-
-      const subtotal = carrinho.reduce((s, i) => s + i.preco * i.quantidade, 0);
-      const frete = subtotal >= 400 ? 0 : 9.9;
-
-      document.getElementById("cartSubtotal").textContent = `R$ ${money(subtotal)}`;
-      document.getElementById("cartFrete").textContent = frete === 0 ? "Grátis" : `R$ ${money(frete)}`;
-      document.getElementById("cartTotal").textContent = `R$ ${money(subtotal + frete)}`;
-    }
-
-    function changeQty(id, amount) {
-      const item = carrinho.find(i => i.id === id);
-      const produto = produtos.find(p => p.id === id);
-      if (!item || !produto) return;
-
-      const nova = item.quantidade + amount;
-
-      if (nova <= 0) {
-        removeItem(id);
-        return;
-      }
-
-      if (nova > produto.estoque) {
-        return notify("Estoque insuficiente", "warning");
-      }
-
-      item.quantidade = nova;
-      saveCart();
-      updateCart();
-    }
-
-    function removeItem(id) {
-      carrinho = carrinho.filter(i => i.id !== id);
-      saveCart();
-      updateCart();
-    }
-
-    function clearCart() {
-      carrinho = [];
-      saveCart();
-      updateCart();
-    }
-
-    function saveCart() {
-      localStorage.setItem("jws_cart", JSON.stringify(carrinho));
-    }
-
-    function toggleCart() {
-      document.getElementById("cart").classList.toggle("active");
-    }
-
-    function openCheckout() {
-      if (!carrinho.length) return;
-
-      const subtotal = carrinho.reduce((s, i) => s + i.preco * i.quantidade, 0);
-      const frete = subtotal >= 400 ? 0 : 9.9;
-      const total = subtotal + frete;
-
-      document.getElementById("checkoutBody").innerHTML = `
-        <form onsubmit="criarPix(event)">
-          <div class="form-group">
-            <label>Nome completo *</label>
-            <input id="nome" required />
-          </div>
-
-          <div class="form-group">
-            <label>WhatsApp *</label>
-            <input id="telefone" required />
-          </div>
-
-          <div class="form-group">
-            <label>E-mail *</label>
-            <input id="email" type="email" required />
-          </div>
-
-          <div class="form-group">
-            <label>Endereço *</label>
-            <textarea id="endereco" required placeholder="Rua, número, bairro, cidade, CEP"></textarea>
-          </div>
-
-          <div class="order-summary">
-            ${carrinho.map(i => `
-              <div class="order-item">
-                <span>${i.nome} x${i.quantidade}</span>
-                <strong>R$ ${money(i.preco * i.quantidade)}</strong>
-              </div>
-            `).join("")}
-
-            <div class="order-item">
-              <span>Frete</span>
-              <strong>${frete === 0 ? "Grátis" : `R$ ${money(frete)}`}</strong>
-            </div>
-
-            <div class="order-total">
-              <span>Total</span>
-              <strong>R$ ${money(total)}</strong>
-            </div>
-          </div>
-
-          <button class="submit" type="submit">Gerar Pix</button>
-        </form>
-      `;
-
-      document.getElementById("checkoutModal").classList.add("active");
-    }
-
-    function closeCheckout() {
-      document.getElementById("checkoutModal").classList.remove("active");
-    }
-
-    async function criarPix(event) {
-      event.preventDefault();
-
-      const cliente = {
-        nome: document.getElementById("nome").value,
-        telefone: document.getElementById("telefone").value,
-        email: document.getElementById("email").value,
-        endereco: document.getElementById("endereco").value
-      };
-
-      const itens = carrinho.map(i => ({
-        id: i.id,
-        quantidade: i.quantidade
-      }));
-
-      try {
-        const res = await fetch(`${API_URL}/api/criar-pix`, {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ cliente, itens })
-        });
-
-        const data = await res.json();
-
-        if (!data.ok) {
-          notify(data.erro || "Erro ao gerar Pix", "error");
-          return;
-        }
-
-        closeCheckout();
-        showPix(data);
-      } catch (err) {
-        console.error(err);
-        notify("Erro ao conectar com o backend", "error");
-      }
-    }
-
-    function showPix(data) {
-      document.getElementById("pixBody").innerHTML = `
-        <h2>Pix gerado</h2>
-        <p>Pedido: <b>${data.pedidoId}</b></p>
-        <p>Total: <b>R$ ${money(data.total)}</b></p>
-
-        ${
-          data.qrCodeBase64
-            ? `<img src="data:image/png;base64,${data.qrCodeBase64}" alt="QR Code Pix" />`
-            : ""
-        }
-
-        <textarea readonly>${data.qrCode || data.pixChave || ""}</textarea>
-
-        <button class="copy" onclick="copyPix('${data.qrCode || data.pixChave || ""}')">
-          Copiar Pix
-        </button>
-
-        <p style="margin-top:12px;color:#777;font-size:13px">
-          Após o pagamento, o pedido será confirmado pelo sistema.
-        </p>
-
-        <button class="close-light" onclick="closePix()">Fechar</button>
-      `;
-
-      document.getElementById("pixModal").classList.add("active");
-    }
-
-    function closePix() {
-      document.getElementById("pixModal").classList.remove("active");
-    }
-
-    function copyPix(text) {
-      navigator.clipboard.writeText(text);
-      notify("Pix copiado", "success");
-    }
-
-    function showDetails(id) {
-      const p = produtos.find(prod => prod.id === id);
-      if (!p) return;
-
-      document.getElementById("detailsBody").innerHTML = `
-        <img
-          src="${p.imagem}"
-          style="width:100%;aspect-ratio:3/4;object-fit:cover;background:#eee;margin-bottom:16px"
-          onerror="this.src='https://via.placeholder.com/600'"
-        />
-
-        <h2 style="text-transform:uppercase">${p.nome}</h2>
-        <p style="font-size:22px;font-weight:800;margin:10px 0">R$ ${money(p.preco)}</p>
-        <p style="color:#666;line-height:1.6">${p.descricao || "Sem descrição."}</p>
-        <p style="margin:12px 0"><b>Estoque:</b> ${p.estoque}</p>
-
-        ${
-          p.estoque > 0
-            ? `<button class="submit" onclick="addToCart('${p.id}'); closeDetails()">Adicionar ao carrinho</button>`
-            : `<button class="clear" disabled>Produto esgotado</button>`
-        }
-      `;
-
-      document.getElementById("detailsModal").classList.add("active");
-    }
-
-    function closeDetails() {
-      document.getElementById("detailsModal").classList.remove("active");
-    }
-
-    function toggleSidebar(force) {
-      const sidebar = document.getElementById("sidebar");
-      const overlay = document.querySelector(".overlay");
-
-      if (force === false) {
-        sidebar.classList.remove("active");
-        overlay.classList.remove("active");
-        return;
-      }
-
-      sidebar.classList.toggle("active");
-      overlay.classList.toggle("active");
-    }
-
-    function focusSearch() {
-      const input = document.getElementById("searchInput");
-      if (input) {
-        input.focus();
-        document.getElementById("shop")?.scrollIntoView({ behavior: "smooth" });
-      }
-    }
-
-    function startBanner() {
-      setInterval(() => {
-        const banners = document.querySelectorAll(".banner");
-        const dots = document.querySelectorAll(".dot");
-
-        if (!banners.length) return;
-
-        currentBanner = (currentBanner + 1) % banners.length;
-
-        banners.forEach((b, i) => b.classList.toggle("active", i === currentBanner));
-        dots.forEach((d, i) => d.classList.toggle("active", i === currentBanner));
-      }, 5000);
-    }
-
-    function goBanner(index) {
-      currentBanner = index;
-
-      document.querySelectorAll(".banner").forEach((b, i) => b.classList.toggle("active", i === index));
-      document.querySelectorAll(".dot").forEach((d, i) => d.classList.toggle("active", i === index));
-    }
-
-    function notify(text, type = "success") {
-      const n = document.createElement("div");
-      n.className = `notification ${type}`;
-      n.textContent = text;
-      document.body.appendChild(n);
-
-      setTimeout(() => n.remove(), 3100);
-    }
-
-    function money(value) {
-      return Number(value || 0).toFixed(2).replace(".", ",");
-    }
-  </script>
+  }
+}
+
+function abrirProduto(id, categoria) {
+  const pasta = normalizarCategoria(categoria);
+  location.href = `produtos/${pasta}/?id=${encodeURIComponent(id)}`;
+}
+function openCategory(category) { location.href = `produtos/${normalizarCategoria(category)}/`; }
+function scrollToShop() { document.getElementById("shop")?.scrollIntoView({ behavior: "smooth" }); }
+function focusSearch() { scrollToShop(); setTimeout(() => document.getElementById("searchInput")?.focus(), 350); }
+
+function setCategory(category) {
+  currentCategory = normalizarCategoria(category) === "camisa" || normalizarCategoria(category) === "calca" || normalizarCategoria(category) === "tenis" ? normalizarCategoria(category) : "all";
+  document.querySelectorAll(".tab").forEach(btn => btn.classList.toggle("active", btn.dataset.cat === currentCategory));
+  renderProducts();
+}
+
+function renderProducts(list = null) {
+  const grid = document.getElementById("productsGrid");
+  if (!grid) return;
+  let arr = list || produtos;
+  if (currentCategory !== "all") arr = arr.filter(p => normalizarCategoria(p.categoria) === currentCategory);
+  if (!arr.length) {
+    grid.innerHTML = `<div class="loading"><div><p><b>Nenhum produto encontrado.</b></p><p style="margin-top:8px;color:#777;font-size:13px">Categoria atual: ${currentCategory}<br>Produtos carregados: ${produtos.length}</p><button class="submit" onclick="setCategory('all')">Ver todos</button></div></div>`;
+    return;
+  }
+  grid.innerHTML = arr.map(p => {
+    const cat = normalizarCategoria(p.categoria);
+    const stockClass = p.estoque <= 0 ? "stock-out" : p.estoque <= 3 ? "stock-low" : p.estoque <= 10 ? "stock-medium" : "stock-high";
+    const stockText = p.estoque <= 0 ? "esgotado" : p.estoque <= 3 ? `últimas ${p.estoque}` : p.estoque <= 10 ? "estoque baixo" : "em estoque";
+    return `<article class="product-card">${p.estoque > 0 && p.estoque <= 3 ? `<span class="product-badge">últimas</span>` : ""}<div class="product-image-container" onclick="abrirProduto('${String(p.id).replaceAll("'", "")}', '${cat}')"><img class="product-image" src="${p.imagem || "https://via.placeholder.com/600"}" alt="${p.nome || "Produto"}" loading="lazy" onerror="this.src='https://via.placeholder.com/600'" /></div><div class="product-info"><h3 class="product-name" onclick="abrirProduto('${String(p.id).replaceAll("'", "")}', '${cat}')">${p.nome || "Produto sem nome"}</h3><div class="product-price">R$ ${money(p.preco)}</div><div class="stock-info ${stockClass}">${stockText}</div><div class="product-buttons"><button class="product-btn details-btn" onclick="abrirProduto('${String(p.id).replaceAll("'", "")}', '${cat}')">Ver produto</button>${p.estoque > 0 ? `<button class="product-btn buy-btn" onclick="addToCart('${String(p.id).replaceAll("'", "")}')">Comprar</button>` : `<button class="product-btn disabled-btn" disabled>Esgotado</button>`}</div></div></article>`;
+  }).join("");
+}
+
+function searchProducts() {
+  const term = document.getElementById("searchInput")?.value.toLowerCase() || "";
+  let arr = produtos.filter(p => currentCategory === "all" || normalizarCategoria(p.categoria) === currentCategory);
+  if (term) arr = arr.filter(p => String(p.nome || "").toLowerCase().includes(term) || String(p.descricao || "").toLowerCase().includes(term));
+  renderProducts(arr);
+}
+function sortProducts() {
+  const value = document.getElementById("sortSelect")?.value;
+  let arr = produtos.filter(p => currentCategory === "all" || normalizarCategoria(p.categoria) === currentCategory);
+  if (value === "price-asc") arr.sort((a,b) => a.preco - b.preco);
+  if (value === "price-desc") arr.sort((a,b) => b.preco - a.preco);
+  if (value === "name-asc") arr.sort((a,b) => String(a.nome || "").localeCompare(String(b.nome || "")));
+  if (value === "stock") arr.sort((a,b) => b.estoque - a.estoque);
+  renderProducts(arr);
+}
+
+function addToCart(id) {
+  const produto = produtos.find(p => String(p.id) === String(id));
+  if (!produto || produto.estoque <= 0) return notify("Produto indisponível", "error");
+  const item = carrinho.find(i => String(i.id) === String(id));
+  if (item) {
+    if (item.quantidade >= produto.estoque) return notify("Quantidade máxima em estoque", "warning");
+    item.quantidade++;
+  } else {
+    carrinho.push({ id: produto.id, nome: produto.nome, preco: produto.preco, imagem: produto.imagem, quantidade: 1 });
+  }
+  saveCart(); updateCart(); notify("Produto adicionado", "success");
+}
+function updateCart() {
+  const count = carrinho.reduce((s,i) => s + i.quantidade, 0);
+  document.querySelector(".cart-count").textContent = count;
+  const items = document.getElementById("cartItems");
+  const summary = document.getElementById("cartSummary");
+  const checkout = document.getElementById("checkoutBtn");
+  const clear = document.getElementById("clearCartBtn");
+  if (!carrinho.length) { items.innerHTML = `<div class="empty-cart"><div>🛍️</div><p>Carrinho vazio</p></div>`; summary.style.display = "none"; checkout.style.display = "none"; clear.style.display = "none"; return; }
+  summary.style.display = "grid"; checkout.style.display = "block"; clear.style.display = "block";
+  items.innerHTML = carrinho.map(item => `<div class="cart-item"><img class="cart-item-image" src="${item.imagem || "https://via.placeholder.com/200"}" onerror="this.src='https://via.placeholder.com/200'" /><div><div class="cart-item-name">${item.nome}</div><div class="cart-item-price">R$ ${money(item.preco * item.quantidade)}</div><div class="cart-item-actions"><div class="quantity-control"><button class="quantity-btn" onclick="changeQty('${item.id}', -1)">-</button><span>${item.quantidade}</span><button class="quantity-btn" onclick="changeQty('${item.id}', 1)">+</button></div><button class="remove-item" onclick="removeItem('${item.id}')">remover</button></div></div></div>`).join("");
+  const subtotal = carrinho.reduce((s,i) => s + i.preco * i.quantidade, 0);
+  const frete = subtotal >= 400 ? 0 : 9.9;
+  document.getElementById("cartSubtotal").textContent = `R$ ${money(subtotal)}`;
+  document.getElementById("cartFrete").textContent = frete === 0 ? "Grátis" : `R$ ${money(frete)}`;
+  document.getElementById("cartTotal").textContent = `R$ ${money(subtotal + frete)}`;
+}
+function changeQty(id, amount) { const item = carrinho.find(i => String(i.id) === String(id)); const produto = produtos.find(p => String(p.id) === String(id)); if (!item) return; const nova = item.quantidade + amount; if (nova <= 0) return removeItem(id); if (produto && nova > produto.estoque) return notify("Estoque insuficiente", "warning"); item.quantidade = nova; saveCart(); updateCart(); }
+function removeItem(id) { carrinho = carrinho.filter(i => String(i.id) !== String(id)); saveCart(); updateCart(); }
+function clearCart() { carrinho = []; saveCart(); updateCart(); }
+function saveCart() { localStorage.setItem("jws_cart", JSON.stringify(carrinho)); }
+function toggleCart() { document.getElementById("cart").classList.toggle("active"); }
+
+function openCheckout() {
+  if (!carrinho.length) return;
+  const subtotal = carrinho.reduce((s,i) => s + i.preco * i.quantidade, 0);
+  const frete = subtotal >= 400 ? 0 : 9.9;
+  const total = subtotal + frete;
+  document.getElementById("checkoutBody").innerHTML = `<form onsubmit="criarPix(event)"><div class="form-group"><label>Nome completo *</label><input id="nome" required /></div><div class="form-group"><label>WhatsApp *</label><input id="telefone" required /></div><div class="form-group"><label>E-mail *</label><input id="email" type="email" required /></div><div class="form-group"><label>Endereço *</label><textarea id="endereco" required placeholder="Rua, número, bairro, cidade, CEP"></textarea></div><div class="order-summary">${carrinho.map(i => `<div class="order-item"><span>${i.nome} x${i.quantidade}</span><strong>R$ ${money(i.preco * i.quantidade)}</strong></div>`).join("")}<div class="order-item"><span>Frete</span><strong>${frete === 0 ? "Grátis" : `R$ ${money(frete)}`}</strong></div><div class="order-total"><span>Total</span><strong>R$ ${money(total)}</strong></div></div><button class="submit" type="submit">Gerar Pix</button></form>`;
+  document.getElementById("checkoutModal").classList.add("active");
+}
+function closeCheckout() { document.getElementById("checkoutModal").classList.remove("active"); }
+async function criarPix(event) {
+  event.preventDefault();
+  const cliente = { nome: document.getElementById("nome").value, telefone: document.getElementById("telefone").value, email: document.getElementById("email").value, endereco: document.getElementById("endereco").value };
+  const itens = carrinho.map(i => ({ id: i.id, quantidade: i.quantidade }));
+  try {
+    const res = await fetch(`${API_URL}/api/criar-pix`, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ cliente, itens }) });
+    const data = await res.json();
+    if (!data.ok) return notify(data.erro || "Erro ao gerar Pix", "error");
+    closeCheckout(); showPix(data);
+  } catch (err) { notify("Erro ao conectar com o backend", "error"); }
+}
+function showPix(data) {
+  const pixText = data.qrCode || data.pixChave || "";
+  document.getElementById("pixBody").innerHTML = `<h2>Pix gerado</h2><p>Pedido: <b>${data.pedidoId || "Pedido"}</b></p><p>Total: <b>R$ ${money(data.total)}</b></p>${data.qrCodeBase64 ? `<img src="data:image/png;base64,${data.qrCodeBase64}" alt="QR Code Pix" />` : ""}<textarea readonly>${pixText}</textarea><button class="copy" onclick="copyPix()">Copiar Pix</button><p style="margin-top:12px;color:#777;font-size:13px">Após o pagamento, o pedido será confirmado.</p><button class="close-light" onclick="closePix()">Fechar</button>`;
+  window.__pixText = pixText;
+  document.getElementById("pixModal").classList.add("active");
+}
+function closePix() { document.getElementById("pixModal").classList.remove("active"); }
+function copyPix() { navigator.clipboard.writeText(window.__pixText || ""); notify("Pix copiado", "success"); }
+
+function toggleSidebar(force) { const sidebar = document.getElementById("sidebar"); const overlay = document.querySelector(".overlay"); if (force === false) { sidebar.classList.remove("active"); overlay.classList.remove("active"); return; } sidebar.classList.toggle("active"); overlay.classList.toggle("active"); }
+function startBanner() { setInterval(() => { const banners = document.querySelectorAll(".banner"); const dots = document.querySelectorAll(".dot"); if (!banners.length) return; currentBanner = (currentBanner + 1) % banners.length; banners.forEach((b,i) => b.classList.toggle("active", i === currentBanner)); dots.forEach((d,i) => d.classList.toggle("active", i === currentBanner)); }, 5000); }
+function goBanner(index) { currentBanner = index; document.querySelectorAll(".banner").forEach((b,i) => b.classList.toggle("active", i === index)); document.querySelectorAll(".dot").forEach((d,i) => d.classList.toggle("active", i === index)); }
+function notify(text, type = "success") { const n = document.createElement("div"); n.className = `notification ${type}`; n.textContent = text; document.body.appendChild(n); setTimeout(() => n.remove(), 3100); }
+</script>
 </body>
 </html>

@@ -166,16 +166,60 @@
         .replaceAll('"', "&quot;");
     }
 
-    function getEstoqueTamanhos(produto) {
-      const estoque = produto.estoqueTamanhos || produto.estoque_tamanhos || produto.estoques || {};
+    function parseEstoqueTextoFlex(texto) {
+      const obj = {};
+      const raw = String(texto || "").trim();
+      if (!raw) return obj;
 
-      if (estoque && typeof estoque === "object" && !Array.isArray(estoque) && Object.keys(estoque).length > 0) {
-        const limpo = {};
-        Object.entries(estoque).forEach(([tamanho, quantidade]) => {
-          const tam = String(tamanho || "").trim().toUpperCase();
-          if (tam) limpo[tam] = Number(quantidade || 0);
-        });
-        return limpo;
+      const regex = /([^:\n,;]+?)\s*:\s*(-?\d+(?:[\.,]\d+)?)/g;
+      let match;
+
+      while ((match = regex.exec(raw)) !== null) {
+        const tamanho = String(match[1] || "").trim().toUpperCase();
+        const quantidade = Number(String(match[2] || "0").replace(",", "."));
+        if (tamanho) obj[tamanho] = Math.max(0, Math.floor(quantidade || 0));
+      }
+
+      return obj;
+    }
+
+    function getEstoqueTamanhos(produto) {
+      const fontes = [
+        produto.estoqueTamanhos,
+        produto.estoque_tamanhos,
+        produto.estoquePorTamanho,
+        produto.estoque_por_tamanho,
+        produto.estoques
+      ];
+
+      for (const fonte of fontes) {
+        if (!fonte) continue;
+
+        if (typeof fonte === "string") {
+          const parsed = parseEstoqueTextoFlex(fonte);
+          if (Object.keys(parsed).length > 0) return parsed;
+        }
+
+        if (Array.isArray(fonte)) {
+          const obj = {};
+          fonte.forEach(item => {
+            if (!item) return;
+            const tamanho = String(item.tamanho || item.nome || item.size || "").trim().toUpperCase();
+            const quantidade = Number(item.quantidade ?? item.qtd ?? item.estoque ?? item.stock ?? 0);
+            if (tamanho) obj[tamanho] = Math.max(0, Math.floor(quantidade || 0));
+          });
+          if (Object.keys(obj).length > 0) return obj;
+        }
+
+        if (typeof fonte === "object") {
+          const obj = {};
+          Object.entries(fonte).forEach(([tamanho, quantidade]) => {
+            const tam = String(tamanho || "").trim().toUpperCase();
+            const qtd = Number(quantidade || 0);
+            if (tam) obj[tam] = Math.max(0, Math.floor(qtd || 0));
+          });
+          if (Object.keys(obj).length > 0) return obj;
+        }
       }
 
       return {};
@@ -211,32 +255,23 @@
     }
 
     function formatEstoqueTamanhos(estoqueTamanhos, tamanhos) {
-      const estoque = estoqueTamanhos && typeof estoqueTamanhos === "object" ? estoqueTamanhos : {};
-      const listaTamanhos = Array.isArray(tamanhos) && tamanhos.length
-        ? tamanhos.map(t => String(t || "").trim().toUpperCase()).filter(Boolean)
+      const estoque = getEstoqueTamanhos({ estoqueTamanhos });
+      const listaBase = Array.isArray(tamanhos) && tamanhos.length
+        ? tamanhos
         : Object.keys(estoque).length
-          ? Object.keys(estoque).map(t => String(t || "").trim().toUpperCase()).filter(Boolean)
+          ? Object.keys(estoque)
           : ["P", "M", "G", "GG"];
 
+      const listaTamanhos = [...new Set(listaBase.map(t => String(t || "").trim().toUpperCase()).filter(Boolean))];
+
       return listaTamanhos.map(tamanho => {
-        const tam = String(tamanho || "").trim().toUpperCase();
-        const qtd = Number(estoque[tam] ?? estoque[tamanho] ?? 0);
-        return `${tam}: ${qtd}`;
+        const qtd = Number(estoque[tamanho] || 0);
+        return `${tamanho}: ${qtd}`;
       }).join("\n");
     }
 
     function parseEstoqueTamanhos(texto) {
-      const obj = {};
-      const raw = String(texto || "").trim();
-      if (!raw) return obj;
-      const regex = /([A-Za-z0-9À-ÿ]+)\s*:\s*([0-9]+)/g;
-      let match;
-      while ((match = regex.exec(raw)) !== null) {
-        const tamanho = String(match[1] || "").trim().toUpperCase();
-        const quantidade = Number(match[2] || 0);
-        if (tamanho) obj[tamanho] = quantidade;
-      }
-      return obj;
+      return parseEstoqueTextoFlex(texto);
     }
 
     function normalizarProduto(p) {
@@ -543,9 +578,11 @@
 
     function atualizarEstoqueAdmin(index, texto) {
       const estoque = parseEstoqueTamanhos(texto);
+      const tamanhos = Object.keys(estoque).length ? Object.keys(estoque) : getTamanhosProduto(adminProdutos[index]);
+
       adminProdutos[index].estoqueTamanhos = estoque;
       adminProdutos[index].estoque_tamanhos = estoque;
-      adminProdutos[index].tamanhos = Object.keys(estoque);
+      adminProdutos[index].tamanhos = tamanhos;
       adminProdutos[index].estoque = Object.values(estoque).reduce((s, v) => s + Number(v || 0), 0);
     }
 

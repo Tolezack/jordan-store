@@ -4,7 +4,14 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Jordan Wear Store</title>
-  <link rel="stylesheet" href="style.css?v=91" />
+  <link rel="stylesheet" href="style.css?v=92" />
+  <style>
+    .frete-opcoes{display:grid;gap:8px;margin-top:10px}
+    .frete-opcao{width:100%;border:1px solid #ccc;background:#fff;min-height:58px;padding:10px 12px;display:flex;justify-content:space-between;align-items:center;gap:12px;text-align:left;cursor:pointer}
+    .frete-opcao.active{border-color:#111;outline:2px solid #111}
+    .frete-opcao strong{display:block;text-transform:uppercase;font-size:14px;color:#111}
+    .frete-opcao small{display:block;color:#666;margin-top:3px;font-size:12px}.frete-opcao span{font-weight:900;white-space:nowrap;color:#111}
+  </style>
 </head>
 <body>
   <div class="promo-strip">Comprando a partir de <b>R$ 400,00</b>, o frete fica grátis.</div>
@@ -129,6 +136,8 @@
     let adminProdutos = [];
     let checkoutFrete = null;
     let checkoutEndereco = null;
+    let opcoesFreteAtual = [];
+    let freteSelecionado = null;
 
     const categoriaNomes = { all:"todos os produtos", camisa:"camisas", calca:"calças", tenis:"tênis", bermuda:"bermudas", moletom:"moletons" };
 
@@ -203,15 +212,45 @@
     }
 
     function limparCep(cep) { return String(cep || "").replace(/\D/g, "").slice(0, 8); }
-    function calcularFretePorUF(uf, subtotal) {
-      if (subtotal >= FRETE_GRATIS_ACIMA) return 0;
+
+    function calcularPacPorUF(uf) {
       const estado = String(uf || "").toUpperCase();
-      if (estado === "SP") return 16.90;
-      if (["RJ", "MG", "ES", "PR", "SC", "RS"].includes(estado)) return 24.90;
-      if (["DF", "GO", "MT", "MS"].includes(estado)) return 32.90;
-      if (["BA", "SE", "AL", "PE", "PB", "RN", "CE", "PI", "MA"].includes(estado)) return 36.90;
-      if (["AM", "PA", "AC", "RO", "RR", "AP", "TO"].includes(estado)) return 44.90;
+      if (estado === "RS") return 16.90;
+      if (["SC", "PR"].includes(estado)) return 24.90;
+      if (["SP", "RJ", "MG", "ES"].includes(estado)) return 29.90;
+      if (["DF", "GO", "MT", "MS"].includes(estado)) return 34.90;
+      if (["BA", "SE", "AL", "PE", "PB", "RN", "CE", "PI", "MA"].includes(estado)) return 39.90;
+      if (["AM", "PA", "AC", "RO", "RR", "AP", "TO"].includes(estado)) return 49.90;
       return 39.90;
+    }
+
+    function calcularSedexPorUF(uf) {
+      const estado = String(uf || "").toUpperCase();
+      if (estado === "RS") return 26.90;
+      if (["SC", "PR"].includes(estado)) return 34.90;
+      if (["SP", "RJ", "MG", "ES"].includes(estado)) return 44.90;
+      if (["DF", "GO", "MT", "MS"].includes(estado)) return 49.90;
+      if (["BA", "SE", "AL", "PE", "PB", "RN", "CE", "PI", "MA"].includes(estado)) return 59.90;
+      if (["AM", "PA", "AC", "RO", "RR", "AP", "TO"].includes(estado)) return 69.90;
+      return 59.90;
+    }
+
+    function calcularOpcoesFrete(endereco, subtotal) {
+      const cidade = normalizarTexto(endereco.localidade || endereco.cidade || "");
+      const uf = String(endereco.uf || "").toUpperCase();
+      const ehIvoti = cidade.includes("ivoti");
+
+      if (ehIvoti) {
+        return [
+          { tipo: "PAC", nome: "PAC - Entrega local", valor: 0, prazo: "Combinar entrega" },
+          { tipo: "SEDEX", nome: "SEDEX", valor: 12.90, prazo: "1 a 2 dias úteis" }
+        ];
+      }
+
+      return [
+        { tipo: "PAC", nome: "PAC", valor: Number(subtotal || 0) >= FRETE_GRATIS_ACIMA ? 0 : calcularPacPorUF(uf), prazo: "5 a 12 dias úteis" },
+        { tipo: "SEDEX", nome: "SEDEX", valor: calcularSedexPorUF(uf), prazo: "2 a 5 dias úteis" }
+      ];
     }
 
     async function carregarProdutos() {
@@ -240,7 +279,7 @@
       }
     }
 
-    function abrirProduto(id, categoria) { window.location.href = `produtos/${normalizarCategoria(categoria)}/?id=${encodeURIComponent(id)}&v=91`; }
+    function abrirProduto(id, categoria) { window.location.href = `produtos/${normalizarCategoria(categoria)}/?id=${encodeURIComponent(id)}&v=92`; }
 
     function renderProducts(list = null) {
       const grid = document.getElementById("productsGrid");
@@ -289,14 +328,17 @@
 
     function openCheckout() {
       if (!carrinho.length) return;
-      checkoutFrete = null; checkoutEndereco = null;
+      checkoutFrete = null;
+      checkoutEndereco = null;
+      opcoesFreteAtual = [];
+      freteSelecionado = null;
       const subtotal = getCarrinhoSubtotal();
       document.getElementById("checkoutBody").innerHTML = `<form onsubmit="irParaPix(event)">
         <div class="form-group"><label>Nome completo *</label><input id="nome" required /></div>
         <div class="form-group"><label>WhatsApp *</label><input id="telefone" required /></div>
-        <div class="form-group"><label>CEP *</label><div style="display:grid;grid-template-columns:1fr 140px;gap:8px"><input id="cep" required inputmode="numeric" maxlength="9" placeholder="00000-000" oninput="mascaraCep(this)" /><button type="button" class="submit" style="margin-top:0" onclick="calcularFreteCheckout()">Calcular</button></div><small id="freteCheckoutInfo" style="display:block;margin-top:8px;color:#777">Digite o CEP para calcular o frete.</small></div>
+        <div class="form-group"><label>CEP *</label><div style="display:grid;grid-template-columns:1fr 140px;gap:8px"><input id="cep" required inputmode="numeric" maxlength="9" placeholder="00000-000" oninput="mascaraCep(this)" /><button type="button" class="submit" style="margin-top:0" onclick="calcularFreteCheckout()">Calcular</button></div><small id="freteCheckoutInfo" style="display:block;margin-top:8px;color:#777">Digite o CEP para ver PAC e SEDEX.</small><div id="freteOpcoesBox" class="frete-opcoes"></div></div>
         <div class="form-group"><label>Endereço completo *</label><textarea id="endereco" required placeholder="Rua, número, bairro, cidade, complemento"></textarea></div>
-        <div class="order-summary">${carrinho.map(i => `<div class="order-item"><span>${escapeHtml(i.nome)} x${i.quantidade}</span><strong>R$ ${money(i.preco * i.quantidade)}</strong></div>`).join("")}<div class="order-item"><span>Subtotal</span><strong>R$ ${money(subtotal)}</strong></div><div class="order-item"><span>Frete</span><strong id="checkoutFreteValor">Calcule pelo CEP</strong></div><div class="order-total"><span>Total</span><strong id="checkoutTotalValor">R$ ${money(subtotal)}</strong></div></div>
+        <div class="order-summary">${carrinho.map(i => `<div class="order-item"><span>${escapeHtml(i.nome)} x${i.quantidade}</span><strong>R$ ${money(i.preco * i.quantidade)}</strong></div>`).join("")}<div class="order-item"><span>Subtotal</span><strong>R$ ${money(subtotal)}</strong></div><div class="order-item"><span>Frete</span><strong id="checkoutFreteValor">Escolha PAC ou SEDEX</strong></div><div class="order-total"><span>Total</span><strong id="checkoutTotalValor">R$ ${money(subtotal)}</strong></div></div>
         <button class="submit" id="btnIrPix" type="submit">Ir para Pix</button>
       </form>`;
       document.getElementById("checkoutModal").classList.add("active");
@@ -304,24 +346,54 @@
     function closeCheckout() { document.getElementById("checkoutModal").classList.remove("active"); }
     function mascaraCep(input) { const cep = limparCep(input.value); input.value = cep.length > 5 ? `${cep.slice(0,5)}-${cep.slice(5)}` : cep; }
     async function calcularFreteCheckout() {
-      const cepEl = document.getElementById("cep"), info = document.getElementById("freteCheckoutInfo"); const cep = limparCep(cepEl.value); const subtotal = getCarrinhoSubtotal();
-      if (cep.length !== 8) { info.innerHTML = `<span style="color:#d63031">Digite um CEP válido com 8 números.</span>`; return; }
-      info.textContent = "Calculando frete...";
+      const cepEl = document.getElementById("cep"), info = document.getElementById("freteCheckoutInfo"), box = document.getElementById("freteOpcoesBox");
+      const cep = limparCep(cepEl.value); const subtotal = getCarrinhoSubtotal();
+      if (cep.length !== 8) { info.innerHTML = `<span style="color:#d63031">Digite um CEP válido com 8 números.</span>`; if (box) box.innerHTML = ""; return; }
+      info.textContent = "Calculando frete..."; if (box) box.innerHTML = "";
       try {
         const res = await fetch(`https://viacep.com.br/ws/${cep}/json/`); const data = await res.json(); if (data.erro) throw new Error("CEP não encontrado");
-        checkoutFrete = calcularFretePorUF(data.uf, subtotal); checkoutEndereco = { cep, uf:data.uf || "", cidade:data.localidade || "", bairro:data.bairro || "", rua:data.logradouro || "" };
-        info.innerHTML = `Entrega para <b>${checkoutEndereco.cidade}/${checkoutEndereco.uf}</b><br>Frete: <b>${checkoutFrete === 0 ? "Grátis" : `R$ ${money(checkoutFrete)}`}</b>`;
-        document.getElementById("checkoutFreteValor").textContent = checkoutFrete === 0 ? "Grátis" : `R$ ${money(checkoutFrete)}`;
-        document.getElementById("checkoutTotalValor").textContent = `R$ ${money(subtotal + checkoutFrete)}`;
-      } catch (err) { console.error(err); info.innerHTML = `<span style="color:#d63031">Não consegui calcular esse CEP.</span>`; }
+        checkoutEndereco = { cep, uf:data.uf || "", cidade:data.localidade || "", bairro:data.bairro || "", rua:data.logradouro || "" };
+        opcoesFreteAtual = calcularOpcoesFrete(data, subtotal);
+        freteSelecionado = opcoesFreteAtual[0] || null;
+        checkoutFrete = freteSelecionado ? Number(freteSelecionado.valor || 0) : null;
+        info.innerHTML = `Entrega para <b>${checkoutEndereco.cidade}/${checkoutEndereco.uf}</b>. Escolha o frete:`;
+        renderOpcoesFreteCheckout();
+        atualizarTotalCheckout();
+      } catch (err) { console.error(err); info.innerHTML = `<span style="color:#d63031">Não consegui calcular esse CEP.</span>`; if (box) box.innerHTML = ""; }
+    }
+    function renderOpcoesFreteCheckout() {
+      const box = document.getElementById("freteOpcoesBox");
+      if (!box) return;
+      box.innerHTML = opcoesFreteAtual.map((opcao, index) => `
+        <button type="button" class="frete-opcao ${freteSelecionado && freteSelecionado.tipo === opcao.tipo ? "active" : ""}" onclick="selecionarFreteCheckout(${index})">
+          <div><strong>${opcao.nome}</strong><small>${opcao.prazo}</small></div>
+          <span>${Number(opcao.valor || 0) === 0 ? "Grátis" : `R$ ${money(opcao.valor)}`}</span>
+        </button>
+      `).join("");
+    }
+    function selecionarFreteCheckout(index) {
+      freteSelecionado = opcoesFreteAtual[index] || opcoesFreteAtual[0] || null;
+      checkoutFrete = freteSelecionado ? Number(freteSelecionado.valor || 0) : null;
+      renderOpcoesFreteCheckout();
+      atualizarTotalCheckout();
+    }
+    function atualizarTotalCheckout() {
+      const subtotal = getCarrinhoSubtotal();
+      const frete = checkoutFrete === null ? 0 : Number(checkoutFrete || 0);
+      const total = subtotal + frete;
+      const freteEl = document.getElementById("checkoutFreteValor");
+      const totalEl = document.getElementById("checkoutTotalValor");
+      if (freteEl) freteEl.textContent = checkoutFrete === null ? "Escolha PAC ou SEDEX" : frete === 0 ? "Grátis" : `R$ ${money(frete)}`;
+      if (totalEl) totalEl.textContent = `R$ ${money(total)}`;
     }
     function irParaPix(event) {
       event.preventDefault();
-      if (checkoutFrete === null || !checkoutEndereco) { alert("Calcule o frete pelo CEP antes de ir para o Pix."); return; }
+      if (checkoutFrete === null || !checkoutEndereco || !freteSelecionado) { alert("Calcule o frete pelo CEP e escolha PAC ou SEDEX antes de ir para o Pix."); return; }
       const subtotal = getCarrinhoSubtotal();
-      const pedido = { id:`PED-${Date.now()}`, tipo:"carrinho", cliente:{ nome:document.getElementById("nome").value, telefone:document.getElementById("telefone").value, endereco:document.getElementById("endereco").value }, itens:carrinho, subtotal, frete:checkoutFrete, total:subtotal + checkoutFrete, cep:checkoutEndereco.cep, enderecoFrete:checkoutEndereco, imagem:carrinho[0]?.imagem || "", nome:`Pedido com ${carrinho.length} item(ns)`, tamanho:"", quantidade:carrinho.reduce((s,i)=>s+Number(i.quantidade||0),0) };
+      const frete = Number(freteSelecionado.valor || 0);
+      const pedido = { id:`PED-${Date.now()}`, tipo:"carrinho", cliente:{ nome:document.getElementById("nome").value, telefone:document.getElementById("telefone").value, endereco:document.getElementById("endereco").value }, itens:carrinho, subtotal, frete, total:subtotal + frete, freteTipo:freteSelecionado.tipo, freteNome:freteSelecionado.nome, fretePrazo:freteSelecionado.prazo, cep:checkoutEndereco.cep, enderecoFrete:checkoutEndereco, imagem:carrinho[0]?.imagem || "", nome:`Pedido com ${carrinho.length} item(ns)`, tamanho:"", quantidade:carrinho.reduce((s,i)=>s+Number(i.quantidade||0),0) };
       localStorage.setItem("pedido_pix_manual", JSON.stringify(pedido));
-      window.location.href = "pix/index.html?v=91";
+      window.location.href = "pix/index.html?v=92";
     }
 
     function toggleSidebar(force) { const sidebar=document.getElementById("sidebar"), overlay=document.querySelector(".overlay"); if (force===false) { sidebar.classList.remove("active"); overlay.classList.remove("active"); return; } sidebar.classList.toggle("active"); overlay.classList.toggle("active"); }

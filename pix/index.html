@@ -3,26 +3,595 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
   <title>Pagamento Pix - Jordan Wear</title>
+
   <style>
-    :root{--bg:#eee;--text:#050505;--line:#ccc;--green:#15934f}*{margin:0;padding:0;box-sizing:border-box}body{font-family:Arial,Helvetica,sans-serif;background:var(--bg);color:var(--text);min-height:100vh}button,textarea,input{font:inherit}button{cursor:pointer;border:0}.pix-topbar{height:82px;background:#f6f6f6;border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:center;position:sticky;top:0;z-index:20}.pix-back{position:absolute;left:18px;color:#111;text-decoration:none;font-size:36px;font-weight:900}.pix-logo{color:#111;text-decoration:none;font-size:19px;font-weight:900;text-transform:lowercase}.pix-main{width:min(980px,calc(100% - 24px));margin:28px auto 60px;display:grid;grid-template-columns:1fr 1fr;gap:24px;align-items:start}.pix-card{background:#fff;border:1px solid var(--line);padding:22px}.pix-card h1{font-size:clamp(32px,5vw,52px);line-height:.95;text-transform:uppercase;letter-spacing:-.06em;margin-bottom:16px}.pix-card p{color:#555;line-height:1.6;margin-bottom:12px}.pedido-box{display:grid;grid-template-columns:86px 1fr;gap:12px;align-items:center;border:1px solid var(--line);background:#f7f7f7;padding:12px;margin-bottom:16px}.pedido-box img{width:86px;height:106px;object-fit:cover;background:#ddd}.pedido-box b{display:block;text-transform:uppercase;line-height:1.2;margin-bottom:5px}.pedido-box small{color:#666;display:block;margin-top:3px}.valores{border-top:1px solid var(--line);margin-top:16px;padding-top:16px;display:grid;gap:8px}.linha-valor{display:flex;justify-content:space-between;gap:12px;color:#555}.linha-valor strong{color:#111}.total{border-top:1px solid var(--line);margin-top:10px;padding-top:14px;font-size:36px;font-weight:900;letter-spacing:-.05em;display:flex;justify-content:space-between;gap:14px}.pix-chave{background:#f7f7f7;border:1px solid var(--line);padding:14px;word-break:break-all;font-size:14px;margin:12px 0}.qr-box{display:grid;place-items:center;background:#f7f7f7;border:1px solid var(--line);padding:16px;margin-bottom:12px}.qr-box img{width:260px;max-width:100%;image-rendering:crisp-edges}.pix-code{width:100%;min-height:150px;border:1px solid var(--line);background:#f7f7f7;padding:14px;resize:none;outline:0;font-size:13px;line-height:1.5}.btn{width:100%;min-height:52px;background:#111;color:#fff;font-weight:900;text-transform:uppercase;letter-spacing:.12em;margin-top:10px}.btn.whats{background:#15934f}.aviso{margin-top:12px;font-size:13px;color:#666}.erro{grid-column:1/-1;background:#fff;border:1px solid var(--line);padding:30px;text-align:center}.erro h1{font-size:34px;text-transform:uppercase;margin-bottom:10px}.erro a{display:inline-flex;margin-top:16px;background:#111;color:#fff;text-decoration:none;padding:14px 18px;font-weight:900;text-transform:uppercase}@media(max-width:760px){.pix-main{grid-template-columns:1fr;margin-top:16px}.pix-card{padding:18px}.total{font-size:30px}}
+    :root {
+      --bg: #eeeeee;
+      --text: #050505;
+      --line: #cccccc;
+      --green: #15934f;
+      --red: #d63031;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: Arial, Helvetica, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+    }
+
+    button,
+    textarea,
+    input {
+      font: inherit;
+    }
+
+    button {
+      cursor: pointer;
+      border: 0;
+    }
+
+    .pix-topbar {
+      height: 82px;
+      background: #f6f6f6;
+      border-bottom: 1px solid var(--line);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: sticky;
+      top: 0;
+      z-index: 20;
+    }
+
+    .pix-back {
+      position: absolute;
+      left: 18px;
+      color: #111;
+      text-decoration: none;
+      font-size: 36px;
+      font-weight: 900;
+      line-height: 1;
+    }
+
+    .pix-logo {
+      color: #111;
+      text-decoration: none;
+      font-size: 19px;
+      font-weight: 900;
+      text-transform: lowercase;
+      letter-spacing: -0.04em;
+    }
+
+    .pix-main {
+      width: min(980px, calc(100% - 24px));
+      margin: 28px auto 60px;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 24px;
+      align-items: start;
+    }
+
+    .pix-card {
+      background: #fff;
+      border: 1px solid var(--line);
+      padding: 22px;
+    }
+
+    .pix-card h1 {
+      font-size: clamp(32px, 5vw, 52px);
+      line-height: 0.95;
+      text-transform: uppercase;
+      letter-spacing: -0.06em;
+      margin-bottom: 16px;
+    }
+
+    .pix-card p {
+      color: #555;
+      line-height: 1.6;
+      margin-bottom: 12px;
+    }
+
+    .pedido-box {
+      display: grid;
+      grid-template-columns: 86px 1fr;
+      gap: 12px;
+      align-items: center;
+      border: 1px solid var(--line);
+      background: #f7f7f7;
+      padding: 12px;
+      margin-bottom: 16px;
+    }
+
+    .pedido-box img {
+      width: 86px;
+      height: 106px;
+      object-fit: cover;
+      background: #ddd;
+    }
+
+    .pedido-box b {
+      display: block;
+      text-transform: uppercase;
+      line-height: 1.2;
+      margin-bottom: 5px;
+    }
+
+    .pedido-box small {
+      color: #666;
+      display: block;
+      margin-top: 3px;
+    }
+
+    .valores {
+      border-top: 1px solid var(--line);
+      margin-top: 16px;
+      padding-top: 16px;
+      display: grid;
+      gap: 8px;
+    }
+
+    .linha-valor {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      color: #555;
+    }
+
+    .linha-valor strong {
+      color: #111;
+    }
+
+    .total {
+      border-top: 1px solid var(--line);
+      margin-top: 10px;
+      padding-top: 14px;
+      font-size: 36px;
+      font-weight: 900;
+      letter-spacing: -0.05em;
+      display: flex;
+      justify-content: space-between;
+      gap: 14px;
+    }
+
+    .pix-chave {
+      background: #f7f7f7;
+      border: 1px solid var(--line);
+      padding: 14px;
+      word-break: break-all;
+      font-size: 14px;
+      margin: 12px 0;
+    }
+
+    .qr-box {
+      display: grid;
+      place-items: center;
+      background: #f7f7f7;
+      border: 1px solid var(--line);
+      padding: 16px;
+      margin-bottom: 12px;
+    }
+
+    .qr-box img {
+      width: 260px;
+      max-width: 100%;
+      image-rendering: crisp-edges;
+    }
+
+    .pix-code {
+      width: 100%;
+      min-height: 150px;
+      border: 1px solid var(--line);
+      background: #f7f7f7;
+      padding: 14px;
+      resize: none;
+      outline: 0;
+      font-size: 13px;
+      line-height: 1.5;
+    }
+
+    .btn {
+      width: 100%;
+      min-height: 52px;
+      background: #111;
+      color: #fff;
+      font-weight: 900;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+      margin-top: 10px;
+    }
+
+    .btn.whats {
+      background: var(--green);
+    }
+
+    .aviso {
+      margin-top: 12px;
+      font-size: 13px;
+      color: #666;
+    }
+
+    .erro {
+      grid-column: 1 / -1;
+      background: #fff;
+      border: 1px solid var(--line);
+      padding: 30px;
+      text-align: center;
+    }
+
+    .erro h1 {
+      font-size: 34px;
+      text-transform: uppercase;
+      margin-bottom: 10px;
+    }
+
+    .erro a {
+      display: inline-flex;
+      margin-top: 16px;
+      background: #111;
+      color: #fff;
+      text-decoration: none;
+      padding: 14px 18px;
+      font-weight: 900;
+      text-transform: uppercase;
+    }
+
+    @media (max-width: 760px) {
+      .pix-main {
+        grid-template-columns: 1fr;
+        margin-top: 16px;
+      }
+
+      .pix-card {
+        padding: 18px;
+      }
+
+      .total {
+        font-size: 30px;
+      }
+    }
   </style>
 </head>
+
 <body>
-  <header class="pix-topbar"><a href="../index.html" class="pix-back">‹</a><a href="../index.html" class="pix-logo">jordanwear</a></header>
+  <header class="pix-topbar">
+    <a href="../index.html" class="pix-back">‹</a>
+    <a href="../index.html" class="pix-logo">jordanwear</a>
+  </header>
+
   <main class="pix-main" id="pixMain"></main>
+
   <script>
-    const PIX_CHAVE="0505667003";
-    const PIX_NOME="JORDAN";
-    const PIX_CIDADE="Rio Grande do Sul";
-    const WHATSAPP_LOJA="556993306882";
-    let pedidoAtual=null, pixCodeAtual="";
-    function money(v){return Number(v||0).toFixed(2).replace(".",",")}function numero(v){return Number(v||0)}function limparTextoPix(t){return String(t||"").normalize("NFD").replace(/[\u0300-\u036f]/g,"").replace(/[^A-Za-z0-9 ]/g,"").trim().substring(0,25).toUpperCase()}function montarCampo(id,valor){return `${id}${String(valor.length).padStart(2,"0")}${valor}`}function crc16(payload){let crc=0xffff;for(let i=0;i<payload.length;i++){crc^=payload.charCodeAt(i)<<8;for(let j=0;j<8;j++){crc=(crc&0x8000)!==0?(crc<<1)^0x1021:crc<<1;crc&=0xffff}}return crc.toString(16).toUpperCase().padStart(4,"0")}
-    function gerarPixCopiaCola({chave,nome,cidade,valor,pedidoId}){const valorFormatado=Number(valor||0).toFixed(2), gui=montarCampo("00","br.gov.bcb.pix"), chavePix=montarCampo("01",chave), merchant=montarCampo("26",gui+chavePix);const payload=montarCampo("00","01")+merchant+montarCampo("52","0000")+montarCampo("53","986")+montarCampo("54",valorFormatado)+montarCampo("58","BR")+montarCampo("59",limparTextoPix(nome))+montarCampo("60",limparTextoPix(cidade).substring(0,15))+montarCampo("62",montarCampo("05",String(pedidoId||"PEDIDO").substring(0,25)))+"6304";return payload+crc16(payload)}
-    function abrirWhatsApp(){const p=pedidoAtual;const itens=Array.isArray(p.itens)?p.itens.map(i=>`- ${i.nome} x${i.quantidade}`).join("%0A"):`- ${p.nome} x${p.quantidade}`;const texto=`Olá, fiz um pedido na Jordan Wear.%0A%0APedido: ${p.id}%0A${itens}%0ASubtotal: R$ ${money(p.subtotal||p.total)}%0AFrete: ${numero(p.frete)===0?"Grátis":`R$ ${money(p.frete)}`}%0ATotal: R$ ${money(p.total)}%0A${p.cep?`CEP: ${p.cep}%0A`:""}${p.enderecoFrete?`Cidade: ${p.enderecoFrete.cidade}/${p.enderecoFrete.uf}%0A`:""}%0AVou enviar o comprovante do Pix.`;window.open(`https://wa.me/${WHATSAPP_LOJA}?text=${texto}`,"_blank")}
-    function copiarPix(){const campo=document.getElementById("pixCode");if(!campo)return;campo.select();campo.setSelectionRange(0,99999);navigator.clipboard.writeText(campo.value);const btn=document.getElementById("copyBtn");btn.textContent="Pix copiado";setTimeout(()=>btn.textContent="Copiar Pix",1600)}
-    function renderPix(){const main=document.getElementById("pixMain"), p=pedidoAtual, subtotal=numero(p.subtotal||p.total), frete=numero(p.frete||0), total=numero(p.total||subtotal+frete);pixCodeAtual=gerarPixCopiaCola({chave:PIX_CHAVE,nome:PIX_NOME,cidade:PIX_CIDADE,valor:total,pedidoId:p.id});const qrUrl=`https://api.qrserver.com/v1/create-qr-code/?size=260x260&data=${encodeURIComponent(pixCodeAtual)}`;const listaItens=Array.isArray(p.itens)?p.itens.map(i=>`<small>${i.nome} x${i.quantidade}</small>`).join(""):`<small>${p.nome} x${p.quantidade}</small>`;main.innerHTML=`<section class="pix-card"><h1>Pagamento Pix</h1><p>Escaneie o QR Code ou copie o Pix. Depois envie o comprovante no WhatsApp.</p><div class="pedido-box"><img src="${p.imagem||p.itens?.[0]?.imagem||"https://via.placeholder.com/200"}"/><div><b>${p.nome||"Pedido"}</b>${listaItens}<small>Pedido: ${p.id}</small>${p.enderecoFrete?`<small>Entrega: ${p.enderecoFrete.cidade}/${p.enderecoFrete.uf}</small>`:""}</div></div><div class="valores"><div class="linha-valor"><span>Subtotal</span><strong>R$ ${money(subtotal)}</strong></div><div class="linha-valor"><span>Frete</span><strong>${frete===0?"Grátis":`R$ ${money(frete)}`}</strong></div><div class="total"><span>Total</span><strong>R$ ${money(total)}</strong></div></div></section><section class="pix-card"><h1>QR Code Pix</h1><div class="qr-box"><img src="${qrUrl}" alt="QR Code Pix" /></div><p>Chave Pix:</p><div class="pix-chave">${PIX_CHAVE}</div><textarea class="pix-code" id="pixCode" readonly>${pixCodeAtual}</textarea><button class="btn" id="copyBtn" onclick="copiarPix()">Copiar Pix</button><button class="btn whats" onclick="abrirWhatsApp()">Enviar comprovante no WhatsApp</button><p class="aviso">Esse pagamento é manual. O pedido será confirmado depois que o comprovante for conferido.</p></section>`}
-    function carregarPix(){const main=document.getElementById("pixMain"), p=JSON.parse(localStorage.getItem("pedido_pix_manual")||"null");if(!p){main.innerHTML=`<div class="erro"><div><h1>Nenhum pedido encontrado</h1><p>Volte para a loja e escolha um produto.</p><a href="../index.html">Voltar para loja</a></div></div>`;return}pedidoAtual=p;renderPix()}carregarPix();
+    /*
+      IMPORTANTE:
+      - PIX_CHAVE: sua chave Pix.
+      - Se for CPF, coloca os 11 números. Ex: "05056667003"
+      - PIX_CIDADE: cidade da conta Pix/loja, sem acento e curta.
+        Não coloca "Rio Grande do Sul", porque isso é estado.
+        Ex: "PORTO ALEGRE", "CANOAS", "GRAVATAI", "VIAMAO"
+    */
+
+    const PIX_CHAVE = "0505667003";
+    const PIX_NOME = "JORDAN";
+    const PIX_CIDADE = "PORTO ALEGRE";
+    const WHATSAPP_LOJA = "556993306882";
+
+    let pedidoAtual = null;
+    let pixCodeAtual = "";
+
+    function numero(valor) {
+      const n = Number(valor);
+      return Number.isFinite(n) ? n : 0;
+    }
+
+    function money(valor) {
+      return numero(valor).toFixed(2).replace(".", ",");
+    }
+
+    function limparTextoPix(texto, limite) {
+      return String(texto || "")
+        .normalize("NFD")
+        .replace(/[\u0300-\u036f]/g, "")
+        .replace(/[^A-Za-z0-9 ]/g, "")
+        .trim()
+        .substring(0, limite)
+        .toUpperCase();
+    }
+
+    function montarCampo(id, valor) {
+      const texto = String(valor || "");
+      const tamanho = String(texto.length).padStart(2, "0");
+      return `${id}${tamanho}${texto}`;
+    }
+
+    function crc16(payload) {
+      let crc = 0xffff;
+
+      for (let i = 0; i < payload.length; i++) {
+        crc ^= payload.charCodeAt(i) << 8;
+
+        for (let j = 0; j < 8; j++) {
+          if ((crc & 0x8000) !== 0) {
+            crc = (crc << 1) ^ 0x1021;
+          } else {
+            crc = crc << 1;
+          }
+
+          crc &= 0xffff;
+        }
+      }
+
+      return crc.toString(16).toUpperCase().padStart(4, "0");
+    }
+
+    function gerarPixCopiaCola({ chave, nome, cidade, valor, pedidoId }) {
+      const valorFormatado = numero(valor).toFixed(2);
+
+      const gui = montarCampo("00", "br.gov.bcb.pix");
+      const chavePix = montarCampo("01", String(chave).trim());
+      const merchantAccountInfo = montarCampo("26", gui + chavePix);
+
+      const payloadSemCRC =
+        montarCampo("00", "01") +
+        merchantAccountInfo +
+        montarCampo("52", "0000") +
+        montarCampo("53", "986") +
+        montarCampo("54", valorFormatado) +
+        montarCampo("58", "BR") +
+        montarCampo("59", limparTextoPix(nome, 25)) +
+        montarCampo("60", limparTextoPix(cidade, 15)) +
+        montarCampo("62", montarCampo("05", limparTextoPix(pedidoId || "PEDIDO", 25))) +
+        "6304";
+
+      return payloadSemCRC + crc16(payloadSemCRC);
+    }
+
+    function calcularSubtotalPedido(pedido) {
+      if (Array.isArray(pedido.itens) && pedido.itens.length > 0) {
+        return pedido.itens.reduce((total, item) => {
+          const preco = numero(item.preco);
+          const quantidade = Math.max(1, numero(item.quantidade || 1));
+          return total + preco * quantidade;
+        }, 0);
+      }
+
+      const preco = numero(pedido.preco);
+      const quantidade = Math.max(1, numero(pedido.quantidade || 1));
+
+      if (preco > 0) {
+        return preco * quantidade;
+      }
+
+      return numero(pedido.subtotal || pedido.total);
+    }
+
+    function normalizarPedido(pedido) {
+      const subtotal = calcularSubtotalPedido(pedido);
+      const frete = pedido.frete === null || pedido.frete === undefined ? 0 : numero(pedido.frete);
+      const total = subtotal + frete;
+
+      return {
+        ...pedido,
+        id: pedido.id || `PED-${Date.now()}`,
+        nome: pedido.nome || "Pedido Jordan Wear",
+        subtotal,
+        frete,
+        total
+      };
+    }
+
+    function getImagemPedido(pedido) {
+      if (pedido.imagem) return pedido.imagem;
+
+      if (Array.isArray(pedido.itens) && pedido.itens.length > 0) {
+        return pedido.itens[0].imagem || pedido.itens[0].foto || "";
+      }
+
+      return "";
+    }
+
+    function getListaItensHTML(pedido) {
+      if (Array.isArray(pedido.itens) && pedido.itens.length > 0) {
+        return pedido.itens.map(item => {
+          const nome = item.nome || "Produto";
+          const quantidade = item.quantidade || 1;
+          const tamanho = item.tamanho ? ` - Tam. ${item.tamanho}` : "";
+          const preco = item.preco ? ` - R$ ${money(item.preco)}` : "";
+
+          return `<small>${nome}${tamanho} x${quantidade}${preco}</small>`;
+        }).join("");
+      }
+
+      const nome = pedido.nome || "Produto";
+      const quantidade = pedido.quantidade || 1;
+      const tamanho = pedido.tamanho ? ` - Tam. ${pedido.tamanho}` : "";
+      const preco = pedido.preco ? ` - R$ ${money(pedido.preco)}` : "";
+
+      return `<small>${nome}${tamanho} x${quantidade}${preco}</small>`;
+    }
+
+    function getListaItensWhatsApp(pedido) {
+      if (Array.isArray(pedido.itens) && pedido.itens.length > 0) {
+        return pedido.itens.map(item => {
+          const nome = item.nome || "Produto";
+          const quantidade = item.quantidade || 1;
+          const tamanho = item.tamanho ? ` - Tam. ${item.tamanho}` : "";
+          const preco = item.preco ? ` - R$ ${money(item.preco)}` : "";
+
+          return `- ${nome}${tamanho} x${quantidade}${preco}`;
+        }).join("%0A");
+      }
+
+      const nome = pedido.nome || "Produto";
+      const quantidade = pedido.quantidade || 1;
+      const tamanho = pedido.tamanho ? ` - Tam. ${pedido.tamanho}` : "";
+      const preco = pedido.preco ? ` - R$ ${money(pedido.preco)}` : "";
+
+      return `- ${nome}${tamanho} x${quantidade}${preco}`;
+    }
+
+    function abrirWhatsApp() {
+      const p = pedidoAtual;
+      const itens = getListaItensWhatsApp(p);
+
+      const texto =
+        `Olá, fiz um pedido na Jordan Wear.%0A%0A` +
+        `Pedido: ${p.id}%0A` +
+        `${itens}%0A%0A` +
+        `Subtotal: R$ ${money(p.subtotal)}%0A` +
+        `Frete: ${numero(p.frete) === 0 ? "Grátis" : `R$ ${money(p.frete)}`}%0A` +
+        `Total: R$ ${money(p.total)}%0A` +
+        `${p.cep ? `CEP: ${p.cep}%0A` : ""}` +
+        `${p.enderecoFrete ? `Cidade: ${p.enderecoFrete.cidade}/${p.enderecoFrete.uf}%0A` : ""}` +
+        `%0AVou enviar o comprovante do Pix.`;
+
+      window.open(`https://wa.me/${WHATSAPP_LOJA}?text=${texto}`, "_blank");
+    }
+
+    async function copiarPix() {
+      const campo = document.getElementById("pixCode");
+
+      if (!campo || !campo.value) return;
+
+      try {
+        await navigator.clipboard.writeText(campo.value);
+      } catch (err) {
+        campo.select();
+        campo.setSelectionRange(0, 99999);
+        document.execCommand("copy");
+      }
+
+      const btn = document.getElementById("copyBtn");
+      btn.textContent = "Pix copiado";
+
+      setTimeout(() => {
+        btn.textContent = "Copiar Pix";
+      }, 1600);
+    }
+
+    function renderPix() {
+      const main = document.getElementById("pixMain");
+      const p = pedidoAtual;
+
+      pixCodeAtual = gerarPixCopiaCola({
+        chave: PIX_CHAVE,
+        nome: PIX_NOME,
+        cidade: PIX_CIDADE,
+        valor: p.total,
+        pedidoId: p.id
+      });
+
+      const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=260x260&data=${encodeURIComponent(pixCodeAtual)}`;
+      const imagem = getImagemPedido(p) || "https://via.placeholder.com/200";
+      const listaItens = getListaItensHTML(p);
+
+      main.innerHTML = `
+        <section class="pix-card">
+          <h1>Pagamento Pix</h1>
+
+          <p>
+            Escaneie o QR Code ou copie o Pix. Depois envie o comprovante no WhatsApp.
+          </p>
+
+          <div class="pedido-box">
+            <img src="${imagem}" alt="Produto" />
+
+            <div>
+              <b>${p.nome || "Pedido"}</b>
+              ${listaItens}
+              <small>Pedido: ${p.id}</small>
+              ${p.enderecoFrete ? `<small>Entrega: ${p.enderecoFrete.cidade}/${p.enderecoFrete.uf}</small>` : ""}
+              ${p.cep ? `<small>CEP: ${p.cep}</small>` : ""}
+            </div>
+          </div>
+
+          <div class="valores">
+            <div class="linha-valor">
+              <span>Subtotal</span>
+              <strong>R$ ${money(p.subtotal)}</strong>
+            </div>
+
+            <div class="linha-valor">
+              <span>Frete</span>
+              <strong>${numero(p.frete) === 0 ? "Grátis" : `R$ ${money(p.frete)}`}</strong>
+            </div>
+
+            <div class="total">
+              <span>Total</span>
+              <strong>R$ ${money(p.total)}</strong>
+            </div>
+          </div>
+        </section>
+
+        <section class="pix-card">
+          <h1>QR Code Pix</h1>
+
+          <div class="qr-box">
+            <img src="${qrUrl}" alt="QR Code Pix" />
+          </div>
+
+          <p>Chave Pix:</p>
+
+          <div class="pix-chave">
+            ${PIX_CHAVE}
+          </div>
+
+          <textarea class="pix-code" id="pixCode" readonly>${pixCodeAtual}</textarea>
+
+          <button class="btn" id="copyBtn" onclick="copiarPix()">
+            Copiar Pix
+          </button>
+
+          <button class="btn whats" onclick="abrirWhatsApp()">
+            Enviar comprovante no WhatsApp
+          </button>
+
+          <p class="aviso">
+            Esse pagamento é manual. O pedido será confirmado depois que o comprovante for conferido.
+          </p>
+        </section>
+      `;
+    }
+
+    function carregarPix() {
+      const main = document.getElementById("pixMain");
+
+      let pedido = null;
+
+      try {
+        pedido = JSON.parse(localStorage.getItem("pedido_pix_manual") || "null");
+      } catch (err) {
+        pedido = null;
+      }
+
+      if (!pedido) {
+        main.innerHTML = `
+          <div class="erro">
+            <div>
+              <h1>Nenhum pedido encontrado</h1>
+              <p>Volte para a loja e escolha um produto.</p>
+              <a href="../index.html">Voltar para loja</a>
+            </div>
+          </div>
+        `;
+        return;
+      }
+
+      pedidoAtual = normalizarPedido(pedido);
+
+      localStorage.setItem("pedido_pix_manual", JSON.stringify(pedidoAtual));
+
+      renderPix();
+    }
+
+    carregarPix();
   </script>
 </body>
 </html>

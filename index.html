@@ -8,7 +8,7 @@
 </head>
 <body>
   <div class="promo-strip">
-    Aproveite: comprando a partir de <b>R$ 400,00</b>, você ganha <b>FRETE GRÁTIS NA SUA COMPRA!</b> 🚚
+    Comprando a partir de <b>R$ 400,00</b>, o frete fica grátis.
   </div>
 
   <button class="hamburger" onclick="toggleSidebar()" aria-label="Abrir menu">
@@ -17,7 +17,7 @@
     <span></span>
   </button>
 
-  <div class="overlay" onclick="toggleSidebar()"></div>
+  <div class="overlay" onclick="toggleSidebar(false)"></div>
 
   <aside class="sidebar" id="sidebar">
     <div class="sidebar-top">
@@ -25,19 +25,19 @@
         <b>jordanwear</b>
         <small>streetwear store</small>
       </div>
-      <button onclick="toggleSidebar()">×</button>
+      <button onclick="toggleSidebar(false)">×</button>
     </div>
 
     <nav>
       <button class="side-link active" onclick="goHome()">Início</button>
-      <button class="side-link" onclick="openCategoryPage('camisa')">Camisas</button>
-      <button class="side-link" onclick="openCategoryPage('calca')">Calças</button>
-      <button class="side-link" onclick="openCategoryPage('tenis')">Tênis</button>
-      <button class="side-link" onclick="scrollToShop()">Todos os produtos</button>
+      <button class="side-link" onclick="setCategoryAndScroll('camisa')">Camisas</button>
+      <button class="side-link" onclick="setCategoryAndScroll('calca')">Calças</button>
+      <button class="side-link" onclick="setCategoryAndScroll('tenis')">Tênis</button>
+      <button class="side-link" onclick="setCategoryAndScroll('all')">Todos os produtos</button>
     </nav>
 
     <div class="safe-note">
-      Pagamento via Pix. Produtos separados somente após confirmação do pagamento.
+      Painel admin oculto: <b>Ctrl + Alt + 8</b>. A senha fica no backend, não no site.
     </div>
   </aside>
 
@@ -51,7 +51,8 @@
     />
 
     <button class="cart-btn" onclick="toggleCart()" aria-label="Abrir carrinho">
-      🛒
+      <img src="Carrinho.svg" alt="Carrinho" onerror="this.style.display='none'; this.parentElement.classList.add('cart-fallback')" />
+      <span class="cart-fallback-icon">🛒</span>
       <span class="cart-count">0</span>
     </button>
   </header>
@@ -59,21 +60,9 @@
   <main id="app">
     <section class="hero">
       <div class="hero-banner">
-        <img
-          class="banner active"
-          src="https://i.pinimg.com/736x/82/21/f4/8221f40a9e4e84aec32443e0130f5cc6.jpg"
-          alt="Banner Jordan Wear Store"
-        />
-        <img
-          class="banner"
-          src="https://i.pinimg.com/736x/47/9c/46/479c46d2e3a13214638a3d80d9ef2cd3.jpg"
-          alt="Banner streetwear"
-        />
-        <img
-          class="banner"
-          src="https://i.pinimg.com/736x/55/e8/60/55e8602476052c3b9e3383840c3b3741.jpg"
-          alt="Banner roupas"
-        />
+        <img class="banner active" src="https://i.pinimg.com/736x/82/21/f4/8221f40a9e4e84aec32443e0130f5cc6.jpg" alt="Banner" />
+        <img class="banner" src="https://i.pinimg.com/736x/47/9c/46/479c46d2e3a13214638a3d80d9ef2cd3.jpg" alt="Banner" />
+        <img class="banner" src="https://i.pinimg.com/736x/55/e8/60/55e8602476052c3b9e3383840c3b3741.jpg" alt="Banner" />
 
         <div class="dots">
           <button class="dot active" onclick="goBanner(0)"></button>
@@ -85,43 +74,40 @@
       <div class="hero-text">
         <span class="tag">nova coleção</span>
         <h1>jordan wear store</h1>
-        <p>
-          Loja feita pra rapaziada que quer se vestir bem sem pagar absurdo.
-          Camisas, calças e tênis selecionados no estilo streetwear.
-        </p>
+        <p>Roupas, calças e tênis selecionados no estilo streetwear. Visual limpo, direto e feito para comprar rápido.</p>
 
         <div class="hero-actions">
           <button onclick="scrollToShop()">Ver produtos</button>
-          <button class="ghost" onclick="openCategoryPage('calca')">Ver calças</button>
+          <button class="ghost" onclick="setCategoryAndScroll('calca')">Ver calças</button>
         </div>
       </div>
     </section>
 
     <section class="category-showcase">
-      <button class="category-tile" onclick="openCategoryPage('calca')">
+      <button class="category-tile" onclick="setCategoryAndScroll('calca')">
         <span>coleção</span>
         <strong>calças</strong>
-        <small>loja/produtos/calca</small>
+        <small>peças streetwear</small>
       </button>
 
-      <button class="category-tile" onclick="openCategoryPage('camisa')">
+      <button class="category-tile" onclick="setCategoryAndScroll('camisa')">
         <span>drop</span>
         <strong>camisas</strong>
-        <small>loja/produtos/camisa</small>
+        <small>seleção atual</small>
       </button>
 
-      <button class="category-tile" onclick="openCategoryPage('tenis')">
+      <button class="category-tile" onclick="setCategoryAndScroll('tenis')">
         <span>seleção</span>
         <strong>tênis</strong>
-        <small>loja/produtos/tenis</small>
+        <small>para fechar o kit</small>
       </button>
     </section>
 
     <section class="features">
       <article>
-        <div>🛒</div>
-        <h3>Frete grátis</h3>
-        <p>acima de R$ 400,00</p>
+        <div>📦</div>
+        <h3>Envio</h3>
+        <p>pedido separado após confirmação</p>
       </article>
 
       <article>
@@ -131,24 +117,22 @@
       </article>
 
       <article>
-        <div>📦</div>
-        <h3>Envio</h3>
-        <p>pedido separado após confirmação</p>
+        <div>🛒</div>
+        <h3>Carrinho</h3>
+        <p>separe seus produtos</p>
       </article>
 
       <article>
         <div>🛡️</div>
-        <h3>Loja segura</h3>
-        <p>pedido enviado direto para conferência</p>
+        <h3>Controle</h3>
+        <p>estoque por tamanho</p>
       </article>
     </section>
 
     <section class="shop" id="shop">
       <div class="section-head">
-        <div>
-          <span class="tag dark">produtos</span>
-          <h2>todos os produtos</h2>
-        </div>
+        <span class="tag dark">produtos</span>
+        <h2>todos os produtos</h2>
         <div class="api-status" id="apiStatus">conectando...</div>
       </div>
 
@@ -200,26 +184,13 @@
 
     <div class="cart-footer">
       <div class="cart-summary" id="cartSummary" style="display:none">
-        <div>
-          <span>Subtotal</span>
-          <strong id="cartSubtotal">R$ 0,00</strong>
-        </div>
-        <div>
-          <span>Frete</span>
-          <strong id="cartFrete">R$ 9,90</strong>
-        </div>
-        <div class="total">
-          <span>Total</span>
-          <strong id="cartTotal">R$ 0,00</strong>
-        </div>
+        <div><span>Subtotal</span><strong id="cartSubtotal">R$ 0,00</strong></div>
+        <div><span>Frete</span><strong id="cartFrete">R$ 9,90</strong></div>
+        <div class="total"><span>Total</span><strong id="cartTotal">R$ 0,00</strong></div>
       </div>
 
-      <button class="checkout" id="checkoutBtn" style="display:none" onclick="openCheckout()">
-        Finalizar compra
-      </button>
-      <button class="clear" id="clearCartBtn" style="display:none" onclick="clearCart()">
-        Limpar carrinho
-      </button>
+      <button class="checkout" id="checkoutBtn" style="display:none" onclick="openCheckout()">Finalizar compra</button>
+      <button class="clear" id="clearCartBtn" style="display:none" onclick="clearCart()">Limpar carrinho</button>
     </div>
   </aside>
 
@@ -282,6 +253,10 @@
       }
     });
 
+    function money(value) {
+      return Number(value || 0).toFixed(2).replace(".", ",");
+    }
+
     function normalizarCategoria(categoria) {
       const c = String(categoria || "")
         .toLowerCase()
@@ -295,8 +270,43 @@
       return c || "camisa";
     }
 
-    function money(value) {
-      return Number(value || 0).toFixed(2).replace(".", ",");
+    function getProdutoImagens(p) {
+      const imgs = [];
+      if (p.imagem) imgs.push(p.imagem);
+      if (Array.isArray(p.imagens)) imgs.push(...p.imagens);
+      return [...new Set(imgs.filter(Boolean).map(x => String(x).trim()))];
+    }
+
+    function estoqueTotal(p) {
+      if (p.estoque_tamanhos && typeof p.estoque_tamanhos === "object") {
+        return Object.values(p.estoque_tamanhos).reduce((s, v) => s + Number(v || 0), 0);
+      }
+      return Number(p.estoque || 0);
+    }
+
+    function sanitizeProduto(p) {
+      const imagens = Array.isArray(p.imagens) ? p.imagens : [];
+      const imagem = String(p.imagem || imagens[0] || "").trim();
+      const tamanhos = Array.isArray(p.tamanhos) && p.tamanhos.length ? p.tamanhos : ["P", "M", "G", "GG"];
+      const estoqueTamanhos = p.estoque_tamanhos && typeof p.estoque_tamanhos === "object" ? p.estoque_tamanhos : {};
+
+      tamanhos.forEach(t => {
+        if (estoqueTamanhos[t] === undefined) estoqueTamanhos[t] = 0;
+      });
+
+      return {
+        ...p,
+        id: String(p.id || `produto-${Date.now()}`).trim(),
+        nome: String(p.nome || "Produto sem nome").trim(),
+        categoria: normalizarCategoria(p.categoria),
+        preco: Number(p.preco || 0),
+        estoque: Number(p.estoque || 0),
+        estoque_tamanhos: estoqueTamanhos,
+        imagem,
+        imagens: getProdutoImagens({ imagem, imagens }),
+        descricao: String(p.descricao || "").trim(),
+        tamanhos: tamanhos.map(t => String(t).trim()).filter(Boolean)
+      };
     }
 
     async function carregarProdutos() {
@@ -321,25 +331,13 @@
         }
 
         produtos = Array.isArray(data) ? data : data.produtos || [];
-
-        produtos = produtos.map((p, index) => ({
-          ...p,
-          id: String(p.id || `produto-${index}-${Date.now()}`).trim(),
-          nome: String(p.nome || "Produto sem nome").trim(),
-          categoria: normalizarCategoria(p.categoria),
-          preco: Number(p.preco || 0),
-          estoque: Number(p.estoque || 0),
-          imagem: String(p.imagem || "").trim(),
-          imagens: Array.isArray(p.imagens) ? p.imagens : [],
-          descricao: String(p.descricao || "").trim(),
-          tamanhos: Array.isArray(p.tamanhos) && p.tamanhos.length ? p.tamanhos : ["P", "M", "G", "GG"]
-        }));
+        produtos = produtos.map(sanitizeProduto);
 
         status.textContent = `online • ${produtos.length} produtos`;
         status.className = "api-status ok";
         renderProducts();
       } catch (err) {
-        console.error("Erro ao carregar produtos:", err);
+        console.error(err);
         status.textContent = "erro na api";
         status.className = "api-status err";
         grid.innerHTML = `
@@ -361,8 +359,6 @@
 
     function renderProducts(list = null) {
       const grid = document.getElementById("productsGrid");
-      if (!grid) return;
-
       let arr = list || produtos;
 
       if (currentCategory !== "all") {
@@ -374,10 +370,6 @@
           <div class="loading">
             <div>
               <p><b>Nenhum produto encontrado.</b></p>
-              <p style="margin-top:8px;color:#777;font-size:13px">
-                Categoria atual: ${currentCategory}<br>
-                Produtos carregados: ${produtos.length}
-              </p>
               <button class="submit" onclick="setCategory('all')">Ver todos</button>
             </div>
           </div>
@@ -387,33 +379,29 @@
 
       grid.innerHTML = arr.map(p => {
         const cat = normalizarCategoria(p.categoria);
-        const stockClass = p.estoque <= 0 ? "stock-out" : p.estoque <= 3 ? "stock-low" : p.estoque <= 10 ? "stock-medium" : "stock-high";
-        const stockText = p.estoque <= 0 ? "esgotado" : p.estoque <= 3 ? `últimas ${p.estoque}` : p.estoque <= 10 ? "estoque baixo" : "em estoque";
+        const total = estoqueTotal(p);
+        const imgs = getProdutoImagens(p);
+        const foto = imgs[0] || "https://via.placeholder.com/600";
+
+        const stockClass = total <= 0 ? "stock-out" : total <= 3 ? "stock-low" : total <= 10 ? "stock-medium" : "stock-high";
+        const stockText = total <= 0 ? "esgotado" : total <= 3 ? `últimas ${total}` : total <= 10 ? "estoque baixo" : "em estoque";
 
         return `
           <article class="product-card">
-            ${p.estoque > 0 && p.estoque <= 3 ? `<span class="product-badge">últimas</span>` : ""}
+            ${total > 0 && total <= 3 ? `<span class="product-badge">últimas</span>` : ""}
+            ${imgs.length > 1 ? `<span class="photo-count">${imgs.length} fotos</span>` : ""}
 
             <div class="product-image-container" onclick="abrirProduto('${p.id}', '${cat}')">
-              <img
-                class="product-image"
-                src="${p.imagem || "https://via.placeholder.com/600"}"
-                alt="${p.nome}"
-                loading="lazy"
-                onerror="this.src='https://via.placeholder.com/600'"
-              />
+              <img class="product-image" src="${foto}" alt="${escapeAttr(p.nome)}" loading="lazy" onerror="this.src='https://via.placeholder.com/600'" />
             </div>
 
             <div class="product-info">
-              <h3 class="product-name" onclick="abrirProduto('${p.id}', '${cat}')">${p.nome}</h3>
+              <h3 class="product-name" onclick="abrirProduto('${p.id}', '${cat}')">${escapeHtml(p.nome)}</h3>
               <div class="product-price">R$ ${money(p.preco)}</div>
               <div class="stock-info ${stockClass}">${stockText}</div>
 
               <div class="product-buttons">
-                ${p.estoque > 0
-                  ? `<button class="product-btn buy-btn" onclick="addToCart('${p.id}')">Comprar</button>`
-                  : `<button class="product-btn disabled-btn" disabled>Esgotado</button>`
-                }
+                <button class="product-btn buy-btn" onclick="abrirProduto('${p.id}', '${cat}')">Comprar</button>
                 <button class="product-btn details-btn" onclick="abrirProduto('${p.id}', '${cat}')">Ver detalhes</button>
               </div>
             </div>
@@ -425,72 +413,35 @@
     function setCategory(category) {
       currentCategory = category;
       document.querySelectorAll(".tab").forEach(btn => btn.classList.remove("active"));
-
+      const map = { all: "todos", camisa: "camisa", calca: "calça", tenis: "tênis" };
       document.querySelectorAll(".tab").forEach(btn => {
-        const text = btn.textContent.toLowerCase();
-        if (
-          (category === "all" && text.includes("todos")) ||
-          (category === "camisa" && text.includes("camisa")) ||
-          (category === "calca" && text.includes("calça")) ||
-          (category === "tenis" && text.includes("tênis"))
-        ) btn.classList.add("active");
+        if (btn.textContent.toLowerCase().includes(map[category])) btn.classList.add("active");
       });
-
       renderProducts();
+    }
+
+    function setCategoryAndScroll(category) {
+      setCategory(category);
+      scrollToShop();
+      toggleSidebar(false);
     }
 
     function searchProducts() {
       const term = document.getElementById("searchInput")?.value.toLowerCase() || "";
       let arr = produtos;
-
-      if (currentCategory !== "all") {
-        arr = arr.filter(p => normalizarCategoria(p.categoria) === currentCategory);
-      }
-
-      if (term) {
-        arr = arr.filter(p =>
-          String(p.nome || "").toLowerCase().includes(term) ||
-          String(p.descricao || "").toLowerCase().includes(term)
-        );
-      }
-
+      if (currentCategory !== "all") arr = arr.filter(p => normalizarCategoria(p.categoria) === currentCategory);
+      if (term) arr = arr.filter(p => String(p.nome || "").toLowerCase().includes(term) || String(p.descricao || "").toLowerCase().includes(term));
       renderProducts(arr);
     }
 
     function sortProducts() {
       const value = document.getElementById("sortSelect")?.value;
       let arr = produtos.filter(p => currentCategory === "all" || normalizarCategoria(p.categoria) === currentCategory);
-
       if (value === "price-asc") arr.sort((a, b) => a.preco - b.preco);
       if (value === "price-desc") arr.sort((a, b) => b.preco - a.preco);
       if (value === "name-asc") arr.sort((a, b) => String(a.nome).localeCompare(String(b.nome)));
-      if (value === "stock") arr.sort((a, b) => b.estoque - a.estoque);
-
+      if (value === "stock") arr.sort((a, b) => estoqueTotal(b) - estoqueTotal(a));
       renderProducts(arr);
-    }
-
-    function addToCart(id) {
-      const produto = produtos.find(p => p.id === id);
-      if (!produto || produto.estoque <= 0) return notify("Produto indisponível", "error");
-
-      const item = carrinho.find(i => i.id === id);
-
-      if (item) {
-        if (item.quantidade >= produto.estoque) return notify("Quantidade máxima em estoque", "warning");
-        item.quantidade++;
-      } else {
-        carrinho.push({
-          id: produto.id,
-          nome: produto.nome,
-          preco: produto.preco,
-          imagem: produto.imagem,
-          quantidade: 1
-        });
-      }
-
-      saveCart();
-      updateCart();
-      notify("Produto adicionado ao carrinho", "success");
     }
 
     function updateCart() {
@@ -518,15 +469,16 @@
         <div class="cart-item">
           <img class="cart-item-image" src="${item.imagem || "https://via.placeholder.com/200"}" onerror="this.src='https://via.placeholder.com/200'" />
           <div>
-            <div class="cart-item-name">${item.nome}</div>
+            <div class="cart-item-name">${escapeHtml(item.nome)}</div>
+            ${item.tamanho ? `<div class="cart-item-size">Tam. ${escapeHtml(item.tamanho)}</div>` : ""}
             <div class="cart-item-price">R$ ${money(item.preco * item.quantidade)}</div>
             <div class="cart-item-actions">
               <div class="quantity-control">
-                <button class="quantity-btn" onclick="changeQty('${item.id}', -1)">-</button>
+                <button class="quantity-btn" onclick="changeQty('${item.cartId || item.id}', -1)">-</button>
                 <span>${item.quantidade}</span>
-                <button class="quantity-btn" onclick="changeQty('${item.id}', 1)">+</button>
+                <button class="quantity-btn" onclick="changeQty('${item.cartId || item.id}', 1)">+</button>
               </div>
-              <button class="remove-item" onclick="removeItem('${item.id}')">remover</button>
+              <button class="remove-item" onclick="removeItem('${item.cartId || item.id}')">remover</button>
             </div>
           </div>
         </div>
@@ -534,28 +486,23 @@
 
       const subtotal = carrinho.reduce((s, i) => s + Number(i.preco || 0) * Number(i.quantidade || 0), 0);
       const frete = subtotal >= 400 ? 0 : 9.9;
-
       document.getElementById("cartSubtotal").textContent = `R$ ${money(subtotal)}`;
       document.getElementById("cartFrete").textContent = frete === 0 ? "Grátis" : `R$ ${money(frete)}`;
       document.getElementById("cartTotal").textContent = `R$ ${money(subtotal + frete)}`;
     }
 
-    function changeQty(id, amount) {
-      const item = carrinho.find(i => i.id === id);
-      const produto = produtos.find(p => p.id === id);
-      if (!item || !produto) return;
-
-      const nova = item.quantidade + amount;
-      if (nova <= 0) return removeItem(id);
-      if (nova > produto.estoque) return notify("Estoque insuficiente", "warning");
-
+    function changeQty(cartId, amount) {
+      const item = carrinho.find(i => (i.cartId || i.id) === cartId);
+      if (!item) return;
+      const nova = Number(item.quantidade || 0) + amount;
+      if (nova <= 0) return removeItem(cartId);
       item.quantidade = nova;
       saveCart();
       updateCart();
     }
 
-    function removeItem(id) {
-      carrinho = carrinho.filter(i => i.id !== id);
+    function removeItem(cartId) {
+      carrinho = carrinho.filter(i => (i.cartId || i.id) !== cartId);
       saveCart();
       updateCart();
     }
@@ -577,45 +524,24 @@
 
     function openCheckout() {
       if (!carrinho.length) return;
-
-      const subtotal = carrinho.reduce((s, i) => s + i.preco * i.quantidade, 0);
+      const subtotal = carrinho.reduce((s, i) => s + Number(i.preco || 0) * Number(i.quantidade || 0), 0);
       const frete = subtotal >= 400 ? 0 : 9.9;
       const total = subtotal + frete;
 
       document.getElementById("checkoutBody").innerHTML = `
         <form onsubmit="criarPix(event)">
-          <div class="form-group">
-            <label>Nome completo *</label>
-            <input id="nome" required />
-          </div>
-          <div class="form-group">
-            <label>WhatsApp *</label>
-            <input id="telefone" required />
-          </div>
-          <div class="form-group">
-            <label>E-mail *</label>
-            <input id="email" type="email" required />
-          </div>
-          <div class="form-group">
-            <label>Endereço *</label>
-            <textarea id="endereco" required placeholder="Rua, número, bairro, cidade, CEP"></textarea>
-          </div>
-
+          <div class="form-group"><label>Nome completo *</label><input id="nome" required /></div>
+          <div class="form-group"><label>WhatsApp *</label><input id="telefone" required /></div>
+          <div class="form-group"><label>E-mail *</label><input id="email" type="email" required /></div>
+          <div class="form-group"><label>Endereço *</label><textarea id="endereco" required placeholder="Rua, número, bairro, cidade, CEP"></textarea></div>
           <div class="order-summary">
-            ${carrinho.map(i => `
-              <div class="order-item">
-                <span>${i.nome} x${i.quantidade}</span>
-                <strong>R$ ${money(i.preco * i.quantidade)}</strong>
-              </div>
-            `).join("")}
+            ${carrinho.map(i => `<div class="order-item"><span>${escapeHtml(i.nome)} x${i.quantidade}</span><strong>R$ ${money(i.preco * i.quantidade)}</strong></div>`).join("")}
             <div class="order-item"><span>Frete</span><strong>${frete === 0 ? "Grátis" : `R$ ${money(frete)}`}</strong></div>
             <div class="order-total"><span>Total</span><strong>R$ ${money(total)}</strong></div>
           </div>
-
           <button class="submit" type="submit">Gerar Pix</button>
         </form>
       `;
-
       document.getElementById("checkoutModal").classList.add("active");
     }
 
@@ -625,15 +551,13 @@
 
     async function criarPix(event) {
       event.preventDefault();
-
       const cliente = {
         nome: document.getElementById("nome").value,
         telefone: document.getElementById("telefone").value,
         email: document.getElementById("email").value,
         endereco: document.getElementById("endereco").value
       };
-
-      const itens = carrinho.map(i => ({ id: i.id, quantidade: i.quantidade }));
+      const itens = carrinho.map(i => ({ id: i.id, tamanho: i.tamanho || "", quantidade: i.quantidade }));
 
       try {
         const res = await fetch(`${API_URL}/api/criar-pix`, {
@@ -641,10 +565,8 @@
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ cliente, itens })
         });
-
         const data = await res.json();
         if (!data.ok) return notify(data.erro || "Erro ao gerar Pix", "error");
-
         closeCheckout();
         showPix(data);
       } catch (err) {
@@ -656,12 +578,11 @@
     function showPix(data) {
       document.getElementById("pixBody").innerHTML = `
         <h2>Pix gerado</h2>
-        <p>Pedido: <b>${data.pedidoId}</b></p>
+        <p>Pedido: <b>${escapeHtml(data.pedidoId || "")}</b></p>
         <p>Total: <b>R$ ${money(data.total)}</b></p>
         ${data.qrCodeBase64 ? `<img src="data:image/png;base64,${data.qrCodeBase64}" alt="QR Code Pix" />` : ""}
         <textarea readonly>${data.qrCode || data.pixChave || ""}</textarea>
         <button class="copy" onclick="copyPix('${data.qrCode || data.pixChave || ""}')">Copiar Pix</button>
-        <p style="margin-top:12px;color:#777;font-size:13px">Após o pagamento, o pedido será confirmado pelo sistema.</p>
         <button class="close-light" onclick="closePix()">Fechar</button>
       `;
       document.getElementById("pixModal").classList.add("active");
@@ -679,40 +600,27 @@
     function toggleSidebar(force) {
       const sidebar = document.getElementById("sidebar");
       const overlay = document.querySelector(".overlay");
-
       if (force === false) {
         sidebar.classList.remove("active");
         overlay.classList.remove("active");
         return;
       }
-
       sidebar.classList.toggle("active");
       overlay.classList.toggle("active");
     }
 
     function focusSearch() {
-      const input = document.getElementById("searchInput");
-      if (input) {
-        input.focus();
-        document.getElementById("shop")?.scrollIntoView({ behavior: "smooth" });
-      }
+      document.getElementById("shop")?.scrollIntoView({ behavior: "smooth" });
+      setTimeout(() => document.getElementById("searchInput")?.focus(), 250);
     }
 
     function scrollToShop() {
       document.getElementById("shop")?.scrollIntoView({ behavior: "smooth" });
-      toggleSidebar(false);
     }
 
     function goHome() {
-      currentCategory = "all";
       setCategory("all");
       window.scrollTo({ top: 0, behavior: "smooth" });
-      toggleSidebar(false);
-    }
-
-    function openCategoryPage(category) {
-      setCategory(category);
-      document.getElementById("shop")?.scrollIntoView({ behavior: "smooth" });
       toggleSidebar(false);
     }
 
@@ -721,7 +629,6 @@
         const banners = document.querySelectorAll(".banner");
         const dots = document.querySelectorAll(".dot");
         if (!banners.length) return;
-
         currentBanner = (currentBanner + 1) % banners.length;
         banners.forEach((b, i) => b.classList.toggle("active", i === currentBanner));
         dots.forEach((d, i) => d.classList.toggle("active", i === currentBanner));
@@ -742,14 +649,6 @@
       setTimeout(() => n.remove(), 3100);
     }
 
-    function escapeHtml(text) {
-      return String(text || "")
-        .replaceAll("&", "&amp;")
-        .replaceAll("<", "&lt;")
-        .replaceAll(">", "&gt;")
-        .replaceAll('"', "&quot;");
-    }
-
     function openAdmin() {
       document.getElementById("adminModal").classList.add("active");
       adminToken ? loadAdminProducts() : showAdminLogin();
@@ -762,12 +661,9 @@
     function showAdminLogin() {
       document.getElementById("adminBody").innerHTML = `
         <form onsubmit="adminLogin(event)">
-          <div class="form-group">
-            <label>Senha admin</label>
-            <input id="adminSenha" type="password" required autocomplete="off" />
-          </div>
+          <div class="form-group"><label>Senha admin</label><input id="adminSenha" type="password" required autocomplete="off" /></div>
           <button class="submit" type="submit">Entrar</button>
-          <p style="margin-top:12px;color:#777;font-size:13px">Aperte Ctrl + Alt + 8 para abrir esse painel. A senha é conferida no backend.</p>
+          <p class="admin-help">Use Ctrl + Alt + 8 para abrir esse painel.</p>
         </form>
       `;
     }
@@ -775,17 +671,14 @@
     async function adminLogin(event) {
       event.preventDefault();
       const senha = document.getElementById("adminSenha").value;
-
       try {
         const res = await fetch(`${API_URL}/api/admin/login`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({ senha })
         });
-
         const data = await res.json();
         if (!data.ok) return notify(data.erro || "Senha incorreta", "error");
-
         adminToken = data.token;
         localStorage.setItem("jws_admin_token", adminToken);
         notify("Admin conectado", "success");
@@ -798,19 +691,16 @@
 
     async function loadAdminProducts() {
       document.getElementById("adminBody").innerHTML = `<div class="loading"><div><div class="spinner"></div><p>Carregando painel...</p></div></div>`;
-
       try {
         const res = await fetch(`${API_URL}/api/admin/produtos`, {
           headers: { Authorization: `Bearer ${adminToken}` }
         });
-
         const data = await res.json();
         if (!data.ok) {
           adminLogout();
           return notify(data.erro || "Login expirou", "error");
         }
-
-        adminProdutos = data.produtos || [];
+        adminProdutos = (data.produtos || []).map(sanitizeProduto);
         renderAdmin();
       } catch (err) {
         console.error(err);
@@ -825,11 +715,16 @@
           <button class="submit" onclick="saveAdminProducts()">Salvar tudo</button>
           <button class="clear" onclick="adminLogout()">Sair</button>
         </div>
+        <p class="admin-help">Fotos: uma URL por linha. A primeira foto vira a miniatura da loja e a primeira foto do produto.</p>
         <div class="admin-list">${adminProdutos.map((p, i) => adminProductHtml(p, i)).join("")}</div>
       `;
     }
 
     function adminProductHtml(p, i) {
+      const imagensTexto = getProdutoImagens(p).join("\n");
+      const tamanhosTexto = (p.tamanhos || []).join(", ");
+      const estoqueTexto = (p.tamanhos || []).map(t => `${t}:${Number((p.estoque_tamanhos || {})[t] || 0)}`).join(", ");
+
       return `
         <div class="admin-product">
           <div class="admin-product-top">
@@ -837,52 +732,74 @@
             <div>
               <b>${escapeHtml(p.nome || "Sem nome")}</b>
               <small>${escapeHtml(p.id || "")}</small>
+              <small>${getProdutoImagens(p).length} foto(s) • estoque total ${estoqueTotal(p)}</small>
             </div>
           </div>
 
           <div class="admin-grid">
-            <div class="form-group">
-              <label>ID</label>
-              <input value="${escapeHtml(p.id || "")}" onchange="adminProdutos[${i}].id=this.value" />
-            </div>
-            <div class="form-group">
-              <label>Nome</label>
-              <input value="${escapeHtml(p.nome || "")}" onchange="adminProdutos[${i}].nome=this.value" />
-            </div>
+            <div class="form-group"><label>ID</label><input value="${escapeAttr(p.id || "")}" onchange="adminProdutos[${i}].id=this.value" /></div>
+            <div class="form-group"><label>Nome</label><input value="${escapeAttr(p.nome || "")}" onchange="adminProdutos[${i}].nome=this.value" /></div>
             <div class="form-group">
               <label>Categoria</label>
               <select onchange="adminProdutos[${i}].categoria=this.value">
-                <option value="camisa" ${normalizarCategoria(p.categoria) === "camisa" ? "selected" : ""}>Camisa</option>
-                <option value="calca" ${normalizarCategoria(p.categoria) === "calca" ? "selected" : ""}>Calça</option>
-                <option value="tenis" ${normalizarCategoria(p.categoria) === "tenis" ? "selected" : ""}>Tênis</option>
+                <option value="camisa" ${p.categoria === "camisa" ? "selected" : ""}>Camisa</option>
+                <option value="calca" ${p.categoria === "calca" ? "selected" : ""}>Calça</option>
+                <option value="tenis" ${p.categoria === "tenis" ? "selected" : ""}>Tênis</option>
               </select>
             </div>
-            <div class="form-group">
-              <label>Preço</label>
-              <input type="number" step="0.01" value="${Number(p.preco || 0)}" onchange="adminProdutos[${i}].preco=Number(this.value)" />
-            </div>
-            <div class="form-group">
-              <label>Estoque</label>
-              <input type="number" value="${Number(p.estoque || 0)}" onchange="adminProdutos[${i}].estoque=Number(this.value)" />
-            </div>
-            <div class="form-group">
-              <label>Imagem / miniatura</label>
-              <input value="${escapeHtml(p.imagem || "")}" onchange="adminProdutos[${i}].imagem=this.value" />
-            </div>
+            <div class="form-group"><label>Preço</label><input type="number" step="0.01" value="${Number(p.preco || 0)}" onchange="adminProdutos[${i}].preco=Number(this.value)" /></div>
           </div>
 
           <div class="form-group">
-            <label>Descrição</label>
-            <textarea onchange="adminProdutos[${i}].descricao=this.value">${escapeHtml(p.descricao || "")}</textarea>
-          </div>
-          <div class="form-group">
-            <label>Tamanhos separados por vírgula</label>
-            <input value="${escapeHtml((p.tamanhos || []).join(", "))}" onchange="adminProdutos[${i}].tamanhos=this.value.split(',').map(x=>x.trim()).filter(Boolean)" />
+            <label>Fotos do produto / miniatura</label>
+            <textarea rows="6" onchange="setAdminImages(${i}, this.value)">${escapeHtml(imagensTexto)}</textarea>
           </div>
 
+          <div class="admin-grid">
+            <div class="form-group">
+              <label>Tamanhos separados por vírgula</label>
+              <input value="${escapeAttr(tamanhosTexto)}" onchange="setAdminSizes(${i}, this.value)" />
+            </div>
+            <div class="form-group">
+              <label>Estoque por tamanho</label>
+              <input value="${escapeAttr(estoqueTexto)}" onchange="setAdminStockSizes(${i}, this.value)" placeholder="P:2, M:3, G:1" />
+            </div>
+          </div>
+
+          <div class="form-group"><label>Descrição</label><textarea onchange="adminProdutos[${i}].descricao=this.value">${escapeHtml(p.descricao || "")}</textarea></div>
           <button class="clear danger" onclick="deleteAdminProduct(${i})">Excluir produto</button>
         </div>
       `;
+    }
+
+    function setAdminImages(index, value) {
+      const imgs = value.split("\n").map(x => x.trim()).filter(Boolean);
+      adminProdutos[index].imagem = imgs[0] || "";
+      adminProdutos[index].imagens = imgs;
+      renderAdmin();
+    }
+
+    function setAdminSizes(index, value) {
+      const tamanhos = value.split(",").map(x => x.trim()).filter(Boolean);
+      adminProdutos[index].tamanhos = tamanhos;
+      adminProdutos[index].estoque_tamanhos = adminProdutos[index].estoque_tamanhos || {};
+      tamanhos.forEach(t => {
+        if (adminProdutos[index].estoque_tamanhos[t] === undefined) adminProdutos[index].estoque_tamanhos[t] = 0;
+      });
+      adminProdutos[index].estoque = estoqueTotal(adminProdutos[index]);
+      renderAdmin();
+    }
+
+    function setAdminStockSizes(index, value) {
+      const obj = {};
+      value.split(",").map(x => x.trim()).filter(Boolean).forEach(part => {
+        const [tam, qtd] = part.split(":").map(x => x.trim());
+        if (tam) obj[tam] = Number(qtd || 0);
+      });
+      adminProdutos[index].estoque_tamanhos = obj;
+      adminProdutos[index].tamanhos = Object.keys(obj).length ? Object.keys(obj) : adminProdutos[index].tamanhos;
+      adminProdutos[index].estoque = Object.values(obj).reduce((s, v) => s + Number(v || 0), 0);
+      renderAdmin();
     }
 
     function addAdminProduct() {
@@ -891,8 +808,10 @@
         nome: "Novo produto",
         categoria: "camisa",
         preco: 0,
-        estoque: 1,
+        estoque: 4,
+        estoque_tamanhos: { P: 1, M: 1, G: 1, GG: 1 },
         imagem: "",
+        imagens: [],
         descricao: "",
         tamanhos: ["P", "M", "G", "GG"]
       });
@@ -907,18 +826,25 @@
 
     async function saveAdminProducts() {
       try {
+        const produtosLimpos = adminProdutos.map(p => {
+          const clean = sanitizeProduto(p);
+          clean.estoque = estoqueTotal(clean);
+          clean.imagem = getProdutoImagens(clean)[0] || "";
+          clean.imagens = getProdutoImagens(clean);
+          return clean;
+        });
+
         const res = await fetch(`${API_URL}/api/admin/produtos`, {
           method: "PUT",
           headers: {
             "Content-Type": "application/json",
             Authorization: `Bearer ${adminToken}`
           },
-          body: JSON.stringify({ produtos: adminProdutos })
+          body: JSON.stringify({ produtos: produtosLimpos })
         });
 
         const data = await res.json();
         if (!data.ok) return notify(data.erro || "Erro ao salvar", "error");
-
         notify("Produtos salvos", "success");
         await carregarProdutos();
       } catch (err) {
@@ -931,6 +857,18 @@
       adminToken = "";
       localStorage.removeItem("jws_admin_token");
       showAdminLogin();
+    }
+
+    function escapeHtml(text) {
+      return String(text || "")
+        .replaceAll("&", "&amp;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;")
+        .replaceAll('"', "&quot;");
+    }
+
+    function escapeAttr(text) {
+      return escapeHtml(text).replaceAll("'", "&#039;");
     }
   </script>
 </body>

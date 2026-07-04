@@ -3,32 +3,21 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-
   <title>Jordan Wear Store</title>
-
-  <link rel="stylesheet" href="style.css?v=50" />
+  <link rel="stylesheet" href="style.css?v=60" />
 </head>
-
 <body>
-  <div class="promo-strip">
-    Comprando a partir de <b>R$ 400,00</b>, o frete fica grátis.
-  </div>
+  <div class="promo-strip">Comprando a partir de <b>R$ 400,00</b>, o frete fica grátis.</div>
 
   <button class="hamburger" onclick="toggleSidebar()" aria-label="Abrir menu">
-    <span></span>
-    <span></span>
-    <span></span>
+    <span></span><span></span><span></span>
   </button>
 
   <div class="overlay" onclick="toggleSidebar(false)"></div>
 
   <aside class="sidebar" id="sidebar">
     <div class="sidebar-top">
-      <div>
-        <b>jordanwear</b>
-        <small>streetwear store</small>
-      </div>
-
+      <div><b>jordanwear</b><small>streetwear store</small></div>
       <button onclick="toggleSidebar(false)">×</button>
     </div>
 
@@ -42,20 +31,12 @@
       <button class="side-link" onclick="scrollToShop()">Todos os produtos</button>
     </nav>
 
-    <div class="safe-note">
-      Painel admin oculto: <b>Ctrl + Alt + 8</b>. A senha fica no backend, não no site.
-    </div>
+    <div class="safe-note">Painel admin oculto: <b>Ctrl + Alt + 8</b>.</div>
   </aside>
 
   <header>
     <button class="header-search" onclick="focusSearch()" aria-label="Buscar"></button>
-
-    <img
-      class="logo"
-      src="https://i.pinimg.com/736x/97/20/a6/9720a60b3796f5660a5e12c771775a02.jpg"
-      alt="Jordan Wear Store"
-    />
-
+    <img class="logo" src="https://i.pinimg.com/736x/97/20/a6/9720a60b3796f5660a5e12c771775a02.jpg" alt="Jordan Wear Store" />
     <button class="cart-btn" onclick="toggleCart()" aria-label="Abrir carrinho">
       <img src="Carrinho.svg" alt="Carrinho" onerror="this.style.display='none'" />
       <span class="cart-count">0</span>
@@ -65,100 +46,35 @@
   <main id="app">
     <section class="hero">
       <div class="hero-banner">
-        <img
-          class="banner active"
-          src="https://i.pinimg.com/1200x/e1/5c/c1/e15cc1589691392bbcdad5ab9f7d0d4a.jpg"
-          alt="Banner Jordan Wear"
-        />
-
-        <img
-          class="banner"
-          src="https://i.pinimg.com/736x/82/21/f4/8221f40a9e4e84aec32443e0130f5cc6.jpg"
-          alt="Banner streetwear"
-        />
-
-        <img
-          class="banner"
-          src="https://i.pinimg.com/736x/47/9c/46/479c46d2e3a13214638a3d80d9ef2cd3.jpg"
-          alt="Banner roupas"
-        />
-
-        <div class="dots">
-          <button class="dot active" onclick="goBanner(0)"></button>
-          <button class="dot" onclick="goBanner(1)"></button>
-          <button class="dot" onclick="goBanner(2)"></button>
-        </div>
+        <img class="banner active" src="https://i.pinimg.com/1200x/e1/5c/c1/e15cc1589691392bbcdad5ab9f7d0d4a.jpg" alt="Banner" />
+        <img class="banner" src="https://i.pinimg.com/736x/82/21/f4/8221f40a9e4e84aec32443e0130f5cc6.jpg" alt="Banner" />
+        <img class="banner" src="https://i.pinimg.com/736x/47/9c/46/479c46d2e3a13214638a3d80d9ef2cd3.jpg" alt="Banner" />
+        <div class="dots"><button class="dot active" onclick="goBanner(0)"></button><button class="dot" onclick="goBanner(1)"></button><button class="dot" onclick="goBanner(2)"></button></div>
       </div>
 
       <div class="hero-text">
         <span class="tag">nova coleção</span>
-
         <h1>jordan wear store</h1>
-
-        <p>
-          Loja streetwear com camisas, calças, tênis, bermudas e moletons.
-        </p>
-
-        <div class="hero-actions">
-          <button onclick="scrollToShop()">Ver produtos</button>
-          <button class="ghost" onclick="openCategoryPage('calca')">Ver calças</button>
-        </div>
+        <p>Loja streetwear com camisas, calças, tênis, bermudas e moletons.</p>
+        <div class="hero-actions"><button onclick="scrollToShop()">Ver produtos</button><button class="ghost" onclick="openCategoryPage('calca')">Ver calças</button></div>
       </div>
     </section>
 
     <section class="category-showcase">
-      <button class="category-tile" onclick="openCategoryPage('calca')">
-        <span>coleção</span>
-        <strong>calças</strong>
-        <small>ver produtos</small>
-      </button>
-
-      <button class="category-tile" onclick="openCategoryPage('camisa')">
-        <span>drop</span>
-        <strong>camisas</strong>
-        <small>ver produtos</small>
-      </button>
-
-      <button class="category-tile" onclick="openCategoryPage('tenis')">
-        <span>seleção</span>
-        <strong>tênis</strong>
-        <small>ver produtos</small>
-      </button>
+      <button class="category-tile" onclick="openCategoryPage('calca')"><span>coleção</span><strong>calças</strong><small>ver produtos</small></button>
+      <button class="category-tile" onclick="openCategoryPage('camisa')"><span>drop</span><strong>camisas</strong><small>ver produtos</small></button>
+      <button class="category-tile" onclick="openCategoryPage('tenis')"><span>seleção</span><strong>tênis</strong><small>ver produtos</small></button>
     </section>
 
     <section class="features">
-      <article>
-        <div>🛒</div>
-        <h3>Frete grátis</h3>
-        <p>acima de R$ 400,00</p>
-      </article>
-
-      <article>
-        <div>💳</div>
-        <h3>Pix</h3>
-        <p>pagamento rápido</p>
-      </article>
-
-      <article>
-        <div>📦</div>
-        <h3>Envio</h3>
-        <p>pedido separado após confirmação</p>
-      </article>
-
-      <article>
-        <div>🛡️</div>
-        <h3>Seguro</h3>
-        <p>compra conferida</p>
-      </article>
+      <article><div>🛒</div><h3>Frete grátis</h3><p>acima de R$ 400,00</p></article>
+      <article><div>💳</div><h3>Pix</h3><p>pagamento rápido</p></article>
+      <article><div>📦</div><h3>Envio</h3><p>pedido separado após confirmação</p></article>
+      <article><div>🛡️</div><h3>Seguro</h3><p>compra conferida</p></article>
     </section>
 
     <section class="shop" id="shop">
-      <div class="section-head">
-        <span class="tag dark">produtos</span>
-        <h2 id="shopTitle">todos os produtos</h2>
-        <div class="api-status" id="apiStatus">carregando...</div>
-      </div>
-
+      <div class="section-head"><span class="tag dark">produtos</span><h2 id="shopTitle">todos os produtos</h2><div class="api-status" id="apiStatus">carregando...</div></div>
       <div class="tabs">
         <button class="tab active" onclick="setCategory('all')">Todos</button>
         <button class="tab" onclick="setCategory('camisa')">Camisas</button>
@@ -167,126 +83,37 @@
         <button class="tab" onclick="setCategory('bermuda')">Bermudas</button>
         <button class="tab" onclick="setCategory('moletom')">Moletons</button>
       </div>
-
       <div class="filters">
-        <label class="search">
-          <span>⌕</span>
-          <input
-            id="searchInput"
-            type="text"
-            placeholder="Buscar produto..."
-            oninput="searchProducts()"
-          />
-        </label>
-
-        <select id="sortSelect" onchange="sortProducts()">
-          <option value="default">Ordenar</option>
-          <option value="price-asc">Menor preço</option>
-          <option value="price-desc">Maior preço</option>
-          <option value="name-asc">A-Z</option>
-          <option value="stock">Mais estoque</option>
-        </select>
+        <label class="search"><span>⌕</span><input id="searchInput" type="text" placeholder="Buscar produto..." oninput="searchProducts()" /></label>
+        <select id="sortSelect" onchange="sortProducts()"><option value="default">Ordenar</option><option value="price-asc">Menor preço</option><option value="price-desc">Maior preço</option><option value="name-asc">A-Z</option><option value="stock">Mais estoque</option></select>
       </div>
-
-      <div class="grid" id="productsGrid">
-        <div class="loading">
-          <div>
-            <div class="spinner"></div>
-            <p>Carregando produtos...</p>
-          </div>
-        </div>
-      </div>
+      <div class="grid" id="productsGrid"><div class="loading"><div><div class="spinner"></div><p>Carregando produtos...</p></div></div></div>
     </section>
   </main>
 
   <aside class="cart" id="cart">
-    <div class="cart-head">
-      <h3>Meu carrinho</h3>
-      <button onclick="toggleCart()">×</button>
-    </div>
-
-    <div class="cart-items" id="cartItems">
-      <div class="empty-cart">
-        <div>🛍️</div>
-        <p>Carrinho vazio</p>
-      </div>
-    </div>
-
+    <div class="cart-head"><h3>Meu carrinho</h3><button onclick="toggleCart()">×</button></div>
+    <div class="cart-items" id="cartItems"><div class="empty-cart"><div>🛍️</div><p>Carrinho vazio</p></div></div>
     <div class="cart-footer">
-      <div class="cart-summary" id="cartSummary" style="display:none">
-        <div>
-          <span>Subtotal</span>
-          <strong id="cartSubtotal">R$ 0,00</strong>
-        </div>
-
-        <div>
-          <span>Frete</span>
-          <strong id="cartFrete">R$ 9,90</strong>
-        </div>
-
-        <div class="total">
-          <span>Total</span>
-          <strong id="cartTotal">R$ 0,00</strong>
-        </div>
-      </div>
-
-      <button class="checkout" id="checkoutBtn" style="display:none" onclick="openCheckout()">
-        Finalizar compra
-      </button>
-
-      <button class="clear" id="clearCartBtn" style="display:none" onclick="clearCart()">
-        Limpar carrinho
-      </button>
+      <div class="cart-summary" id="cartSummary" style="display:none"><div><span>Subtotal</span><strong id="cartSubtotal">R$ 0,00</strong></div><div><span>Frete</span><strong id="cartFrete">R$ 9,90</strong></div><div class="total"><span>Total</span><strong id="cartTotal">R$ 0,00</strong></div></div>
+      <button class="checkout" id="checkoutBtn" style="display:none" onclick="openCheckout()">Finalizar compra</button>
+      <button class="clear" id="clearCartBtn" style="display:none" onclick="clearCart()">Limpar carrinho</button>
     </div>
   </aside>
 
-  <section class="modal" id="checkoutModal">
-    <div class="modal-card">
-      <div class="modal-head">
-        <h3>Finalizar pedido</h3>
-        <button onclick="closeCheckout()">×</button>
-      </div>
+  <section class="modal" id="checkoutModal"><div class="modal-card"><div class="modal-head"><h3>Finalizar pedido</h3><button onclick="closeCheckout()">×</button></div><div class="modal-body" id="checkoutBody"></div></div></section>
+  <section class="modal" id="pixModal"><div class="modal-card"><div class="modal-head"><h3>Pagamento Pix</h3><button onclick="closePix()">×</button></div><div class="pix-box" id="pixBody"></div></div></section>
+  <section class="modal" id="adminModal"><div class="modal-card admin-card"><div class="modal-head"><h3>Painel Admin</h3><button onclick="closeAdmin()">×</button></div><div class="modal-body" id="adminBody"></div></div></section>
 
-      <div class="modal-body" id="checkoutBody"></div>
-    </div>
-  </section>
-
-  <section class="modal" id="pixModal">
-    <div class="modal-card">
-      <div class="modal-head">
-        <h3>Pagamento Pix</h3>
-        <button onclick="closePix()">×</button>
-      </div>
-
-      <div class="pix-box" id="pixBody"></div>
-    </div>
-  </section>
-
-  <section class="modal" id="adminModal">
-    <div class="modal-card admin-card">
-      <div class="modal-head">
-        <h3>Painel Admin</h3>
-        <button onclick="closeAdmin()">×</button>
-      </div>
-
-      <div class="modal-body" id="adminBody"></div>
-    </div>
-  </section>
-
-  <footer>
-    <b>jordanwear</b>
-    <p>Streetwear selecionado. Pedido via Pix.</p>
-  </footer>
+  <footer><b>jordanwear</b><p>Streetwear selecionado. Pedido via Pix.</p></footer>
 
   <script>
     const API_URL = "https://jordan-store-backend.onrender.com".replace(/\/$/, "");
-
     let produtos = [];
     let produtosRender = [];
     let carrinho = JSON.parse(localStorage.getItem("jws_cart") || "[]");
     let currentCategory = "all";
     let currentBanner = 0;
-
     let adminToken = localStorage.getItem("jws_admin_token") || "";
     let adminProdutos = [];
 
@@ -324,7 +151,6 @@
       if (c.includes("tenis") || c.includes("sapato")) return "tenis";
       if (c.includes("bermuda") || c.includes("short")) return "bermuda";
       if (c.includes("moletom") || c.includes("blusa")) return "moletom";
-
       return c || "camisa";
     }
 
@@ -341,28 +167,14 @@
     }
 
     function getEstoqueTamanhos(produto) {
-      const estoque =
-        produto.estoqueTamanhos ||
-        produto.estoque_tamanhos ||
-        produto.estoques ||
-        {};
+      const estoque = produto.estoqueTamanhos || produto.estoque_tamanhos || produto.estoques || {};
 
-      if (
-        estoque &&
-        typeof estoque === "object" &&
-        !Array.isArray(estoque) &&
-        Object.keys(estoque).length > 0
-      ) {
+      if (estoque && typeof estoque === "object" && !Array.isArray(estoque) && Object.keys(estoque).length > 0) {
         const limpo = {};
-
         Object.entries(estoque).forEach(([tamanho, quantidade]) => {
-          const tam = String(tamanho || "").trim();
-
-          if (tam) {
-            limpo[tam] = Number(quantidade || 0);
-          }
+          const tam = String(tamanho || "").trim().toUpperCase();
+          if (tam) limpo[tam] = Number(quantidade || 0);
         });
-
         return limpo;
       }
 
@@ -372,84 +184,58 @@
     function getEstoqueTotal(produto) {
       const estoqueTamanhos = getEstoqueTamanhos(produto);
       const valores = Object.values(estoqueTamanhos);
-
-      if (valores.length > 0) {
-        return valores.reduce((total, valor) => total + Number(valor || 0), 0);
-      }
-
+      if (valores.length > 0) return valores.reduce((total, valor) => total + Number(valor || 0), 0);
       return Number(produto.estoque || 0);
     }
 
     function getTamanhosProduto(produto) {
       const estoqueTamanhos = getEstoqueTamanhos(produto);
       const tamanhosEstoque = Object.keys(estoqueTamanhos);
-
-      if (tamanhosEstoque.length > 0) {
-        return tamanhosEstoque;
-      }
-
+      if (tamanhosEstoque.length > 0) return tamanhosEstoque;
       if (Array.isArray(produto.tamanhos) && produto.tamanhos.length > 0) {
-        return produto.tamanhos.map(t => String(t || "").trim()).filter(Boolean);
+        return produto.tamanhos.map(t => String(t || "").trim().toUpperCase()).filter(Boolean);
       }
-
       return ["P", "M", "G", "GG"];
     }
 
     function getFotosProduto(produto) {
       const fotos = [];
-
-      if (produto.imagem) {
-        fotos.push(String(produto.imagem).trim());
-      }
-
+      if (produto.imagem) fotos.push(String(produto.imagem).trim());
       if (Array.isArray(produto.imagens)) {
         produto.imagens.forEach(img => {
           const foto = String(img || "").trim();
-
-          if (foto && !fotos.includes(foto)) {
-            fotos.push(foto);
-          }
+          if (foto && !fotos.includes(foto)) fotos.push(foto);
         });
       }
-
       return fotos.filter(Boolean);
     }
 
     function formatEstoqueTamanhos(estoqueTamanhos, tamanhos) {
-      const estoque = estoqueTamanhos && typeof estoqueTamanhos === "object"
-        ? estoqueTamanhos
-        : {};
+      const estoque = estoqueTamanhos && typeof estoqueTamanhos === "object" ? estoqueTamanhos : {};
+      const listaTamanhos = Array.isArray(tamanhos) && tamanhos.length
+        ? tamanhos.map(t => String(t || "").trim().toUpperCase()).filter(Boolean)
+        : Object.keys(estoque).length
+          ? Object.keys(estoque).map(t => String(t || "").trim().toUpperCase()).filter(Boolean)
+          : ["P", "M", "G", "GG"];
 
-      if (Object.keys(estoque).length > 0) {
-        return Object.entries(estoque)
-          .map(([tam, qtd]) => `${tam}: ${qtd}`)
-          .join("\n");
-      }
-
-      const lista = Array.isArray(tamanhos) && tamanhos.length
-        ? tamanhos
-        : ["P", "M", "G", "GG"];
-
-      return lista.map(t => `${t}: 0`).join("\n");
+      return listaTamanhos.map(tamanho => {
+        const tam = String(tamanho || "").trim().toUpperCase();
+        const qtd = Number(estoque[tam] ?? estoque[tamanho] ?? 0);
+        return `${tam}: ${qtd}`;
+      }).join("\n");
     }
 
     function parseEstoqueTamanhos(texto) {
       const obj = {};
-
-      String(texto || "")
-        .split("\n")
-        .map(linha => linha.trim())
-        .filter(Boolean)
-        .forEach(linha => {
-          const partes = linha.split(":");
-          const tamanho = String(partes[0] || "").trim();
-          const qtd = Number(partes[1] || 0);
-
-          if (tamanho) {
-            obj[tamanho] = qtd;
-          }
-        });
-
+      const raw = String(texto || "").trim();
+      if (!raw) return obj;
+      const regex = /([A-Za-z0-9À-ÿ]+)\s*:\s*([0-9]+)/g;
+      let match;
+      while ((match = regex.exec(raw)) !== null) {
+        const tamanho = String(match[1] || "").trim().toUpperCase();
+        const quantidade = Number(match[2] || 0);
+        if (tamanho) obj[tamanho] = quantidade;
+      }
       return obj;
     }
 
@@ -458,7 +244,6 @@
       const estoqueTamanhos = getEstoqueTamanhos(p);
       const estoqueTotal = getEstoqueTotal(p);
       const tamanhos = getTamanhosProduto(p);
-
       return {
         ...p,
         id: String(p.id || `produto-${Date.now()}`).trim(),
@@ -478,201 +263,101 @@
     async function carregarProdutos() {
       const status = document.getElementById("apiStatus");
       const grid = document.getElementById("productsGrid");
-
       try {
         status.textContent = "carregando...";
         status.className = "api-status";
-
         let data = null;
-
         try {
           const res = await fetch(`${API_URL}/api/produtos?cache=${Date.now()}`);
-
-          if (!res.ok) {
-            throw new Error("Backend offline");
-          }
-
+          if (!res.ok) throw new Error("Backend offline");
           data = await res.json();
         } catch (errBackend) {
           console.warn("Backend falhou, tentando produtos.json local", errBackend);
-
           const local = await fetch(`produtos.json?cache=${Date.now()}`);
-
-          if (!local.ok) {
-            throw new Error("Não achei produtos.json");
-          }
-
+          if (!local.ok) throw new Error("Não achei produtos.json");
           data = await local.json();
         }
-
         const lista = Array.isArray(data) ? data : data.produtos || [];
-
         produtos = lista.map(normalizarProduto);
         produtosRender = [...produtos];
-
         status.textContent = `online • ${produtos.length} produtos`;
         status.className = "api-status ok";
-
         renderProducts();
       } catch (err) {
         console.error(err);
-
         status.textContent = "erro";
         status.className = "api-status err";
-
-        grid.innerHTML = `
-          <div class="loading">
-            <div>
-              <p><b>Não foi possível carregar os produtos.</b></p>
-              <p style="margin-top:8px;color:#777;font-size:13px">${escapeHtml(err.message)}</p>
-              <button class="submit" onclick="carregarProdutos()">Tentar novamente</button>
-            </div>
-          </div>
-        `;
+        grid.innerHTML = `<div class="loading"><div><p><b>Não foi possível carregar os produtos.</b></p><p style="margin-top:8px;color:#777;font-size:13px">${escapeHtml(err.message)}</p><button class="submit" onclick="carregarProdutos()">Tentar novamente</button></div></div>`;
       }
     }
 
     function abrirProduto(id, categoria) {
       const pasta = normalizarCategoria(categoria);
-      window.location.href = `produtos/${pasta}/?id=${encodeURIComponent(id)}&v=50`;
+      window.location.href = `produtos/${pasta}/?id=${encodeURIComponent(id)}&v=60`;
     }
 
     function renderProducts(list = null) {
       const grid = document.getElementById("productsGrid");
       if (!grid) return;
-
       let arr = list || produtos;
-
-      if (currentCategory !== "all") {
-        arr = arr.filter(p => normalizarCategoria(p.categoria) === currentCategory);
-      }
-
+      if (currentCategory !== "all") arr = arr.filter(p => normalizarCategoria(p.categoria) === currentCategory);
       if (!arr.length) {
-        grid.innerHTML = `
-          <div class="loading">
-            <div>
-              <p><b>Nenhum produto encontrado.</b></p>
-              <button class="submit" onclick="setCategory('all')">Ver todos</button>
-            </div>
-          </div>
-        `;
+        grid.innerHTML = `<div class="loading"><div><p><b>Nenhum produto encontrado.</b></p><button class="submit" onclick="setCategory('all')">Ver todos</button></div></div>`;
         return;
       }
-
       grid.innerHTML = arr.map(p => {
         const cat = normalizarCategoria(p.categoria);
         const estoque = getEstoqueTotal(p);
         const fotos = getFotosProduto(p);
         const img = fotos[0] || "https://via.placeholder.com/600";
-
-        const stockClass =
-          estoque <= 0 ? "stock-out" :
-          estoque <= 3 ? "stock-low" :
-          estoque <= 10 ? "stock-medium" :
-          "stock-high";
-
-        const stockText =
-          estoque <= 0 ? "esgotado" :
-          estoque <= 3 ? `últimas ${estoque}` :
-          estoque <= 10 ? `${estoque} em estoque` :
-          `${estoque} em estoque`;
-
+        const stockClass = estoque <= 0 ? "stock-out" : estoque <= 3 ? "stock-low" : estoque <= 10 ? "stock-medium" : "stock-high";
+        const stockText = estoque <= 0 ? "esgotado" : estoque <= 3 ? `últimas ${estoque}` : `${estoque} em estoque`;
         return `
           <article class="product-card">
             ${estoque > 0 && estoque <= 3 ? `<span class="product-badge">últimas</span>` : ""}
-
             <div class="product-image-container" onclick="abrirProduto('${p.id}', '${cat}')">
-              <img
-                class="product-image"
-                src="${img}"
-                alt="${escapeHtml(p.nome)}"
-                loading="lazy"
-                onerror="this.src='https://via.placeholder.com/600'"
-              />
+              <img class="product-image" src="${img}" alt="${escapeHtml(p.nome)}" loading="lazy" onerror="this.src='https://via.placeholder.com/600'" />
             </div>
-
             <div class="product-info">
-              <h3 class="product-name" onclick="abrirProduto('${p.id}', '${cat}')">
-                ${escapeHtml(p.nome)}
-              </h3>
-
+              <h3 class="product-name" onclick="abrirProduto('${p.id}', '${cat}')">${escapeHtml(p.nome)}</h3>
               <div class="product-price">R$ ${money(p.preco)}</div>
               <div class="stock-info ${stockClass}">${stockText}</div>
-
               <div class="product-buttons">
-                ${
-                  estoque > 0
-                    ? `<button class="product-btn buy-btn" onclick="abrirProduto('${p.id}', '${cat}')">Comprar</button>`
-                    : `<button class="product-btn disabled-btn" disabled>Esgotado</button>`
-                }
-
-                <button class="product-btn details-btn" onclick="abrirProduto('${p.id}', '${cat}')">
-                  Ver detalhes
-                </button>
+                ${estoque > 0 ? `<button class="product-btn buy-btn" onclick="abrirProduto('${p.id}', '${cat}')">Comprar</button>` : `<button class="product-btn disabled-btn" disabled>Esgotado</button>`}
+                <button class="product-btn details-btn" onclick="abrirProduto('${p.id}', '${cat}')">Ver detalhes</button>
               </div>
             </div>
-          </article>
-        `;
+          </article>`;
       }).join("");
     }
 
     function setCategory(category) {
       currentCategory = category;
-
       document.getElementById("shopTitle").textContent = categoriaNomes[category] || "produtos";
-
-      document.querySelectorAll(".tab").forEach(btn => {
-        btn.classList.remove("active");
-      });
-
+      document.querySelectorAll(".tab").forEach(btn => btn.classList.remove("active"));
       document.querySelectorAll(".tab").forEach(btn => {
         const text = btn.textContent.toLowerCase();
-
-        if (
-          category === "all" && text.includes("todos") ||
-          category === "camisa" && text.includes("camisa") ||
-          category === "calca" && text.includes("calça") ||
-          category === "tenis" && text.includes("tênis") ||
-          category === "bermuda" && text.includes("bermuda") ||
-          category === "moletom" && text.includes("moletom")
-        ) {
-          btn.classList.add("active");
-        }
+        if ((category === "all" && text.includes("todos")) || (category === "camisa" && text.includes("camisa")) || (category === "calca" && text.includes("calça")) || (category === "tenis" && text.includes("tênis")) || (category === "bermuda" && text.includes("bermuda")) || (category === "moletom" && text.includes("moletom"))) btn.classList.add("active");
       });
-
-      renderProducts();
+      produtosRender = produtos.filter(p => category === "all" || normalizarCategoria(p.categoria) === category);
+      renderProducts(produtosRender);
     }
 
     function searchProducts() {
       const term = document.getElementById("searchInput")?.value.toLowerCase() || "";
-
-      let arr = produtos;
-
-      if (currentCategory !== "all") {
-        arr = arr.filter(p => normalizarCategoria(p.categoria) === currentCategory);
-      }
-
-      if (term) {
-        arr = arr.filter(p =>
-          String(p.nome || "").toLowerCase().includes(term) ||
-          String(p.descricao || "").toLowerCase().includes(term)
-        );
-      }
-
+      let arr = produtos.filter(p => currentCategory === "all" || normalizarCategoria(p.categoria) === currentCategory);
+      if (term) arr = arr.filter(p => String(p.nome || "").toLowerCase().includes(term) || String(p.descricao || "").toLowerCase().includes(term));
       produtosRender = arr;
       renderProducts(arr);
     }
 
     function sortProducts() {
       const value = document.getElementById("sortSelect")?.value;
-
       let arr = [...produtosRender];
-
       if (value === "price-asc") arr.sort((a, b) => a.preco - b.preco);
       if (value === "price-desc") arr.sort((a, b) => b.preco - a.preco);
       if (value === "name-asc") arr.sort((a, b) => String(a.nome).localeCompare(String(b.nome)));
       if (value === "stock") arr.sort((a, b) => getEstoqueTotal(b) - getEstoqueTotal(a));
-
       renderProducts(arr);
     }
 
@@ -680,60 +365,28 @@
       const count = carrinho.reduce((s, i) => s + Number(i.quantidade || 0), 0);
       const countEl = document.querySelector(".cart-count");
       if (countEl) countEl.textContent = count;
-
       const items = document.getElementById("cartItems");
       const summary = document.getElementById("cartSummary");
       const checkout = document.getElementById("checkoutBtn");
       const clear = document.getElementById("clearCartBtn");
-
       if (!items) return;
-
       if (!carrinho.length) {
-        items.innerHTML = `
-          <div class="empty-cart">
-            <div>🛍️</div>
-            <p>Carrinho vazio</p>
-          </div>
-        `;
-
+        items.innerHTML = `<div class="empty-cart"><div>🛍️</div><p>Carrinho vazio</p></div>`;
         summary.style.display = "none";
         checkout.style.display = "none";
         clear.style.display = "none";
         return;
       }
-
       summary.style.display = "grid";
       checkout.style.display = "block";
       clear.style.display = "block";
-
       items.innerHTML = carrinho.map(item => `
         <div class="cart-item">
-          <img
-            class="cart-item-image"
-            src="${item.imagem || "https://via.placeholder.com/200"}"
-            onerror="this.src='https://via.placeholder.com/200'"
-          />
-
-          <div>
-            <div class="cart-item-name">${escapeHtml(item.nome)}</div>
-            <div class="cart-item-price">R$ ${money(item.preco * item.quantidade)}</div>
-
-            <div class="cart-item-actions">
-              <div class="quantity-control">
-                <button class="quantity-btn" onclick="changeQty('${item.cartId || item.id}', -1)">-</button>
-                <span>${item.quantidade}</span>
-                <button class="quantity-btn" onclick="changeQty('${item.cartId || item.id}', 1)">+</button>
-              </div>
-
-              <button class="remove-item" onclick="removeItem('${item.cartId || item.id}')">remover</button>
-            </div>
-          </div>
-        </div>
-      `).join("");
-
+          <img class="cart-item-image" src="${item.imagem || "https://via.placeholder.com/200"}" onerror="this.src='https://via.placeholder.com/200'" />
+          <div><div class="cart-item-name">${escapeHtml(item.nome)}</div><div class="cart-item-price">R$ ${money(item.preco * item.quantidade)}</div><div class="cart-item-actions"><div class="quantity-control"><button class="quantity-btn" onclick="changeQty('${item.cartId || item.id}', -1)">-</button><span>${item.quantidade}</span><button class="quantity-btn" onclick="changeQty('${item.cartId || item.id}', 1)">+</button></div><button class="remove-item" onclick="removeItem('${item.cartId || item.id}')">remover</button></div></div>
+        </div>`).join("");
       const subtotal = carrinho.reduce((s, i) => s + Number(i.preco || 0) * Number(i.quantidade || 0), 0);
       const frete = subtotal >= 400 ? 0 : 9.9;
-
       document.getElementById("cartSubtotal").textContent = `R$ ${money(subtotal)}`;
       document.getElementById("cartFrete").textContent = frete === 0 ? "Grátis" : `R$ ${money(frete)}`;
       document.getElementById("cartTotal").textContent = `R$ ${money(subtotal + frete)}`;
@@ -742,476 +395,154 @@
     function changeQty(cartId, amount) {
       const item = carrinho.find(i => (i.cartId || i.id) === cartId);
       if (!item) return;
-
       const nova = Number(item.quantidade || 0) + amount;
-
-      if (nova <= 0) {
-        removeItem(cartId);
-        return;
-      }
-
+      if (nova <= 0) return removeItem(cartId);
       item.quantidade = nova;
       saveCart();
       updateCart();
     }
 
-    function removeItem(cartId) {
-      carrinho = carrinho.filter(i => (i.cartId || i.id) !== cartId);
-      saveCart();
-      updateCart();
-    }
-
-    function clearCart() {
-      if (!confirm("Limpar carrinho?")) return;
-
-      carrinho = [];
-      saveCart();
-      updateCart();
-    }
-
-    function saveCart() {
-      localStorage.setItem("jws_cart", JSON.stringify(carrinho));
-    }
-
-    function toggleCart() {
-      document.getElementById("cart").classList.toggle("active");
-    }
+    function removeItem(cartId) { carrinho = carrinho.filter(i => (i.cartId || i.id) !== cartId); saveCart(); updateCart(); }
+    function clearCart() { if (!confirm("Limpar carrinho?")) return; carrinho = []; saveCart(); updateCart(); }
+    function saveCart() { localStorage.setItem("jws_cart", JSON.stringify(carrinho)); }
+    function toggleCart() { document.getElementById("cart").classList.toggle("active"); }
 
     function openCheckout() {
       if (!carrinho.length) return;
-
       const subtotal = carrinho.reduce((s, i) => s + Number(i.preco || 0) * Number(i.quantidade || 0), 0);
       const frete = subtotal >= 400 ? 0 : 9.9;
       const total = subtotal + frete;
-
       document.getElementById("checkoutBody").innerHTML = `
         <form onsubmit="criarPix(event)">
-          <div class="form-group">
-            <label>Nome completo *</label>
-            <input id="nome" required />
-          </div>
-
-          <div class="form-group">
-            <label>WhatsApp *</label>
-            <input id="telefone" required />
-          </div>
-
-          <div class="form-group">
-            <label>E-mail *</label>
-            <input id="email" type="email" required />
-          </div>
-
-          <div class="form-group">
-            <label>Endereço *</label>
-            <textarea id="endereco" required placeholder="Rua, número, bairro, cidade, CEP"></textarea>
-          </div>
-
-          <div class="order-summary">
-            ${carrinho.map(i => `
-              <div class="order-item">
-                <span>${escapeHtml(i.nome)} x${i.quantidade}</span>
-                <strong>R$ ${money(i.preco * i.quantidade)}</strong>
-              </div>
-            `).join("")}
-
-            <div class="order-item">
-              <span>Frete</span>
-              <strong>${frete === 0 ? "Grátis" : `R$ ${money(frete)}`}</strong>
-            </div>
-
-            <div class="order-total">
-              <span>Total</span>
-              <strong>R$ ${money(total)}</strong>
-            </div>
-          </div>
-
+          <div class="form-group"><label>Nome completo *</label><input id="nome" required /></div>
+          <div class="form-group"><label>WhatsApp *</label><input id="telefone" required /></div>
+          <div class="form-group"><label>E-mail *</label><input id="email" type="email" required /></div>
+          <div class="form-group"><label>Endereço *</label><textarea id="endereco" required placeholder="Rua, número, bairro, cidade, CEP"></textarea></div>
+          <div class="order-summary">${carrinho.map(i => `<div class="order-item"><span>${escapeHtml(i.nome)} x${i.quantidade}</span><strong>R$ ${money(i.preco * i.quantidade)}</strong></div>`).join("")}<div class="order-item"><span>Frete</span><strong>${frete === 0 ? "Grátis" : `R$ ${money(frete)}`}</strong></div><div class="order-total"><span>Total</span><strong>R$ ${money(total)}</strong></div></div>
           <button class="submit" type="submit">Gerar Pix</button>
-        </form>
-      `;
-
+        </form>`;
       document.getElementById("checkoutModal").classList.add("active");
     }
 
-    function closeCheckout() {
-      document.getElementById("checkoutModal").classList.remove("active");
-    }
+    function closeCheckout() { document.getElementById("checkoutModal").classList.remove("active"); }
 
     async function criarPix(event) {
       event.preventDefault();
-
-      const cliente = {
-        nome: document.getElementById("nome").value,
-        telefone: document.getElementById("telefone").value,
-        email: document.getElementById("email").value,
-        endereco: document.getElementById("endereco").value
-      };
-
-      const itens = carrinho.map(i => ({
-        id: i.id,
-        quantidade: i.quantidade,
-        tamanho: i.tamanho || ""
-      }));
-
+      const cliente = { nome: document.getElementById("nome").value, telefone: document.getElementById("telefone").value, email: document.getElementById("email").value, endereco: document.getElementById("endereco").value };
+      const itens = carrinho.map(i => ({ id: i.id, quantidade: i.quantidade, tamanho: i.tamanho || "" }));
       try {
-        const res = await fetch(`${API_URL}/api/criar-pix`, {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json"
-          },
-          body: JSON.stringify({ cliente, itens })
-        });
-
+        const res = await fetch(`${API_URL}/api/criar-pix`, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ cliente, itens }) });
         const data = await res.json();
-
-        if (!data.ok) {
-          notify(data.erro || "Erro ao gerar Pix", "error");
-          return;
-        }
-
-        closeCheckout();
-        showPix(data);
-      } catch (err) {
-        console.error(err);
-        notify("Erro ao conectar com o backend", "error");
-      }
+        if (!data.ok) return notify(data.erro || "Erro ao gerar Pix", "error");
+        closeCheckout(); showPix(data);
+      } catch (err) { console.error(err); notify("Erro ao conectar com o backend", "error"); }
     }
 
     function showPix(data) {
-      document.getElementById("pixBody").innerHTML = `
-        <h2>Pix gerado</h2>
-        <p>Pedido: <b>${escapeHtml(data.pedidoId || "")}</b></p>
-        <p>Total: <b>R$ ${money(data.total)}</b></p>
-
-        ${
-          data.qrCodeBase64
-            ? `<img src="data:image/png;base64,${data.qrCodeBase64}" alt="QR Code Pix" />`
-            : ""
-        }
-
-        <textarea readonly>${data.qrCode || data.pixChave || ""}</textarea>
-
-        <button class="copy" onclick="copyPix('${data.qrCode || data.pixChave || ""}')">
-          Copiar Pix
-        </button>
-
-        <button class="close-light" onclick="closePix()">Fechar</button>
-      `;
-
+      document.getElementById("pixBody").innerHTML = `<h2>Pix gerado</h2><p>Pedido: <b>${escapeHtml(data.pedidoId || "")}</b></p><p>Total: <b>R$ ${money(data.total)}</b></p>${data.qrCodeBase64 ? `<img src="data:image/png;base64,${data.qrCodeBase64}" alt="QR Code Pix" />` : ""}<textarea readonly>${data.qrCode || data.pixChave || ""}</textarea><button class="copy" onclick="copyPix('${data.qrCode || data.pixChave || ""}')">Copiar Pix</button><button class="close-light" onclick="closePix()">Fechar</button>`;
       document.getElementById("pixModal").classList.add("active");
     }
-
-    function closePix() {
-      document.getElementById("pixModal").classList.remove("active");
-    }
-
-    function copyPix(text) {
-      navigator.clipboard.writeText(text);
-      notify("Pix copiado", "success");
-    }
+    function closePix() { document.getElementById("pixModal").classList.remove("active"); }
+    function copyPix(text) { navigator.clipboard.writeText(text); notify("Pix copiado", "success"); }
 
     function toggleSidebar(force) {
       const sidebar = document.getElementById("sidebar");
       const overlay = document.querySelector(".overlay");
-
-      if (force === false) {
-        sidebar.classList.remove("active");
-        overlay.classList.remove("active");
-        return;
-      }
-
-      sidebar.classList.toggle("active");
-      overlay.classList.toggle("active");
+      if (force === false) { sidebar.classList.remove("active"); overlay.classList.remove("active"); return; }
+      sidebar.classList.toggle("active"); overlay.classList.toggle("active");
     }
 
-    function focusSearch() {
-      const input = document.getElementById("searchInput");
-
-      if (input) {
-        input.focus();
-        document.getElementById("shop")?.scrollIntoView({ behavior: "smooth" });
-      }
-    }
-
-    function scrollToShop() {
-      document.getElementById("shop")?.scrollIntoView({ behavior: "smooth" });
-      toggleSidebar(false);
-    }
-
-    function goHome() {
-      currentCategory = "all";
-      setCategory("all");
-      window.scrollTo({ top: 0, behavior: "smooth" });
-      toggleSidebar(false);
-    }
-
-    function openCategoryPage(category) {
-      setCategory(category);
-      document.getElementById("shop")?.scrollIntoView({ behavior: "smooth" });
-      toggleSidebar(false);
-    }
+    function focusSearch() { const input = document.getElementById("searchInput"); if (input) { input.focus(); document.getElementById("shop")?.scrollIntoView({ behavior: "smooth" }); } }
+    function scrollToShop() { document.getElementById("shop")?.scrollIntoView({ behavior: "smooth" }); toggleSidebar(false); }
+    function goHome() { currentCategory = "all"; setCategory("all"); window.scrollTo({ top: 0, behavior: "smooth" }); toggleSidebar(false); }
+    function openCategoryPage(category) { setCategory(category); document.getElementById("shop")?.scrollIntoView({ behavior: "smooth" }); toggleSidebar(false); }
 
     function startBanner() {
       setInterval(() => {
         const banners = document.querySelectorAll(".banner");
         const dots = document.querySelectorAll(".dot");
-
         if (!banners.length) return;
-
         currentBanner = (currentBanner + 1) % banners.length;
-
         banners.forEach((b, i) => b.classList.toggle("active", i === currentBanner));
         dots.forEach((d, i) => d.classList.toggle("active", i === currentBanner));
       }, 5000);
     }
+    function goBanner(index) { currentBanner = index; document.querySelectorAll(".banner").forEach((b, i) => b.classList.toggle("active", i === index)); document.querySelectorAll(".dot").forEach((d, i) => d.classList.toggle("active", i === index)); }
+    function notify(text, type = "success") { const n = document.createElement("div"); n.className = `notification ${type}`; n.textContent = text; document.body.appendChild(n); setTimeout(() => n.remove(), 3100); }
 
-    function goBanner(index) {
-      currentBanner = index;
-
-      document.querySelectorAll(".banner").forEach((b, i) => b.classList.toggle("active", i === index));
-      document.querySelectorAll(".dot").forEach((d, i) => d.classList.toggle("active", i === index));
-    }
-
-    function notify(text, type = "success") {
-      const n = document.createElement("div");
-      n.className = `notification ${type}`;
-      n.textContent = text;
-      document.body.appendChild(n);
-
-      setTimeout(() => n.remove(), 3100);
-    }
-
-    function openAdmin() {
-      document.getElementById("adminModal").classList.add("active");
-
-      if (adminToken) {
-        loadAdminProducts();
-      } else {
-        showAdminLogin();
-      }
-    }
-
-    function closeAdmin() {
-      document.getElementById("adminModal").classList.remove("active");
-    }
-
-    function showAdminLogin() {
-      document.getElementById("adminBody").innerHTML = `
-        <form onsubmit="adminLogin(event)">
-          <div class="form-group">
-            <label>Senha admin</label>
-            <input id="adminSenha" type="password" required autocomplete="off" />
-          </div>
-
-          <button class="submit" type="submit">Entrar</button>
-
-          <p style="margin-top:12px;color:#777;font-size:13px">
-            Aperte Ctrl + Alt + 8 para abrir esse painel.
-          </p>
-        </form>
-      `;
-    }
+    function openAdmin() { document.getElementById("adminModal").classList.add("active"); adminToken ? loadAdminProducts() : showAdminLogin(); }
+    function closeAdmin() { document.getElementById("adminModal").classList.remove("active"); }
+    function showAdminLogin() { document.getElementById("adminBody").innerHTML = `<form onsubmit="adminLogin(event)"><div class="form-group"><label>Senha admin</label><input id="adminSenha" type="password" required autocomplete="off" /></div><button class="submit" type="submit">Entrar</button><p style="margin-top:12px;color:#777;font-size:13px">Aperte Ctrl + Alt + 8 para abrir esse painel.</p></form>`; }
 
     async function adminLogin(event) {
       event.preventDefault();
-
       const senha = document.getElementById("adminSenha").value;
-
       try {
-        const res = await fetch(`${API_URL}/api/admin/login`, {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json"
-          },
-          body: JSON.stringify({ senha })
-        });
-
+        const res = await fetch(`${API_URL}/api/admin/login`, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ senha }) });
         const data = await res.json();
-
-        if (!data.ok) {
-          notify(data.erro || "Senha incorreta", "error");
-          return;
-        }
-
+        if (!data.ok) return notify(data.erro || "Senha incorreta", "error");
         adminToken = data.token;
         localStorage.setItem("jws_admin_token", adminToken);
-
         notify("Admin conectado", "success");
         loadAdminProducts();
-      } catch (err) {
-        console.error(err);
-        notify("Erro ao conectar no backend", "error");
-      }
+      } catch (err) { console.error(err); notify("Erro ao conectar no backend", "error"); }
     }
 
     async function loadAdminProducts() {
-      document.getElementById("adminBody").innerHTML = `
-        <div class="loading">
-          <div>
-            <div class="spinner"></div>
-            <p>Carregando painel...</p>
-          </div>
-        </div>
-      `;
-
+      document.getElementById("adminBody").innerHTML = `<div class="loading"><div><div class="spinner"></div><p>Carregando painel...</p></div></div>`;
       try {
-        const res = await fetch(`${API_URL}/api/admin/produtos?cache=${Date.now()}`, {
-          headers: {
-            Authorization: `Bearer ${adminToken}`
-          }
-        });
-
+        const res = await fetch(`${API_URL}/api/admin/produtos?cache=${Date.now()}`, { headers: { Authorization: `Bearer ${adminToken}` } });
         const data = await res.json();
-
-        if (!data.ok) {
-          adminLogout();
-          notify(data.erro || "Login expirou", "error");
-          return;
-        }
-
+        if (!data.ok) { adminLogout(); notify(data.erro || "Login expirou", "error"); return; }
         const lista = Array.isArray(data.produtos) ? data.produtos : [];
-
         adminProdutos = lista.map(normalizarProduto);
         renderAdmin();
-      } catch (err) {
-        console.error(err);
-        notify("Erro ao carregar produtos admin", "error");
-      }
+      } catch (err) { console.error(err); notify("Erro ao carregar produtos admin", "error"); }
     }
 
     function renderAdmin() {
-      document.getElementById("adminBody").innerHTML = `
-        <div class="admin-toolbar">
-          <button class="submit" onclick="addAdminProduct()">+ Produto</button>
-          <button class="submit" onclick="saveAdminProducts()">Salvar tudo</button>
-          <button class="clear" onclick="adminLogout()">Sair</button>
-        </div>
-
-        <div class="admin-list">
-          ${adminProdutos.map((p, i) => adminProductHtml(p, i)).join("")}
-        </div>
-      `;
+      document.getElementById("adminBody").innerHTML = `<div class="admin-toolbar"><button class="submit" onclick="addAdminProduct()">+ Produto</button><button class="submit" onclick="saveAdminProducts()">Salvar tudo</button><button class="clear" onclick="adminLogout()">Sair</button></div><div class="admin-list">${adminProdutos.map((p, i) => adminProductHtml(p, i)).join("")}</div>`;
     }
 
     function adminProductHtml(p, i) {
       const estoqueAtual = getEstoqueTamanhos(p);
       const fotos = getFotosProduto(p);
-
       return `
         <div class="admin-product">
-          <div class="admin-product-top">
-            <img
-              src="${fotos[0] || "https://via.placeholder.com/120"}"
-              onerror="this.src='https://via.placeholder.com/120'"
-            />
-
-            <div>
-              <b>${escapeHtml(p.nome || "Sem nome")}</b>
-              <small>${escapeHtml(p.id || "")}</small>
-              <small>${fotos.length} foto(s) • estoque total ${getEstoqueTotal(p)}</small>
-            </div>
-          </div>
-
+          <div class="admin-product-top"><img src="${fotos[0] || "https://via.placeholder.com/120"}" onerror="this.src='https://via.placeholder.com/120'" /><div><b>${escapeHtml(p.nome || "Sem nome")}</b><small>${escapeHtml(p.id || "")}</small><small>${fotos.length} foto(s) • estoque total ${getEstoqueTotal(p)}</small></div></div>
           <div class="admin-grid">
-            <div class="form-group">
-              <label>ID</label>
-              <input value="${escapeHtml(p.id || "")}" onchange="adminProdutos[${i}].id=this.value" />
-            </div>
-
-            <div class="form-group">
-              <label>Nome</label>
-              <input value="${escapeHtml(p.nome || "")}" onchange="adminProdutos[${i}].nome=this.value" />
-            </div>
-
-            <div class="form-group">
-              <label>Categoria</label>
-              <select onchange="adminProdutos[${i}].categoria=this.value">
-                <option value="camisa" ${normalizarCategoria(p.categoria) === "camisa" ? "selected" : ""}>Camisa</option>
-                <option value="calca" ${normalizarCategoria(p.categoria) === "calca" ? "selected" : ""}>Calça</option>
-                <option value="tenis" ${normalizarCategoria(p.categoria) === "tenis" ? "selected" : ""}>Tênis</option>
-                <option value="bermuda" ${normalizarCategoria(p.categoria) === "bermuda" ? "selected" : ""}>Bermuda</option>
-                <option value="moletom" ${normalizarCategoria(p.categoria) === "moletom" ? "selected" : ""}>Moletom</option>
-              </select>
-            </div>
-
-            <div class="form-group">
-              <label>Preço</label>
-              <input type="number" step="0.01" value="${Number(p.preco || 0)}" onchange="adminProdutos[${i}].preco=Number(this.value)" />
-            </div>
+            <div class="form-group"><label>ID</label><input value="${escapeHtml(p.id || "")}" onchange="adminProdutos[${i}].id=this.value" /></div>
+            <div class="form-group"><label>Nome</label><input value="${escapeHtml(p.nome || "")}" onchange="adminProdutos[${i}].nome=this.value" /></div>
+            <div class="form-group"><label>Categoria</label><select onchange="adminProdutos[${i}].categoria=this.value"><option value="camisa" ${normalizarCategoria(p.categoria) === "camisa" ? "selected" : ""}>Camisa</option><option value="calca" ${normalizarCategoria(p.categoria) === "calca" ? "selected" : ""}>Calça</option><option value="tenis" ${normalizarCategoria(p.categoria) === "tenis" ? "selected" : ""}>Tênis</option><option value="bermuda" ${normalizarCategoria(p.categoria) === "bermuda" ? "selected" : ""}>Bermuda</option><option value="moletom" ${normalizarCategoria(p.categoria) === "moletom" ? "selected" : ""}>Moletom</option></select></div>
+            <div class="form-group"><label>Preço</label><input type="number" step="0.01" value="${Number(p.preco || 0)}" onchange="adminProdutos[${i}].preco=Number(this.value)" /></div>
           </div>
-
-          <div class="form-group">
-            <label>Fotos do produto / miniatura</label>
-            <textarea
-              class="admin-big-textarea"
-              onchange="atualizarFotosAdmin(${i}, this.value)"
-            >${escapeHtml(fotos.join("\n"))}</textarea>
-
-            <small style="display:block;margin-top:6px;color:#777;line-height:1.5">
-              A primeira foto vira a miniatura. Coloque uma foto por linha.
-            </small>
-          </div>
-
-          <div class="admin-grid">
-            <div class="form-group">
-              <label>Tamanhos separados por vírgula</label>
-              <input
-                value="${escapeHtml(getTamanhosProduto(p).join(", "))}"
-                onchange="atualizarTamanhosAdmin(${i}, this.value)"
-              />
-            </div>
-
-            <div class="form-group">
-              <label>Estoque por tamanho</label>
-              <textarea onchange="atualizarEstoqueAdmin(${i}, this.value)">${formatEstoqueTamanhos(estoqueAtual, getTamanhosProduto(p))}</textarea>
-            </div>
-          </div>
-
-          <div class="form-group">
-            <label>Descrição</label>
-            <textarea onchange="adminProdutos[${i}].descricao=this.value">${escapeHtml(p.descricao || "")}</textarea>
-          </div>
-
-          <button class="clear danger" onclick="deleteAdminProduct(${i})">
-            Excluir produto
-          </button>
-        </div>
-      `;
+          <div class="form-group"><label>Fotos do produto / miniatura</label><textarea class="admin-big-textarea" onchange="atualizarFotosAdmin(${i}, this.value)">${escapeHtml(fotos.join("\n"))}</textarea><small style="display:block;margin-top:6px;color:#777;line-height:1.5">A primeira foto vira a miniatura. Coloque uma foto por linha.</small></div>
+          <div class="admin-grid"><div class="form-group"><label>Tamanhos separados por vírgula</label><input value="${escapeHtml(getTamanhosProduto(p).join(", "))}" onchange="atualizarTamanhosAdmin(${i}, this.value)" /></div><div class="form-group"><label>Estoque por tamanho</label><textarea onchange="atualizarEstoqueAdmin(${i}, this.value)">${formatEstoqueTamanhos(estoqueAtual, getTamanhosProduto(p))}</textarea></div></div>
+          <div class="form-group"><label>Descrição</label><textarea onchange="adminProdutos[${i}].descricao=this.value">${escapeHtml(p.descricao || "")}</textarea></div>
+          <button class="clear danger" onclick="deleteAdminProduct(${i})">Excluir produto</button>
+        </div>`;
     }
 
     function atualizarFotosAdmin(index, texto) {
-      const fotos = String(texto || "")
-        .split("\n")
-        .map(x => x.trim())
-        .filter(Boolean);
-
+      const fotos = String(texto || "").split("\n").map(x => x.trim()).filter(Boolean);
       adminProdutos[index].imagem = fotos[0] || "";
       adminProdutos[index].imagens = fotos;
     }
 
     function atualizarTamanhosAdmin(index, texto) {
-      const tamanhos = String(texto || "")
-        .split(",")
-        .map(x => x.trim())
-        .filter(Boolean);
-
+      const tamanhos = String(texto || "").split(",").map(x => x.trim().toUpperCase()).filter(Boolean);
       const antigos = getEstoqueTamanhos(adminProdutos[index]);
       const novoEstoque = {};
-
-      tamanhos.forEach(tamanho => {
-        novoEstoque[tamanho] = Number(antigos[tamanho] || 0);
-      });
-
+      tamanhos.forEach(tamanho => { novoEstoque[tamanho] = Number(antigos[tamanho] || 0); });
       adminProdutos[index].tamanhos = tamanhos;
       adminProdutos[index].estoqueTamanhos = novoEstoque;
       adminProdutos[index].estoque_tamanhos = novoEstoque;
       adminProdutos[index].estoque = Object.values(novoEstoque).reduce((s, v) => s + Number(v || 0), 0);
-
       renderAdmin();
     }
 
     function atualizarEstoqueAdmin(index, texto) {
       const estoque = parseEstoqueTamanhos(texto);
-
       adminProdutos[index].estoqueTamanhos = estoque;
       adminProdutos[index].estoque_tamanhos = estoque;
       adminProdutos[index].tamanhos = Object.keys(estoque);
@@ -1219,73 +550,25 @@
     }
 
     function addAdminProduct() {
-      const estoquePadrao = {
-        P: 0,
-        M: 0,
-        G: 0,
-        GG: 0
-      };
-
-      adminProdutos.unshift({
-        id: `produto-${Date.now()}`,
-        nome: "Novo produto",
-        categoria: "camisa",
-        preco: 0,
-        estoque: 0,
-        estoqueTamanhos: estoquePadrao,
-        estoque_tamanhos: estoquePadrao,
-        imagem: "",
-        imagens: [],
-        descricao: "",
-        tamanhos: ["P", "M", "G", "GG"]
-      });
-
+      const estoquePadrao = { P: 0, M: 0, G: 0, GG: 0 };
+      adminProdutos.unshift({ id: `produto-${Date.now()}`, nome: "Novo produto", categoria: "camisa", preco: 0, estoque: 0, estoqueTamanhos: estoquePadrao, estoque_tamanhos: estoquePadrao, imagem: "", imagens: [], descricao: "", tamanhos: ["P", "M", "G", "GG"] });
       renderAdmin();
     }
 
-    function deleteAdminProduct(index) {
-      if (!confirm("Excluir produto?")) return;
-
-      adminProdutos.splice(index, 1);
-      renderAdmin();
-    }
+    function deleteAdminProduct(index) { if (!confirm("Excluir produto?")) return; adminProdutos.splice(index, 1); renderAdmin(); }
 
     async function saveAdminProducts() {
       try {
         const produtosParaSalvar = adminProdutos.map(normalizarProduto);
-
-        const res = await fetch(`${API_URL}/api/admin/produtos`, {
-          method: "PUT",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${adminToken}`
-          },
-          body: JSON.stringify({
-            produtos: produtosParaSalvar
-          })
-        });
-
+        const res = await fetch(`${API_URL}/api/admin/produtos`, { method: "PUT", headers: { "Content-Type": "application/json", Authorization: `Bearer ${adminToken}` }, body: JSON.stringify({ produtos: produtosParaSalvar }) });
         const data = await res.json();
-
-        if (!data.ok) {
-          notify(data.erro || "Erro ao salvar", "error");
-          return;
-        }
-
+        if (!data.ok) return notify(data.erro || "Erro ao salvar", "error");
         notify("Produtos salvos", "success");
-
         await carregarProdutos();
-      } catch (err) {
-        console.error(err);
-        notify("Erro ao salvar produtos", "error");
-      }
+      } catch (err) { console.error(err); notify("Erro ao salvar produtos", "error"); }
     }
 
-    function adminLogout() {
-      adminToken = "";
-      localStorage.removeItem("jws_admin_token");
-      showAdminLogin();
-    }
+    function adminLogout() { adminToken = ""; localStorage.removeItem("jws_admin_token"); showAdminLogin(); }
   </script>
 </body>
 </html>

@@ -36,7 +36,7 @@
       "nome": "Camisa França Azuk",
       "categoria": "camisa",
       "preco": 60,
-      "estoque": 1,
+      "estoque": 124,
       "imagem": "https://dcdn-us.mitiendanube.com/stores/007/694/334/products/20260519153953230001-88cd9e4b013f14281017792052534092-1024-1024.webp",
       "imagens": [
         "https://dcdn-us.mitiendanube.com/stores/007/694/334/products/20260519153953230001-88cd9e4b013f14281017792052534092-1024-1024.webp"
@@ -48,8 +48,18 @@
         "G",
         "GG"
       ],
-      "estoqueTamanhos": {},
-      "estoque_tamanhos": {}
+      "estoqueTamanhos": {
+        "P": 1,
+        "M": 0,
+        "G": 0,
+        "GG": 123
+      },
+      "estoque_tamanhos": {
+        "P": 1,
+        "M": 0,
+        "G": 0,
+        "GG": 123
+      }
     },
     {
       "id": "calca-street-preta",

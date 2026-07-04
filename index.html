@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Jordan Wear Store</title>
-  <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="style.css?v=20" />
 </head>
 <body>
   <div class="promo-strip">
@@ -277,22 +277,41 @@
       return [...new Set(imgs.filter(Boolean).map(x => String(x).trim()))];
     }
 
+    function getEstoqueMap(p) {
+      const camel = p && p.estoqueTamanhos && typeof p.estoqueTamanhos === "object" ? p.estoqueTamanhos : null;
+      const snake = p && p.estoque_tamanhos && typeof p.estoque_tamanhos === "object" ? p.estoque_tamanhos : null;
+      return camel || snake || {};
+    }
+
     function estoqueTotal(p) {
-      if (p.estoque_tamanhos && typeof p.estoque_tamanhos === "object") {
-        return Object.values(p.estoque_tamanhos).reduce((s, v) => s + Number(v || 0), 0);
+      const map = getEstoqueMap(p);
+      const valores = Object.values(map);
+
+      if (valores.length) {
+        return valores.reduce((s, v) => s + Number(v || 0), 0);
       }
+
       return Number(p.estoque || 0);
     }
 
     function sanitizeProduto(p) {
       const imagens = Array.isArray(p.imagens) ? p.imagens : [];
       const imagem = String(p.imagem || imagens[0] || "").trim();
-      const tamanhos = Array.isArray(p.tamanhos) && p.tamanhos.length ? p.tamanhos : ["P", "M", "G", "GG"];
-      const estoqueTamanhos = p.estoque_tamanhos && typeof p.estoque_tamanhos === "object" ? p.estoque_tamanhos : {};
+      const estoqueMapOriginal = getEstoqueMap(p);
+      const tamanhosBase = Array.isArray(p.tamanhos) && p.tamanhos.length
+        ? p.tamanhos
+        : Object.keys(estoqueMapOriginal).length
+          ? Object.keys(estoqueMapOriginal)
+          : ["P", "M", "G", "GG"];
+
+      const tamanhos = tamanhosBase.map(t => String(t).trim()).filter(Boolean);
+      const estoqueTamanhos = {};
 
       tamanhos.forEach(t => {
-        if (estoqueTamanhos[t] === undefined) estoqueTamanhos[t] = 0;
+        estoqueTamanhos[t] = Number(estoqueMapOriginal[t] || 0);
       });
+
+      const estoque = Object.values(estoqueTamanhos).reduce((s, v) => s + Number(v || 0), 0);
 
       return {
         ...p,
@@ -300,12 +319,13 @@
         nome: String(p.nome || "Produto sem nome").trim(),
         categoria: normalizarCategoria(p.categoria),
         preco: Number(p.preco || 0),
-        estoque: Number(p.estoque || 0),
+        estoque,
+        estoqueTamanhos,
         estoque_tamanhos: estoqueTamanhos,
         imagem,
         imagens: getProdutoImagens({ imagem, imagens }),
         descricao: String(p.descricao || "").trim(),
-        tamanhos: tamanhos.map(t => String(t).trim()).filter(Boolean)
+        tamanhos
       };
     }
 
@@ -723,7 +743,8 @@
     function adminProductHtml(p, i) {
       const imagensTexto = getProdutoImagens(p).join("\n");
       const tamanhosTexto = (p.tamanhos || []).join(", ");
-      const estoqueTexto = (p.tamanhos || []).map(t => `${t}:${Number((p.estoque_tamanhos || {})[t] || 0)}`).join(", ");
+      const estoqueMap = getEstoqueMap(p);
+      const estoqueTexto = (p.tamanhos || []).map(t => `${t}:${Number(estoqueMap[t] || 0)}`).join(", ");
 
       return `
         <div class="admin-product">
@@ -745,6 +766,8 @@
                 <option value="camisa" ${p.categoria === "camisa" ? "selected" : ""}>Camisa</option>
                 <option value="calca" ${p.categoria === "calca" ? "selected" : ""}>Calça</option>
                 <option value="tenis" ${p.categoria === "tenis" ? "selected" : ""}>Tênis</option>
+                <option value="bermuda" ${p.categoria === "bermuda" ? "selected" : ""}>Bermuda</option>
+                <option value="moletom" ${p.categoria === "moletom" ? "selected" : ""}>Moletom</option>
               </select>
             </div>
             <div class="form-group"><label>Preço</label><input type="number" step="0.01" value="${Number(p.preco || 0)}" onchange="adminProdutos[${i}].preco=Number(this.value)" /></div>
@@ -781,11 +804,14 @@
 
     function setAdminSizes(index, value) {
       const tamanhos = value.split(",").map(x => x.trim()).filter(Boolean);
-      adminProdutos[index].tamanhos = tamanhos;
-      adminProdutos[index].estoque_tamanhos = adminProdutos[index].estoque_tamanhos || {};
+      const antigo = getEstoqueMap(adminProdutos[index]);
+      const novo = {};
       tamanhos.forEach(t => {
-        if (adminProdutos[index].estoque_tamanhos[t] === undefined) adminProdutos[index].estoque_tamanhos[t] = 0;
+        novo[t] = Number(antigo[t] || 0);
       });
+      adminProdutos[index].tamanhos = tamanhos;
+      adminProdutos[index].estoqueTamanhos = novo;
+      adminProdutos[index].estoque_tamanhos = novo;
       adminProdutos[index].estoque = estoqueTotal(adminProdutos[index]);
       renderAdmin();
     }
@@ -796,6 +822,7 @@
         const [tam, qtd] = part.split(":").map(x => x.trim());
         if (tam) obj[tam] = Number(qtd || 0);
       });
+      adminProdutos[index].estoqueTamanhos = obj;
       adminProdutos[index].estoque_tamanhos = obj;
       adminProdutos[index].tamanhos = Object.keys(obj).length ? Object.keys(obj) : adminProdutos[index].tamanhos;
       adminProdutos[index].estoque = Object.values(obj).reduce((s, v) => s + Number(v || 0), 0);
@@ -809,6 +836,7 @@
         categoria: "camisa",
         preco: 0,
         estoque: 4,
+        estoqueTamanhos: { P: 1, M: 1, G: 1, GG: 1 },
         estoque_tamanhos: { P: 1, M: 1, G: 1, GG: 1 },
         imagem: "",
         imagens: [],
@@ -828,6 +856,9 @@
       try {
         const produtosLimpos = adminProdutos.map(p => {
           const clean = sanitizeProduto(p);
+          const estoqueMap = getEstoqueMap(clean);
+          clean.estoqueTamanhos = estoqueMap;
+          clean.estoque_tamanhos = estoqueMap;
           clean.estoque = estoqueTotal(clean);
           clean.imagem = getProdutoImagens(clean)[0] || "";
           clean.imagens = getProdutoImagens(clean);

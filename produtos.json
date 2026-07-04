@@ -7,7 +7,9 @@
       "preco": 60,
       "estoque": 4,
       "imagem": "https://dcdn-us.mitiendanube.com/stores/007/694/334/products/20260519153953230001-88cd9e4b013f14281017792052534092-1024-1024.webp",
-      "imagens": [],
+      "imagens": [
+        "https://dcdn-us.mitiendanube.com/stores/007/694/334/products/20260519153953230001-88cd9e4b013f14281017792052534092-1024-1024.webp"
+      ],
       "descricao": "teste"
     },
     {
@@ -17,7 +19,9 @@
       "preco": 125,
       "estoque": 3,
       "imagem": "https://i.pinimg.com/736x/47/9c/46/479c46d2e3a13214638a3d80d9ef2cd3.jpg",
-      "imagens": [],
+      "imagens": [
+        "https://i.pinimg.com/736x/47/9c/46/479c46d2e3a13214638a3d80d9ef2cd3.jpg"
+      ],
       "descricao": "Calça preta para montar kit streetwear."
     },
     {
@@ -27,10 +31,12 @@
       "preco": 220,
       "estoque": 2,
       "imagem": "https://i.pinimg.com/736x/55/e8/60/55e8602476052c3b9e3383840c3b3741.jpg",
-      "imagens": [],
+      "imagens": [
+        "https://i.pinimg.com/736x/55/e8/60/55e8602476052c3b9e3383840c3b3741.jpg"
+      ],
       "descricao": "Tênis estilo Jordan para fechar o outfit."
     }
   ],
-  "ultimaAtualizacao": "2026-07-04T03:53:46.671Z",
+  "ultimaAtualizacao": "2026-07-04T16:49:39.240Z",
   "totalProdutos": 3
 }

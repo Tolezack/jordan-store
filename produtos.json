@@ -5,10 +5,28 @@
       "nome": "cagada",
       "categoria": "camisa",
       "preco": 324,
-      "estoque": 24,
+      "estoque": 14,
       "imagem": "",
       "imagens": [],
-      "descricao": ""
+      "descricao": "",
+      "tamanhos": [
+        "P",
+        "M",
+        "G",
+        "GG"
+      ],
+      "estoqueTamanhos": {
+        "P": 0,
+        "M": 2,
+        "G": 0,
+        "GG": 12
+      },
+      "estoque_tamanhos": {
+        "P": 0,
+        "M": 2,
+        "G": 0,
+        "GG": 12
+      }
     },
     {
       "id": "camisa-frança-azul",
@@ -20,7 +38,15 @@
       "imagens": [
         "https://dcdn-us.mitiendanube.com/stores/007/694/334/products/20260519153953230001-88cd9e4b013f14281017792052534092-1024-1024.webp"
       ],
-      "descricao": "teste"
+      "descricao": "teste",
+      "tamanhos": [
+        "P",
+        "M",
+        "G",
+        "GG"
+      ],
+      "estoqueTamanhos": {},
+      "estoque_tamanhos": {}
     },
     {
       "id": "calca-street-preta",
@@ -32,7 +58,15 @@
       "imagens": [
         "https://i.pinimg.com/736x/47/9c/46/479c46d2e3a13214638a3d80d9ef2cd3.jpg"
       ],
-      "descricao": "Calça preta para montar kit streetwear."
+      "descricao": "Calça preta para montar kit streetwear.",
+      "tamanhos": [
+        "P",
+        "M",
+        "G",
+        "GG"
+      ],
+      "estoqueTamanhos": {},
+      "estoque_tamanhos": {}
     },
     {
       "id": "tenis-jordan-vermelho",
@@ -44,9 +78,15 @@
       "imagens": [
         "https://i.pinimg.com/736x/55/e8/60/55e8602476052c3b9e3383840c3b3741.jpg"
       ],
-      "descricao": "Tênis estilo Jordan para fechar o outfit."
+      "descricao": "Tênis estilo Jordan para fechar o outfit.",
+      "tamanhos": [
+        "P",
+        "M",
+        "G",
+        "GG"
+      ],
+      "estoqueTamanhos": {},
+      "estoque_tamanhos": {}
     }
-  ],
-  "ultimaAtualizacao": "2026-07-04T18:11:23.307Z",
-  "totalProdutos": 4
+  ]
 }

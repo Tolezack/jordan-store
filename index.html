@@ -3,109 +3,890 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Jordan Store</title>
+  <title>Jordan Wear Store</title>
   <link rel="stylesheet" href="style.css" />
 </head>
+
 <body>
   <div class="bg"></div>
 
-  <button class="hamburger" onclick="toggleSidebar()" aria-label="Menu"><span></span><span></span><span></span></button>
+  <!-- AVISO SUPERIOR -->
+  <div class="promo-strip">
+    Aproveite: comprando a partir de <b>R$ 400,00</b>, você ganha <b>FRETE GRÁTIS NA SUA COMPRA!</b> 🚚
+  </div>
+
+  <!-- MENU LATERAL -->
+  <button class="hamburger" onclick="toggleSidebar()" aria-label="Abrir menu">
+    <span></span>
+    <span></span>
+    <span></span>
+  </button>
+
   <div class="overlay" onclick="toggleSidebar()"></div>
 
   <aside class="sidebar" id="sidebar">
     <div class="sidebar-top">
-      <div><b>Jordan Store</b><small>streetwear • sneakers</small></div>
+      <div>
+        <b>jordanwear</b>
+        <small>streetwear store</small>
+      </div>
       <button onclick="toggleSidebar()">×</button>
     </div>
+
     <nav>
-      <button class="side-link active" onclick="filterByCategory('all');toggleSidebar()">🏠 Início</button>
-      <button class="side-link" onclick="filterByCategory('camisas');toggleSidebar()">👕 Camisas</button>
-      <button class="side-link" onclick="filterByCategory('calcas');toggleSidebar()">👖 Calças</button>
-      <button class="side-link" onclick="filterByCategory('tenis');toggleSidebar()">👟 Tênis</button>
+      <button class="side-link active" onclick="goHome()">Início</button>
+      <button class="side-link" onclick="openCategoryPage('camisas')">Camisas</button>
+      <button class="side-link" onclick="openCategoryPage('calcas')">Calças</button>
+      <button class="side-link" onclick="openCategoryPage('tenis')">Tênis</button>
+      <button class="side-link" onclick="scrollToShop()">Todos os produtos</button>
     </nav>
-    <div class="safe-note">Frontend público sem token. GitHub, Discord e Mercado Pago ficam só no backend.</div>
+
+    <div class="safe-note">
+      Pagamento via Pix. Produtos separados somente após confirmação do pagamento.
+    </div>
   </aside>
 
+  <!-- HEADER -->
   <header>
-    <img class="logo" src="https://i.pinimg.com/736x/97/20/a6/9720a60b3796f5660a5e12c771775a02.jpg" alt="Jordan Store">
-    <button class="cart-btn" onclick="toggleCart()">🛒<span class="cart-count">0</span></button>
+    <button class="header-search" onclick="focusSearch()" aria-label="Buscar">⌕</button>
+
+    <img
+      class="logo"
+      src="https://i.pinimg.com/736x/97/20/a6/9720a60b3796f5660a5e12c771775a02.jpg"
+      alt="Jordan Wear Store"
+    />
+
+    <button class="cart-btn" onclick="toggleCart()" aria-label="Abrir carrinho">
+      🛒
+      <span class="cart-count">0</span>
+    </button>
   </header>
 
-  <main>
+  <!-- PÁGINA PRINCIPAL -->
+  <main id="app">
     <section class="hero">
-      <div class="hero-text">
-        <span class="tag">DROP NOVO • PIX • ENVIO 24H</span>
-        <h1>Jordan Store</h1>
-        <p>Visual premium, preço acessível e Pix automático pelo backend.</p>
-        <div class="hero-actions">
-          <button onclick="scrollToProducts()">Ver produtos</button>
-          <button class="ghost" onclick="filterByCategory('tenis')">Tênis</button>
+      <div class="hero-banner">
+        <img
+          class="banner active"
+          src="https://i.pinimg.com/736x/82/21/f4/8221f40a9e4e84aec32443e0130f5cc6.jpg"
+          alt="Banner Jordan Wear Store"
+        />
+        <img
+          class="banner"
+          src="https://i.pinimg.com/736x/47/9c/46/479c46d2e3a13214638a3d80d9ef2cd3.jpg"
+          alt="Banner streetwear"
+        />
+        <img
+          class="banner"
+          src="https://i.pinimg.com/736x/55/e8/60/55e8602476052c3b9e3383840c3b3741.jpg"
+          alt="Banner roupas"
+        />
+
+        <div class="dots">
+          <button class="dot active" onclick="goBanner(0)"></button>
+          <button class="dot" onclick="goBanner(1)"></button>
+          <button class="dot" onclick="goBanner(2)"></button>
         </div>
       </div>
-      <div class="hero-banner">
-        <img class="banner active" src="https://i.pinimg.com/736x/82/21/f4/8221f40a9e4e84aec32443e0130f5cc6.jpg">
-        <img class="banner" src="https://i.pinimg.com/736x/47/9c/46/479c46d2e3a13214638a3d80d9ef2cd3.jpg">
-        <img class="banner" src="https://i.pinimg.com/736x/55/e8/60/55e8602476052c3b9e3383840c3b3741.jpg">
-        <div class="dots"><button class="dot active" onclick="goToBannerSlide(0)"></button><button class="dot" onclick="goToBannerSlide(1)"></button><button class="dot" onclick="goToBannerSlide(2)"></button></div>
+
+      <div class="hero-text">
+        <span class="tag">nova coleção</span>
+        <h1>jordan wear store</h1>
+        <p>
+          Loja feita pra rapaziada que quer se vestir bem sem pagar absurdo.
+          Camisas, calças e tênis selecionados no estilo streetwear.
+        </p>
+
+        <div class="hero-actions">
+          <button onclick="scrollToShop()">Ver produtos</button>
+          <button class="ghost" onclick="openCategoryPage('calcas')">Ver calças</button>
+        </div>
       </div>
     </section>
 
-    <section class="features">
-      <article><div>🚚</div><h3>Envio rápido</h3><p>Pedido preparado após confirmação.</p></article>
-      <article><div>🏦</div><h3>Pix automático</h3><p>QR Code gerado pelo backend.</p></article>
-      <article><div>🛡️</div><h3>Seguro</h3><p>Tokens fora do frontend.</p></article>
-      <article><div>🔥</div><h3>Estoque ao vivo</h3><p>Produtos vêm da API.</p></article>
+    <!-- CATEGORIAS GRANDES, PARECENDO LINKS DE LOJA -->
+    <section class="category-showcase">
+      <button class="category-tile category-calcas" onclick="openCategoryPage('calcas')">
+        <span>coleção</span>
+        <strong>calças</strong>
+        <small>abrir loja/produtos/calcas</small>
+      </button>
+
+      <button class="category-tile category-camisas" onclick="openCategoryPage('camisas')">
+        <span>drop</span>
+        <strong>camisas</strong>
+        <small>abrir loja/produtos/camisas</small>
+      </button>
+
+      <button class="category-tile category-tenis" onclick="openCategoryPage('tenis')">
+        <span>seleção</span>
+        <strong>tênis</strong>
+        <small>abrir loja/produtos/tenis</small>
+      </button>
     </section>
 
-    <section class="shop" id="produtos">
+    <!-- BENEFÍCIOS -->
+    <section class="features">
+      <article>
+        <div>🛒</div>
+        <h3>Frete grátis</h3>
+        <p>acima de R$ 400,00</p>
+      </article>
+
+      <article>
+        <div>💳</div>
+        <h3>Pix</h3>
+        <p>pagamento rápido e seguro</p>
+      </article>
+
+      <article>
+        <div>📦</div>
+        <h3>Envio</h3>
+        <p>pedido separado após confirmação</p>
+      </article>
+
+      <article>
+        <div>🛡️</div>
+        <h3>Loja segura</h3>
+        <p>pedido enviado direto para conferência</p>
+      </article>
+    </section>
+
+    <!-- LOJA -->
+    <section class="shop" id="shop">
       <div class="section-head">
-        <div><span class="tag dark">CATÁLOGO</span><h2>Produtos</h2></div>
-        <span class="api-status" id="apiStatus">conectando...</span>
+        <div>
+          <span class="tag dark">produtos</span>
+          <h2>todos os produtos</h2>
+        </div>
+
+        <div class="api-status" id="apiStatus">conectando...</div>
       </div>
 
       <div class="tabs">
-        <button class="tab active" onclick="filterByCategory('all')">🏠 Todos</button>
-        <button class="tab" onclick="filterByCategory('camisas')">👕 Camisas</button>
-        <button class="tab" onclick="filterByCategory('calcas')">👖 Calças</button>
-        <button class="tab" onclick="filterByCategory('tenis')">👟 Tênis</button>
+        <button class="tab active" onclick="setCategory('all')">Todos</button>
+        <button class="tab" onclick="openCategoryPage('camisas')">Camisas</button>
+        <button class="tab" onclick="openCategoryPage('calcas')">Calças</button>
+        <button class="tab" onclick="openCategoryPage('tenis')">Tênis</button>
       </div>
 
       <div class="filters">
-        <label class="search">🔍<input id="searchInput" placeholder="Buscar produtos..." oninput="searchProducts()"></label>
+        <label class="search">
+          <span>⌕</span>
+          <input id="searchInput" type="text" placeholder="Buscar produto..." oninput="searchProducts()" />
+        </label>
+
         <select id="sortSelect" onchange="sortProducts()">
-          <option value="default">Ordenar: padrão</option>
+          <option value="default">Ordenar</option>
           <option value="price-asc">Menor preço</option>
           <option value="price-desc">Maior preço</option>
-          <option value="name-asc">Nome A-Z</option>
+          <option value="name-asc">A-Z</option>
           <option value="stock">Mais estoque</option>
         </select>
       </div>
 
-      <div class="grid" id="allProducts">
-        <div class="loading"><span class="spinner"></span><h3>Carregando produtos...</h3></div>
+      <div class="grid" id="productsGrid">
+        <div class="loading">
+          <div>
+            <div class="spinner"></div>
+            <p>Carregando produtos...</p>
+          </div>
+        </div>
       </div>
     </section>
   </main>
 
-  <footer><b>Jordan<span>Store</span></b><p>Frontend público + backend seguro no Render.</p></footer>
+  <!-- CARRINHO -->
+  <aside class="cart" id="cart">
+    <div class="cart-head">
+      <h3>Meu carrinho</h3>
+      <button onclick="toggleCart()">×</button>
+    </div>
 
-  <aside class="cart" id="cartModal">
-    <div class="cart-head"><h3>🛒 Meu carrinho</h3><button onclick="toggleCart()">×</button></div>
-    <div class="cart-items" id="cartItems"></div>
-    <div class="cart-footer">
-      <div class="cart-summary" id="cartSummary">
-        <div><span>Subtotal</span><b id="cartSubtotal">R$ 0,00</b></div>
-        <div><span>Frete</span><b id="cartShipping">R$ 9,90</b></div>
-        <div class="total"><span>Total</span><b id="cartTotal">R$ 0,00</b></div>
+    <div class="cart-items" id="cartItems">
+      <div class="empty-cart">
+        <div>🛍️</div>
+        <p>Carrinho vazio</p>
       </div>
-      <button class="checkout" id="checkoutBtn" onclick="openCheckout()">Finalizar pedido</button>
-      <button class="clear" id="clearCartBtn" onclick="clearCart()">Limpar carrinho</button>
+    </div>
+
+    <div class="cart-footer">
+      <div class="cart-summary" id="cartSummary" style="display:none">
+        <div>
+          <span>Subtotal</span>
+          <strong id="cartSubtotal">R$ 0,00</strong>
+        </div>
+
+        <div>
+          <span>Frete</span>
+          <strong id="cartFrete">R$ 9,90</strong>
+        </div>
+
+        <div class="total">
+          <span>Total</span>
+          <strong id="cartTotal">R$ 0,00</strong>
+        </div>
+      </div>
+
+      <button class="checkout" id="checkoutBtn" style="display:none" onclick="openCheckout()">
+        Finalizar compra
+      </button>
+
+      <button class="clear" id="clearCartBtn" style="display:none" onclick="clearCart()">
+        Limpar carrinho
+      </button>
     </div>
   </aside>
 
-  <div class="modal" id="checkoutModal"><div class="modal-card"><div class="modal-head"><h3>Finalizar pedido</h3><button onclick="closeCheckout()">×</button></div><div id="checkoutForm" class="modal-body"></div></div></div>
-  <div class="modal" id="detailsModal"></div>
+  <!-- MODAL CHECKOUT -->
+  <section class="modal" id="checkoutModal">
+    <div class="modal-card">
+      <div class="modal-head">
+        <h3>Finalizar pedido</h3>
+        <button onclick="closeCheckout()">×</button>
+      </div>
 
-  <script src="script.js"></script>
+      <div class="modal-body" id="checkoutBody"></div>
+    </div>
+  </section>
+
+  <!-- MODAL PIX -->
+  <section class="modal" id="pixModal">
+    <div class="modal-card">
+      <div class="modal-head">
+        <h3>Pagamento Pix</h3>
+        <button onclick="closePix()">×</button>
+      </div>
+
+      <div class="pix-box" id="pixBody"></div>
+    </div>
+  </section>
+
+  <!-- MODAL DETALHES -->
+  <section class="modal" id="detailsModal">
+    <div class="modal-card">
+      <div class="modal-head">
+        <h3>Produto</h3>
+        <button onclick="closeDetails()">×</button>
+      </div>
+
+      <div class="modal-body" id="detailsBody"></div>
+    </div>
+  </section>
+
+  <footer>
+    <b>jordan<span>wear</span></b>
+    <p>Streetwear selecionado. Pedidos via Pix. Atendimento pelo WhatsApp.</p>
+  </footer>
+
+  <script>
+    const API_URL = "https://SEU-BACKEND.onrender.com";
+
+    let produtos = [];
+    let carrinho = JSON.parse(localStorage.getItem("jws_cart") || "[]");
+    let currentCategory = "all";
+    let currentBanner = 0;
+
+    const categoriaNomes = {
+      all: "todos os produtos",
+      camisas: "camisas",
+      calcas: "calças",
+      tenis: "tênis"
+    };
+
+    const categoriaTexto = {
+      camisas: "Peças selecionadas para montar o kit no estilo streetwear.",
+      calcas: "Calças para completar o outfit, com foco em visual pesado e confortável.",
+      tenis: "Tênis para fechar o kit com presença."
+    };
+
+    document.addEventListener("DOMContentLoaded", () => {
+      carregarProdutos();
+      updateCart();
+      startBanner();
+      handleRoute();
+      window.addEventListener("hashchange", handleRoute);
+    });
+
+    async function carregarProdutos() {
+      const status = document.getElementById("apiStatus");
+
+      try {
+        const res = await fetch(`${API_URL}/api/produtos`);
+        const data = await res.json();
+
+        produtos = Array.isArray(data) ? data : data.produtos || [];
+
+        produtos = produtos.map(p => ({
+          ...p,
+          preco: Number(p.preco || 0),
+          estoque: Number(p.estoque || 0),
+          imagens: p.imagens || []
+        }));
+
+        status.textContent = "online";
+        status.className = "api-status ok";
+
+        renderProducts();
+      } catch (err) {
+        console.error(err);
+        status.textContent = "erro na api";
+        status.className = "api-status err";
+
+        document.getElementById("productsGrid").innerHTML = `
+          <div class="loading">
+            <div>
+              <p>Não foi possível carregar os produtos.</p>
+              <button class="submit" onclick="carregarProdutos()">Tentar novamente</button>
+            </div>
+          </div>
+        `;
+      }
+    }
+
+    function handleRoute() {
+      const hash = location.hash.replace("#", "");
+
+      if (hash.startsWith("/loja/produtos/")) {
+        const cat = hash.split("/").pop();
+        if (["camisas", "calcas", "tenis"].includes(cat)) {
+          renderCategoryPage(cat);
+          return;
+        }
+      }
+
+      renderHome();
+    }
+
+    function renderHome() {
+      document.body.classList.remove("category-mode");
+
+      const app = document.getElementById("app");
+      const home = document.querySelector(".hero");
+
+      if (home) return;
+
+      location.reload();
+    }
+
+    function openCategoryPage(category) {
+      location.hash = `/loja/produtos/${category}`;
+      toggleSidebar(false);
+      window.scrollTo({ top: 0, behavior: "smooth" });
+    }
+
+    function renderCategoryPage(category) {
+      currentCategory = category;
+      document.body.classList.add("category-mode");
+
+      const nome = categoriaNomes[category];
+      const texto = categoriaTexto[category];
+
+      document.getElementById("app").innerHTML = `
+        <section class="category-page">
+          <div class="category-hero">
+            <button class="back-btn" onclick="goHome()">← voltar</button>
+            <span class="tag">loja/produtos/${category}</span>
+            <h1>${nome}</h1>
+            <p>${texto}</p>
+          </div>
+
+          <section class="shop category-shop" id="shop">
+            <div class="section-head">
+              <div>
+                <span class="tag dark">coleção</span>
+                <h2>${nome}</h2>
+              </div>
+
+              <div class="api-status ok">online</div>
+            </div>
+
+            <div class="tabs">
+              <button class="tab ${category === "camisas" ? "active" : ""}" onclick="openCategoryPage('camisas')">Camisas</button>
+              <button class="tab ${category === "calcas" ? "active" : ""}" onclick="openCategoryPage('calcas')">Calças</button>
+              <button class="tab ${category === "tenis" ? "active" : ""}" onclick="openCategoryPage('tenis')">Tênis</button>
+              <button class="tab" onclick="goHome()">Início</button>
+            </div>
+
+            <div class="filters">
+              <label class="search">
+                <span>⌕</span>
+                <input id="searchInput" type="text" placeholder="Buscar em ${nome}..." oninput="searchProducts()" />
+              </label>
+
+              <select id="sortSelect" onchange="sortProducts()">
+                <option value="default">Ordenar</option>
+                <option value="price-asc">Menor preço</option>
+                <option value="price-desc">Maior preço</option>
+                <option value="name-asc">A-Z</option>
+                <option value="stock">Mais estoque</option>
+              </select>
+            </div>
+
+            <div class="grid" id="productsGrid"></div>
+          </section>
+        </section>
+      `;
+
+      renderProducts();
+    }
+
+    function goHome() {
+      location.hash = "";
+      location.reload();
+    }
+
+    function scrollToShop() {
+      document.getElementById("shop")?.scrollIntoView({ behavior: "smooth" });
+      toggleSidebar(false);
+    }
+
+    function setCategory(category) {
+      currentCategory = category;
+
+      document.querySelectorAll(".tab").forEach(btn => btn.classList.remove("active"));
+      event?.target?.classList.add("active");
+
+      renderProducts();
+    }
+
+    function renderProducts(list = null) {
+      const grid = document.getElementById("productsGrid");
+      if (!grid) return;
+
+      let arr = list || produtos;
+
+      if (currentCategory !== "all") {
+        arr = arr.filter(p => p.categoria === currentCategory);
+      }
+
+      if (!arr.length) {
+        grid.innerHTML = `
+          <div class="loading">
+            <p>Nenhum produto encontrado.</p>
+          </div>
+        `;
+        return;
+      }
+
+      grid.innerHTML = arr.map(p => {
+        const stockClass =
+          p.estoque <= 0 ? "stock-out" :
+          p.estoque <= 3 ? "stock-low" :
+          p.estoque <= 10 ? "stock-medium" : "stock-high";
+
+        const stockText =
+          p.estoque <= 0 ? "esgotado" :
+          p.estoque <= 3 ? `últimas ${p.estoque}` :
+          p.estoque <= 10 ? "estoque baixo" : "em estoque";
+
+        return `
+          <article class="product-card">
+            ${p.estoque > 0 && p.estoque <= 3 ? `<span class="product-badge">últimas</span>` : ""}
+
+            <div class="product-image-container" onclick="showDetails('${p.id}')">
+              <img
+                class="product-image"
+                src="${p.imagem || "https://via.placeholder.com/600"}"
+                alt="${p.nome}"
+                loading="lazy"
+                onerror="this.src='https://via.placeholder.com/600'"
+              />
+            </div>
+
+            <div class="product-info">
+              <h3 class="product-name">${p.nome}</h3>
+              <div class="product-price">R$ ${money(p.preco)}</div>
+              <div class="stock-info ${stockClass}">${stockText}</div>
+
+              <div class="product-buttons">
+                ${
+                  p.estoque > 0
+                    ? `<button class="product-btn buy-btn" onclick="addToCart('${p.id}')">Comprar</button>`
+                    : `<button class="product-btn disabled-btn" disabled>Esgotado</button>`
+                }
+                <button class="product-btn details-btn" onclick="showDetails('${p.id}')">Detalhes</button>
+              </div>
+            </div>
+          </article>
+        `;
+      }).join("");
+    }
+
+    function searchProducts() {
+      const term = document.getElementById("searchInput")?.value.toLowerCase() || "";
+
+      let arr = produtos;
+
+      if (currentCategory !== "all") {
+        arr = arr.filter(p => p.categoria === currentCategory);
+      }
+
+      if (term) {
+        arr = arr.filter(p =>
+          p.nome?.toLowerCase().includes(term) ||
+          p.descricao?.toLowerCase().includes(term)
+        );
+      }
+
+      renderProducts(arr);
+    }
+
+    function sortProducts() {
+      const value = document.getElementById("sortSelect")?.value;
+
+      let arr = produtos.filter(p => currentCategory === "all" || p.categoria === currentCategory);
+
+      if (value === "price-asc") arr.sort((a, b) => a.preco - b.preco);
+      if (value === "price-desc") arr.sort((a, b) => b.preco - a.preco);
+      if (value === "name-asc") arr.sort((a, b) => a.nome.localeCompare(b.nome));
+      if (value === "stock") arr.sort((a, b) => b.estoque - a.estoque);
+
+      renderProducts(arr);
+    }
+
+    function addToCart(id) {
+      const produto = produtos.find(p => p.id === id);
+      if (!produto || produto.estoque <= 0) return notify("Produto indisponível", "error");
+
+      const item = carrinho.find(i => i.id === id);
+
+      if (item) {
+        if (item.quantidade >= produto.estoque) {
+          return notify("Quantidade máxima em estoque", "warning");
+        }
+
+        item.quantidade++;
+      } else {
+        carrinho.push({
+          id: produto.id,
+          nome: produto.nome,
+          preco: produto.preco,
+          imagem: produto.imagem,
+          quantidade: 1
+        });
+      }
+
+      saveCart();
+      updateCart();
+      notify("Produto adicionado ao carrinho", "success");
+    }
+
+    function updateCart() {
+      const count = carrinho.reduce((s, i) => s + i.quantidade, 0);
+      document.querySelector(".cart-count").textContent = count;
+
+      const items = document.getElementById("cartItems");
+      const summary = document.getElementById("cartSummary");
+      const checkout = document.getElementById("checkoutBtn");
+      const clear = document.getElementById("clearCartBtn");
+
+      if (!carrinho.length) {
+        items.innerHTML = `
+          <div class="empty-cart">
+            <div>🛍️</div>
+            <p>Carrinho vazio</p>
+          </div>
+        `;
+
+        summary.style.display = "none";
+        checkout.style.display = "none";
+        clear.style.display = "none";
+        return;
+      }
+
+      summary.style.display = "grid";
+      checkout.style.display = "block";
+      clear.style.display = "block";
+
+      items.innerHTML = carrinho.map(item => `
+        <div class="cart-item">
+          <img class="cart-item-image" src="${item.imagem}" onerror="this.src='https://via.placeholder.com/200'" />
+
+          <div>
+            <div class="cart-item-name">${item.nome}</div>
+            <div class="cart-item-price">R$ ${money(item.preco * item.quantidade)}</div>
+
+            <div class="cart-item-actions">
+              <div class="quantity-control">
+                <button class="quantity-btn" onclick="changeQty('${item.id}', -1)">-</button>
+                <span>${item.quantidade}</span>
+                <button class="quantity-btn" onclick="changeQty('${item.id}', 1)">+</button>
+              </div>
+
+              <button class="remove-item" onclick="removeItem('${item.id}')">remover</button>
+            </div>
+          </div>
+        </div>
+      `).join("");
+
+      const subtotal = carrinho.reduce((s, i) => s + i.preco * i.quantidade, 0);
+      const frete = subtotal >= 400 ? 0 : 9.9;
+
+      document.getElementById("cartSubtotal").textContent = `R$ ${money(subtotal)}`;
+      document.getElementById("cartFrete").textContent = frete === 0 ? "Grátis" : `R$ ${money(frete)}`;
+      document.getElementById("cartTotal").textContent = `R$ ${money(subtotal + frete)}`;
+    }
+
+    function changeQty(id, amount) {
+      const item = carrinho.find(i => i.id === id);
+      const produto = produtos.find(p => p.id === id);
+      if (!item || !produto) return;
+
+      const nova = item.quantidade + amount;
+
+      if (nova <= 0) {
+        removeItem(id);
+        return;
+      }
+
+      if (nova > produto.estoque) {
+        return notify("Estoque insuficiente", "warning");
+      }
+
+      item.quantidade = nova;
+      saveCart();
+      updateCart();
+    }
+
+    function removeItem(id) {
+      carrinho = carrinho.filter(i => i.id !== id);
+      saveCart();
+      updateCart();
+    }
+
+    function clearCart() {
+      carrinho = [];
+      saveCart();
+      updateCart();
+    }
+
+    function saveCart() {
+      localStorage.setItem("jws_cart", JSON.stringify(carrinho));
+    }
+
+    function toggleCart() {
+      document.getElementById("cart").classList.toggle("active");
+    }
+
+    function openCheckout() {
+      if (!carrinho.length) return;
+
+      const subtotal = carrinho.reduce((s, i) => s + i.preco * i.quantidade, 0);
+      const frete = subtotal >= 400 ? 0 : 9.9;
+      const total = subtotal + frete;
+
+      document.getElementById("checkoutBody").innerHTML = `
+        <form onsubmit="criarPix(event)">
+          <div class="form-group">
+            <label>Nome completo *</label>
+            <input id="nome" required />
+          </div>
+
+          <div class="form-group">
+            <label>WhatsApp *</label>
+            <input id="telefone" required />
+          </div>
+
+          <div class="form-group">
+            <label>E-mail *</label>
+            <input id="email" type="email" required />
+          </div>
+
+          <div class="form-group">
+            <label>Endereço *</label>
+            <textarea id="endereco" required placeholder="Rua, número, bairro, cidade, CEP"></textarea>
+          </div>
+
+          <div class="order-summary">
+            ${carrinho.map(i => `
+              <div class="order-item">
+                <span>${i.nome} x${i.quantidade}</span>
+                <strong>R$ ${money(i.preco * i.quantidade)}</strong>
+              </div>
+            `).join("")}
+
+            <div class="order-item">
+              <span>Frete</span>
+              <strong>${frete === 0 ? "Grátis" : `R$ ${money(frete)}`}</strong>
+            </div>
+
+            <div class="order-total">
+              <span>Total</span>
+              <strong>R$ ${money(total)}</strong>
+            </div>
+          </div>
+
+          <button class="submit" type="submit">Gerar Pix</button>
+        </form>
+      `;
+
+      document.getElementById("checkoutModal").classList.add("active");
+    }
+
+    function closeCheckout() {
+      document.getElementById("checkoutModal").classList.remove("active");
+    }
+
+    async function criarPix(event) {
+      event.preventDefault();
+
+      const cliente = {
+        nome: document.getElementById("nome").value,
+        telefone: document.getElementById("telefone").value,
+        email: document.getElementById("email").value,
+        endereco: document.getElementById("endereco").value
+      };
+
+      const itens = carrinho.map(i => ({
+        id: i.id,
+        quantidade: i.quantidade
+      }));
+
+      try {
+        const res = await fetch(`${API_URL}/api/criar-pix`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ cliente, itens })
+        });
+
+        const data = await res.json();
+
+        if (!data.ok) {
+          notify(data.erro || "Erro ao gerar Pix", "error");
+          return;
+        }
+
+        closeCheckout();
+        showPix(data);
+      } catch (err) {
+        console.error(err);
+        notify("Erro ao conectar com o backend", "error");
+      }
+    }
+
+    function showPix(data) {
+      document.getElementById("pixBody").innerHTML = `
+        <h2>Pix gerado</h2>
+        <p>Pedido: <b>${data.pedidoId}</b></p>
+        <p>Total: <b>R$ ${money(data.total)}</b></p>
+
+        ${
+          data.qrCodeBase64
+            ? `<img src="data:image/png;base64,${data.qrCodeBase64}" alt="QR Code Pix" />`
+            : ""
+        }
+
+        <textarea readonly>${data.qrCode || data.pixChave || ""}</textarea>
+
+        <button class="copy" onclick="copyPix('${data.qrCode || data.pixChave || ""}')">
+          Copiar Pix
+        </button>
+
+        <p style="margin-top:12px;color:#777;font-size:13px">
+          Após o pagamento, o pedido será confirmado pelo sistema.
+        </p>
+
+        <button class="close-light" onclick="closePix()">Fechar</button>
+      `;
+
+      document.getElementById("pixModal").classList.add("active");
+    }
+
+    function closePix() {
+      document.getElementById("pixModal").classList.remove("active");
+    }
+
+    function copyPix(text) {
+      navigator.clipboard.writeText(text);
+      notify("Pix copiado", "success");
+    }
+
+    function showDetails(id) {
+      const p = produtos.find(prod => prod.id === id);
+      if (!p) return;
+
+      document.getElementById("detailsBody").innerHTML = `
+        <img
+          src="${p.imagem}"
+          style="width:100%;aspect-ratio:3/4;object-fit:cover;background:#eee;margin-bottom:16px"
+          onerror="this.src='https://via.placeholder.com/600'"
+        />
+
+        <h2 style="text-transform:uppercase">${p.nome}</h2>
+        <p style="font-size:22px;font-weight:800;margin:10px 0">R$ ${money(p.preco)}</p>
+        <p style="color:#666;line-height:1.6">${p.descricao || "Sem descrição."}</p>
+        <p style="margin:12px 0"><b>Estoque:</b> ${p.estoque}</p>
+
+        ${
+          p.estoque > 0
+            ? `<button class="submit" onclick="addToCart('${p.id}'); closeDetails()">Adicionar ao carrinho</button>`
+            : `<button class="clear" disabled>Produto esgotado</button>`
+        }
+      `;
+
+      document.getElementById("detailsModal").classList.add("active");
+    }
+
+    function closeDetails() {
+      document.getElementById("detailsModal").classList.remove("active");
+    }
+
+    function toggleSidebar(force) {
+      const sidebar = document.getElementById("sidebar");
+      const overlay = document.querySelector(".overlay");
+
+      if (force === false) {
+        sidebar.classList.remove("active");
+        overlay.classList.remove("active");
+        return;
+      }
+
+      sidebar.classList.toggle("active");
+      overlay.classList.toggle("active");
+    }
+
+    function focusSearch() {
+      const input = document.getElementById("searchInput");
+      if (input) {
+        input.focus();
+        document.getElementById("shop")?.scrollIntoView({ behavior: "smooth" });
+      }
+    }
+
+    function startBanner() {
+      setInterval(() => {
+        const banners = document.querySelectorAll(".banner");
+        const dots = document.querySelectorAll(".dot");
+
+        if (!banners.length) return;
+
+        currentBanner = (currentBanner + 1) % banners.length;
+
+        banners.forEach((b, i) => b.classList.toggle("active", i === currentBanner));
+        dots.forEach((d, i) => d.classList.toggle("active", i === currentBanner));
+      }, 5000);
+    }
+
+    function goBanner(index) {
+      currentBanner = index;
+
+      document.querySelectorAll(".banner").forEach((b, i) => b.classList.toggle("active", i === index));
+      document.querySelectorAll(".dot").forEach((d, i) => d.classList.toggle("active", i === index));
+    }
+
+    function notify(text, type = "success") {
+      const n = document.createElement("div");
+      n.className = `notification ${type}`;
+      n.textContent = text;
+      document.body.appendChild(n);
+
+      setTimeout(() => n.remove(), 3100);
+    }
+
+    function money(value) {
+      return Number(value || 0).toFixed(2).replace(".", ",");
+    }
+  </script>
 </body>
 </html>

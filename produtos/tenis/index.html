@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Produto - Jordan Wear</title>
-  <!-- VERSAO REAL V30 - produto com estoque por tamanho robusto -->
+  <!-- VERSAO V40 - produto com estoque real por tamanho e carrinho svg -->
 
   <style>
     :root {
@@ -604,8 +604,7 @@
     <a class="brand" href="../../index.html">jordanwear</a>
 
     <a class="cart-link" href="../../index.html#cart" aria-label="Carrinho">
-      <img src="../../Carrinho.svg" alt="Carrinho" onerror="this.style.display='none';this.nextElementSibling.style.display='block'" />
-      <span class="cart-emoji" style="display:none">🛒</span>
+      <img src="../../Carrinho.svg" alt="Carrinho" />
       <span class="cart-count" id="cartCount">0</span>
     </a>
   </header>
@@ -687,7 +686,18 @@
         }
       }
 
-      return {};
+      const tamanhos = Array.isArray(produto.tamanhos) && produto.tamanhos.length
+        ? produto.tamanhos.map(t => String(t || "").trim()).filter(Boolean)
+        : ["P", "M", "G", "GG"];
+
+      const totalAntigo = numeroEstoque(produto.estoque);
+      const mapAntigo = {};
+
+      tamanhos.forEach((tamanho, index) => {
+        mapAntigo[tamanho] = index === 0 ? totalAntigo : 0;
+      });
+
+      return mapAntigo;
     }
 
     function getTamanhos(produto) {
@@ -945,7 +955,8 @@
       if (nova > max) return;
 
       quantidade = nova;
-      document.getElementById("qtyText").textContent = quantidade;
+      const txt = document.getElementById("qtyText");
+      if (txt) txt.textContent = quantidade;
     }
 
     function comprarProduto() {

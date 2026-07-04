@@ -243,6 +243,127 @@
       font-weight: 700;
     }
 
+    .comprovante-actions {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 8px;
+      margin-top: 10px;
+    }
+
+    .upload-comprovante-btn {
+      min-height: 52px;
+      display: grid;
+      place-items: center;
+      background: #f7f7f7;
+      color: #111;
+      border: 1px solid var(--line);
+      font-weight: 900;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      font-size: 12px;
+      cursor: pointer;
+      text-align: center;
+    }
+
+    .upload-comprovante-btn input {
+      display: none;
+    }
+
+    .comprovante-preview {
+      display: none;
+      margin-top: 10px;
+      border: 1px solid var(--line);
+      background: #f7f7f7;
+      padding: 10px;
+      gap: 10px;
+      grid-template-columns: 70px 1fr;
+      align-items: center;
+    }
+
+    .comprovante-preview.show {
+      display: grid;
+    }
+
+    .comprovante-preview img {
+      width: 70px;
+      height: 70px;
+      object-fit: cover;
+      background: #ddd;
+      border: 1px solid var(--line);
+    }
+
+    .comprovante-preview strong {
+      display: block;
+      font-size: 13px;
+      text-transform: uppercase;
+    }
+
+    .comprovante-preview small {
+      display: block;
+      margin-top: 4px;
+      color: #666;
+      line-height: 1.4;
+    }
+
+    .ok-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.45);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 9999;
+      padding: 18px;
+    }
+
+    .ok-overlay.show {
+      display: flex;
+    }
+
+    .ok-modal {
+      width: min(420px, 100%);
+      background: #fff;
+      border: 2px solid #111;
+      padding: 24px;
+      box-shadow: 10px 10px 0 #111;
+      text-align: center;
+    }
+
+    .ok-icon {
+      width: 72px;
+      height: 72px;
+      margin: 0 auto 14px;
+      background: var(--green);
+      color: #fff;
+      display: grid;
+      place-items: center;
+      font-size: 40px;
+      font-weight: 900;
+    }
+
+    .ok-modal h2 {
+      font-size: 30px;
+      text-transform: uppercase;
+      letter-spacing: -0.05em;
+      margin-bottom: 8px;
+    }
+
+    .ok-modal p {
+      color: #555;
+      line-height: 1.5;
+      margin-bottom: 14px;
+    }
+
+    .ok-modal button {
+      width: 100%;
+      min-height: 52px;
+      background: #111;
+      color: #fff;
+      font-weight: 900;
+      text-transform: uppercase;
+      letter-spacing: 0.12em;
+    }
+
     .pedido-backend-status {
       margin-top: 10px;
       font-size: 13px;
@@ -288,6 +409,10 @@
       .total {
         font-size: 30px;
       }
+
+      .comprovante-actions {
+        grid-template-columns: 1fr;
+      }
     }
   </style>
 </head>
@@ -318,6 +443,8 @@
 
     let pedidoAtual = null;
     let pixCodeAtual = "";
+    let comprovanteImagemBase64 = "";
+    let comprovanteArquivoNome = "";
 
     function numero(valor) {
       const n = Number(valor);
@@ -502,27 +629,145 @@
       }
     }
 
-    async function enviarComprovanteLink() {
+    function mostrarOkCustomizado(titulo, mensagem) {
+      let overlay = document.getElementById("okOverlay");
+
+      if (!overlay) {
+        overlay = document.createElement("div");
+        overlay.id = "okOverlay";
+        overlay.className = "ok-overlay";
+        document.body.appendChild(overlay);
+      }
+
+      overlay.innerHTML = `
+        <div class="ok-modal">
+          <div class="ok-icon">✓</div>
+          <h2>${titulo}</h2>
+          <p>${mensagem}</p>
+          <button onclick="fecharOkCustomizado()">OK</button>
+        </div>
+      `;
+
+      overlay.classList.add("show");
+    }
+
+    function fecharOkCustomizado() {
+      const overlay = document.getElementById("okOverlay");
+      if (overlay) overlay.classList.remove("show");
+    }
+
+    function atualizarPreviewComprovante() {
+      const box = document.getElementById("comprovantePreview");
+      const img = document.getElementById("comprovantePreviewImg");
+      const nome = document.getElementById("comprovantePreviewNome");
+
+      if (!box || !img || !nome) return;
+
+      if (!comprovanteImagemBase64) {
+        box.classList.remove("show");
+        return;
+      }
+
+      img.src = comprovanteImagemBase64;
+      nome.textContent = comprovanteArquivoNome || "Imagem selecionada";
+      box.classList.add("show");
+    }
+
+    function compactarImagemComprovante(file) {
+      return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+
+        reader.onload = () => {
+          const img = new Image();
+
+          img.onload = () => {
+            const maxSize = 900;
+            let width = img.width;
+            let height = img.height;
+
+            if (width > height && width > maxSize) {
+              height = Math.round(height * (maxSize / width));
+              width = maxSize;
+            } else if (height > maxSize) {
+              width = Math.round(width * (maxSize / height));
+              height = maxSize;
+            }
+
+            const canvas = document.createElement("canvas");
+            canvas.width = width;
+            canvas.height = height;
+
+            const ctx = canvas.getContext("2d");
+            ctx.fillStyle = "#ffffff";
+            ctx.fillRect(0, 0, width, height);
+            ctx.drawImage(img, 0, 0, width, height);
+
+            resolve(canvas.toDataURL("image/jpeg", 0.72));
+          };
+
+          img.onerror = reject;
+          img.src = reader.result;
+        };
+
+        reader.onerror = reject;
+        reader.readAsDataURL(file);
+      });
+    }
+
+    async function escolherImagemComprovante(input) {
+      const statusEl = document.getElementById("pedidoBackendStatus");
+      const file = input.files && input.files[0];
+
+      if (!file) return;
+
+      if (!file.type.startsWith("image/")) {
+        mostrarOkCustomizado("Arquivo inválido", "Escolha uma imagem do comprovante, tipo PNG, JPG ou JPEG.");
+        input.value = "";
+        return;
+      }
+
+      try {
+        if (statusEl) statusEl.textContent = "Carregando imagem do comprovante...";
+
+        comprovanteArquivoNome = file.name || "comprovante.jpg";
+        comprovanteImagemBase64 = await compactarImagemComprovante(file);
+        atualizarPreviewComprovante();
+
+        if (statusEl) statusEl.textContent = "Imagem carregada. Clique em enviar comprovante.";
+      } catch (err) {
+        console.error(err);
+        comprovanteImagemBase64 = "";
+        comprovanteArquivoNome = "";
+        atualizarPreviewComprovante();
+        if (statusEl) statusEl.textContent = "Não consegui carregar essa imagem.";
+      }
+    }
+
+    async function enviarComprovante() {
       if (!pedidoAtual || !pedidoAtual.id) return;
 
       const input = document.getElementById("comprovanteLink");
       const statusEl = document.getElementById("pedidoBackendStatus");
       const link = String(input?.value || "").trim();
 
-      if (!link) {
-        alert("Cole o link do comprovante antes de enviar.");
+      if (!link && !comprovanteImagemBase64) {
+        mostrarOkCustomizado("Falta comprovante", "Cole um link ou coloque uma imagem do comprovante antes de enviar.");
         return;
       }
 
       try {
-        if (statusEl) statusEl.textContent = "Enviando link do comprovante...";
+        if (statusEl) statusEl.textContent = "Enviando comprovante para a loja...";
 
         await criarPedidoPendenteNoBackend();
 
         const res = await fetch(`${API_URL}/api/pedidos/${encodeURIComponent(pedidoAtual.id)}/comprovante`, {
           method: "POST",
           headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ comprovanteLink: link })
+          body: JSON.stringify({
+            comprovanteLink: link,
+            comprovanteImagem: comprovanteImagemBase64,
+            comprovanteArquivoNome
+          })
         });
 
         const data = await res.json();
@@ -530,14 +775,17 @@
         if (!data.ok) throw new Error(data.erro || "Erro ao enviar comprovante");
 
         pedidoAtual.comprovanteLink = link;
+        pedidoAtual.comprovanteImagem = comprovanteImagemBase64;
+        pedidoAtual.comprovanteArquivoNome = comprovanteArquivoNome;
         pedidoAtual.status = "pendente";
         localStorage.setItem("pedido_pix_manual", JSON.stringify(pedidoAtual));
 
-        if (statusEl) statusEl.textContent = "Link do comprovante enviado. Aguarde a loja aceitar no painel admin.";
-        alert("Comprovante enviado para a loja.");
+        if (statusEl) statusEl.textContent = "Comprovante enviado. Aguarde a loja aceitar no painel admin.";
+        mostrarOkCustomizado("Enviado", "Comprovante enviado para a loja. Seu pedido ficou pendente até ser aprovado.");
       } catch (err) {
         console.error(err);
         if (statusEl) statusEl.textContent = "Erro ao enviar comprovante. Confira se o backend está online.";
+        mostrarOkCustomizado("Erro", "Não consegui enviar o comprovante agora. Tente de novo em alguns segundos.");
       }
     }
 
@@ -595,6 +843,8 @@
       const qrUrl = `https://api.qrserver.com/v1/create-qr-code/?size=260x260&data=${encodeURIComponent(pixCodeAtual)}`;
       const imagem = getImagemPedido(p) || "https://via.placeholder.com/200";
       const listaItens = getListaItensHTML(p);
+      comprovanteImagemBase64 = p.comprovanteImagem || comprovanteImagemBase64 || "";
+      comprovanteArquivoNome = p.comprovanteArquivoNome || comprovanteArquivoNome || "";
 
       main.innerHTML = `
         <section class="pix-card">
@@ -654,11 +904,28 @@
           </button>
 
           <div class="comprovante-box">
-            <label>Link do comprovante *</label>
-            <input id="comprovanteLink" placeholder="Cole aqui o link/print do comprovante" value="${p.comprovanteLink || ""}" />
-            <button class="btn" onclick="enviarComprovanteLink()">
-              Enviar link do comprovante
-            </button>
+            <label>Comprovante do Pix *</label>
+            <input id="comprovanteLink" placeholder="Cole o link do comprovante, se tiver" value="${p.comprovanteLink || ""}" />
+
+            <div class="comprovante-actions">
+              <label class="upload-comprovante-btn">
+                Colocar imagem
+                <input type="file" accept="image/*" onchange="escolherImagemComprovante(this)" />
+              </label>
+
+              <button class="btn" onclick="enviarComprovante()">
+                Enviar comprovante
+              </button>
+            </div>
+
+            <div class="comprovante-preview ${p.comprovanteImagem ? "show" : ""}" id="comprovantePreview">
+              <img id="comprovantePreviewImg" src="${p.comprovanteImagem || ""}" alt="Comprovante" />
+              <div>
+                <strong>Imagem pronta</strong>
+                <small id="comprovantePreviewNome">${p.comprovanteArquivoNome || "Comprovante selecionado"}</small>
+              </div>
+            </div>
+
             <div class="pedido-backend-status" id="pedidoBackendStatus">
               Enviando pedido para o painel admin...
             </div>

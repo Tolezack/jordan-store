@@ -7,7 +7,322 @@
   <link rel="stylesheet" href="../../style.css" />
 </head>
 <body class="product-page-body">
-  <header class="product-header-v2">
+  <header class="product-header-v2"><!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Produto - Jordan Wear</title>
+  <link rel="stylesheet" href="../../style.css?v=produto-fix-2" />
+</head>
+<body class="produto-body">
+  <header class="produto-topbar">
+    <a class="produto-voltar" href="../../index.html" aria-label="Voltar">←</a>
+
+    <a class="produto-logo" href="../../index.html">jordanwear</a>
+
+    <a class="produto-carrinho" href="../../index.html#cart" aria-label="Carrinho">
+      <img src="../../Carrinho.svg" alt="Carrinho" onerror="this.style.display='none';this.parentElement.classList.add('cart-fallback')" />
+      <span id="cartCount">0</span>
+    </a>
+  </header>
+
+  <main class="produto-main">
+    <section id="produtoView" class="produto-shell">
+      <div class="produto-loading">
+        <div class="spinner"></div>
+        <p>Carregando produto...</p>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    let produtoAtual = null;
+    let fotos = [];
+    let fotoAtual = 0;
+    let autoSlide = null;
+    let quantidade = 1;
+    let tamanhoSelecionado = "";
+    let estoqueSelecionado = 0;
+
+    function money(value) {
+      return Number(value || 0).toFixed(2).replace(".", ",");
+    }
+
+    function idUrl() {
+      return new URLSearchParams(location.search).get("id");
+    }
+
+    function normalizarCategoria(categoria) {
+      const c = String(categoria || "")
+        .toLowerCase()
+        .normalize("NFD")
+        .replace(/[\u0300-\u036f]/g, "")
+        .trim();
+
+      if (c.includes("camisa") || c.includes("camiseta")) return "camisa";
+      if (c.includes("calca")) return "calca";
+      if (c.includes("tenis") || c.includes("sapato")) return "tenis";
+      return c || "camisa";
+    }
+
+    function getTamanhos(produto) {
+      if (Array.isArray(produto.tamanhosEstoque) && produto.tamanhosEstoque.length) {
+        return produto.tamanhosEstoque.map(t => ({
+          tamanho: String(t.tamanho || t.nome || "").trim(),
+          estoque: Number(t.estoque || 0)
+        })).filter(t => t.tamanho);
+      }
+
+      if (produto.estoqueTamanhos && typeof produto.estoqueTamanhos === "object") {
+        return Object.entries(produto.estoqueTamanhos).map(([tamanho, estoque]) => ({
+          tamanho: String(tamanho).trim(),
+          estoque: Number(estoque || 0)
+        })).filter(t => t.tamanho);
+      }
+
+      if (Array.isArray(produto.tamanhos) && produto.tamanhos.length) {
+        return produto.tamanhos.map(t => ({
+          tamanho: String(t).trim(),
+          estoque: Number(produto.estoque || 0)
+        })).filter(t => t.tamanho);
+      }
+
+      return ["P", "M", "G", "GG"].map(t => ({
+        tamanho: t,
+        estoque: Number(produto.estoque || 0)
+      }));
+    }
+
+    async function carregarProduto() {
+      const view = document.getElementById("produtoView");
+      const id = idUrl();
+
+      try {
+        const res = await fetch(`../../produtos.json?v=${Date.now()}`);
+        if (!res.ok) throw new Error("produtos.json não encontrado");
+
+        const data = await res.json();
+        const produtos = Array.isArray(data) ? data : data.produtos || [];
+        produtoAtual = produtos.find(p => String(p.id) === String(id));
+
+        if (!produtoAtual) {
+          view.innerHTML = `
+            <div class="produto-erro">
+              <h1>Produto não encontrado</h1>
+              <p>Confere se o ID desse produto existe no produtos.json.</p>
+              <a href="../../index.html">Voltar para loja</a>
+            </div>
+          `;
+          return;
+        }
+
+        produtoAtual.preco = Number(produtoAtual.preco || 0);
+        produtoAtual.categoria = normalizarCategoria(produtoAtual.categoria);
+
+        fotos = [
+          produtoAtual.imagem,
+          ...(Array.isArray(produtoAtual.imagens) ? produtoAtual.imagens : [])
+        ].filter(Boolean);
+
+        if (!fotos.length) fotos = ["https://via.placeholder.com/900"];
+
+        const tamanhos = getTamanhos(produtoAtual);
+        const primeiroDisponivel = tamanhos.find(t => t.estoque > 0) || tamanhos[0];
+        tamanhoSelecionado = primeiroDisponivel.tamanho;
+        estoqueSelecionado = Number(primeiroDisponivel.estoque || 0);
+
+        document.title = `${produtoAtual.nome} - Jordan Wear`;
+        renderProduto(tamanhos);
+        atualizarCarrinhoTop();
+        iniciarAutoSlide();
+      } catch (err) {
+        console.error(err);
+        view.innerHTML = `
+          <div class="produto-erro">
+            <h1>Erro ao carregar</h1>
+            <p>O caminho ../../produtos.json precisa existir.</p>
+            <a href="../../index.html">Voltar para loja</a>
+          </div>
+        `;
+      }
+    }
+
+    function renderProduto(tamanhos) {
+      const view = document.getElementById("produtoView");
+      const temEstoque = estoqueSelecionado > 0;
+
+      view.innerHTML = `
+        <section class="produto-galeria">
+          <div class="produto-foto-box">
+            <button class="foto-nav foto-prev" onclick="mudarFoto(-1)" aria-label="Foto anterior">‹</button>
+
+            <img id="fotoPrincipal" src="${fotos[fotoAtual]}" alt="${produtoAtual.nome}" onerror="this.src='https://via.placeholder.com/900'" />
+
+            <button class="foto-nav foto-next" onclick="mudarFoto(1)" aria-label="Próxima foto">›</button>
+
+            <div class="foto-count" id="fotoCount">${fotoAtual + 1}/${fotos.length}</div>
+          </div>
+
+          <div class="produto-thumbs">
+            ${fotos.map((foto, i) => `
+              <button class="${i === fotoAtual ? "active" : ""}" onclick="irFoto(${i})" aria-label="Foto ${i + 1}">
+                <img src="${foto}" onerror="this.src='https://via.placeholder.com/200'" />
+              </button>
+            `).join("")}
+          </div>
+        </section>
+
+        <section class="produto-info-nova">
+          <div class="produto-breadcrumb">
+            <a href="../../index.html">Início</a>
+            <span>›</span>
+            <span>${produtoAtual.categoria}</span>
+          </div>
+
+          <h1>${produtoAtual.nome}</h1>
+
+          <div class="produto-preco-novo">R$ ${money(produtoAtual.preco)}</div>
+          <div class="produto-pix-novo">R$ ${money(produtoAtual.preco * 0.97)} no Pix</div>
+
+          <p class="produto-desc-nova">${produtoAtual.descricao || "Produto selecionado da Jordan Wear Store."}</p>
+
+          <div class="produto-campo">
+            <label>Tamanho</label>
+            <select onchange="selecionarTamanho(this.value)">
+              ${tamanhos.map(t => `
+                <option value="${t.tamanho}" ${t.tamanho === tamanhoSelecionado ? "selected" : ""}>
+                  ${t.tamanho} - ${t.estoque} em estoque
+                </option>
+              `).join("")}
+            </select>
+          </div>
+
+          <div class="produto-tamanhos-lista">
+            ${tamanhos.map(t => `
+              <button class="${t.tamanho === tamanhoSelecionado ? "active" : ""} ${t.estoque <= 0 ? "off" : ""}" onclick="selecionarTamanho('${t.tamanho}')">
+                <strong>${t.tamanho}</strong>
+                <span>${t.estoque}</span>
+              </button>
+            `).join("")}
+          </div>
+
+          <div class="produto-compra-linha">
+            <div class="produto-quantidade">
+              <button onclick="mudarQuantidade(-1)">−</button>
+              <span id="qtdText">${quantidade}</span>
+              <button onclick="mudarQuantidade(1)">+</button>
+            </div>
+
+            ${temEstoque
+              ? `<button class="produto-comprar" onclick="comprarProduto()">Comprar</button>`
+              : `<button class="produto-comprar off" disabled>Indisponível</button>`
+            }
+          </div>
+
+          <div class="produto-estoque-info">
+            Tamanho <b id="tamAtual">${tamanhoSelecionado}</b> • <b id="estAtual">${estoqueSelecionado}</b> em estoque
+          </div>
+
+          <details class="produto-detalhes-box" open>
+            <summary>Sobre a peça</summary>
+            <p>Pagamento via Pix. O pedido é separado depois da confirmação do pagamento. Escolha o tamanho antes de comprar.</p>
+          </details>
+        </section>
+      `;
+    }
+
+    function iniciarAutoSlide() {
+      clearInterval(autoSlide);
+      if (fotos.length <= 1) return;
+      autoSlide = setInterval(() => mudarFoto(1, true), 4500);
+    }
+
+    function atualizarFoto() {
+      const img = document.getElementById("fotoPrincipal");
+      const count = document.getElementById("fotoCount");
+      if (!img || !count) return;
+
+      img.src = fotos[fotoAtual];
+      count.textContent = `${fotoAtual + 1}/${fotos.length}`;
+
+      document.querySelectorAll(".produto-thumbs button").forEach((btn, i) => {
+        btn.classList.toggle("active", i === fotoAtual);
+      });
+    }
+
+    function mudarFoto(dir, auto = false) {
+      if (!fotos.length) return;
+      fotoAtual = (fotoAtual + dir + fotos.length) % fotos.length;
+      atualizarFoto();
+      if (!auto) iniciarAutoSlide();
+    }
+
+    function irFoto(index) {
+      fotoAtual = index;
+      atualizarFoto();
+      iniciarAutoSlide();
+    }
+
+    function selecionarTamanho(tamanho) {
+      const tamanhos = getTamanhos(produtoAtual);
+      const item = tamanhos.find(t => t.tamanho === tamanho);
+      if (!item) return;
+
+      tamanhoSelecionado = item.tamanho;
+      estoqueSelecionado = Number(item.estoque || 0);
+      if (quantidade > estoqueSelecionado) quantidade = Math.max(1, estoqueSelecionado);
+      if (quantidade < 1) quantidade = 1;
+
+      renderProduto(tamanhos);
+      iniciarAutoSlide();
+    }
+
+    function mudarQuantidade(valor) {
+      const nova = quantidade + valor;
+      if (nova < 1) return;
+      if (nova > estoqueSelecionado) return;
+      quantidade = nova;
+      document.getElementById("qtdText").textContent = quantidade;
+    }
+
+    function comprarProduto() {
+      if (!produtoAtual || estoqueSelecionado <= 0) return;
+
+      const carrinho = JSON.parse(localStorage.getItem("jws_cart") || "[]");
+      const cartId = `${produtoAtual.id}-${tamanhoSelecionado}`;
+      const item = carrinho.find(i => i.cartId === cartId);
+
+      if (item) {
+        item.quantidade += quantidade;
+      } else {
+        carrinho.push({
+          cartId,
+          id: produtoAtual.id,
+          nome: `${produtoAtual.nome} - Tam. ${tamanhoSelecionado}`,
+          tamanho: tamanhoSelecionado,
+          preco: produtoAtual.preco,
+          imagem: fotos[0],
+          quantidade
+        });
+      }
+
+      localStorage.setItem("jws_cart", JSON.stringify(carrinho));
+      atualizarCarrinhoTop();
+      alert("Produto adicionado ao carrinho.");
+    }
+
+    function atualizarCarrinhoTop() {
+      const carrinho = JSON.parse(localStorage.getItem("jws_cart") || "[]");
+      const total = carrinho.reduce((s, i) => s + Number(i.quantidade || 0), 0);
+      document.getElementById("cartCount").textContent = total;
+    }
+
+    carregarProduto();
+  </script>
+</body>
+</html>
+
     <a href="../../index.html" class="product-back-v2">←</a>
 
     <a href="../../index.html" class="product-logo-v2">jordanwear</a>

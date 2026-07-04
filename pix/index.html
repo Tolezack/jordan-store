@@ -218,6 +218,38 @@
       color: #666;
     }
 
+    .comprovante-box {
+      border-top: 1px solid var(--line);
+      margin-top: 14px;
+      padding-top: 14px;
+    }
+
+    .comprovante-box label {
+      display: block;
+      font-size: 12px;
+      text-transform: uppercase;
+      font-weight: 900;
+      letter-spacing: 0.08em;
+      margin-bottom: 7px;
+    }
+
+    .comprovante-box input {
+      width: 100%;
+      height: 50px;
+      border: 1px solid var(--line);
+      background: #f7f7f7;
+      padding: 0 12px;
+      outline: 0;
+      font-weight: 700;
+    }
+
+    .pedido-backend-status {
+      margin-top: 10px;
+      font-size: 13px;
+      color: #555;
+      line-height: 1.5;
+    }
+
     .erro {
       grid-column: 1 / -1;
       background: #fff;
@@ -282,6 +314,7 @@
     const PIX_NOME = "JORDAN";
     const PIX_CIDADE = "IVOTI";
     const WHATSAPP_LOJA = "556993306882";
+    const API_URL = "https://jordan-store-backend.onrender.com".replace(/\/$/, "");
 
     let pedidoAtual = null;
     let pixCodeAtual = "";
@@ -437,6 +470,77 @@
       return `- ${nome}${tamanho} x${quantidade}${preco}`;
     }
 
+    async function criarPedidoPendenteNoBackend() {
+      if (!pedidoAtual || !pedidoAtual.id) return;
+
+      const chave = `pedido_backend_criado_${pedidoAtual.id}`;
+      const statusEl = document.getElementById("pedidoBackendStatus");
+
+      if (localStorage.getItem(chave) === "sim") {
+        if (statusEl) statusEl.textContent = "Pedido pendente já enviado para o painel admin.";
+        return;
+      }
+
+      try {
+        if (statusEl) statusEl.textContent = "Enviando pedido para o painel admin...";
+
+        const res = await fetch(`${API_URL}/api/pedidos`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ pedido: pedidoAtual })
+        });
+
+        const data = await res.json();
+
+        if (!data.ok) throw new Error(data.erro || "Erro ao criar pedido");
+
+        localStorage.setItem(chave, "sim");
+        if (statusEl) statusEl.textContent = "Pedido pendente enviado para o painel admin.";
+      } catch (err) {
+        console.error(err);
+        if (statusEl) statusEl.textContent = "Não consegui enviar o pedido para o painel. Tente atualizar a página.";
+      }
+    }
+
+    async function enviarComprovanteLink() {
+      if (!pedidoAtual || !pedidoAtual.id) return;
+
+      const input = document.getElementById("comprovanteLink");
+      const statusEl = document.getElementById("pedidoBackendStatus");
+      const link = String(input?.value || "").trim();
+
+      if (!link) {
+        alert("Cole o link do comprovante antes de enviar.");
+        return;
+      }
+
+      try {
+        if (statusEl) statusEl.textContent = "Enviando link do comprovante...";
+
+        await criarPedidoPendenteNoBackend();
+
+        const res = await fetch(`${API_URL}/api/pedidos/${encodeURIComponent(pedidoAtual.id)}/comprovante`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ comprovanteLink: link })
+        });
+
+        const data = await res.json();
+
+        if (!data.ok) throw new Error(data.erro || "Erro ao enviar comprovante");
+
+        pedidoAtual.comprovanteLink = link;
+        pedidoAtual.status = "pendente";
+        localStorage.setItem("pedido_pix_manual", JSON.stringify(pedidoAtual));
+
+        if (statusEl) statusEl.textContent = "Link do comprovante enviado. Aguarde a loja aceitar no painel admin.";
+        alert("Comprovante enviado para a loja.");
+      } catch (err) {
+        console.error(err);
+        if (statusEl) statusEl.textContent = "Erro ao enviar comprovante. Confira se o backend está online.";
+      }
+    }
+
     function abrirWhatsApp() {
       const p = pedidoAtual;
       const itens = getListaItensWhatsApp(p);
@@ -549,12 +653,23 @@
             Copiar Pix
           </button>
 
+          <div class="comprovante-box">
+            <label>Link do comprovante *</label>
+            <input id="comprovanteLink" placeholder="Cole aqui o link/print do comprovante" value="${p.comprovanteLink || ""}" />
+            <button class="btn" onclick="enviarComprovanteLink()">
+              Enviar link do comprovante
+            </button>
+            <div class="pedido-backend-status" id="pedidoBackendStatus">
+              Enviando pedido para o painel admin...
+            </div>
+          </div>
+
           <button class="btn whats" onclick="abrirWhatsApp()">
-            Enviar comprovante no WhatsApp
+            Abrir WhatsApp da loja
           </button>
 
           <p class="aviso">
-            Esse pagamento é manual. O pedido será confirmado depois que o comprovante for conferido.
+            Esse pagamento é manual. O pedido fica pendente no painel admin e será confirmado depois que o comprovante for conferido.
           </p>
         </section>
       `;
@@ -589,6 +704,7 @@
       localStorage.setItem("pedido_pix_manual", JSON.stringify(pedidoAtual));
 
       renderPix();
+      criarPedidoPendenteNoBackend();
     }
 
     carregarPix();

@@ -69,6 +69,8 @@
 
   <script>
     const API_URL = "https://jordan-store-backend.onrender.com".replace(/\/$/, "");
+    const PIX_CHAVE_MANUAL = "SUA_CHAVE_PIX_AQUI";
+    const WHATSAPP_LOJA = "5599999999999";
     let produtos = [], produtosRender = [], carrinho = JSON.parse(localStorage.getItem("jws_cart") || "[]");
     let currentCategory = "all", currentBanner = 0, adminToken = localStorage.getItem("jws_admin_token") || "", adminProdutos = [];
     const categoriaNomes = { all:"todos os produtos", camisa:"camisas", calca:"calças", tenis:"tênis", bermuda:"bermudas", moletom:"moletons" };
@@ -154,10 +156,64 @@
     function saveCart(){ localStorage.setItem("jws_cart",JSON.stringify(carrinho)); }
     function toggleCart(){ document.getElementById("cart").classList.toggle("active"); }
 
-    function openCheckout(){ if(!carrinho.length)return; const subtotal=carrinho.reduce((s,i)=>s+Number(i.preco||0)*Number(i.quantidade||0),0), frete=subtotal>=400?0:9.9, total=subtotal+frete; document.getElementById("checkoutBody").innerHTML=`<form onsubmit="criarPix(event)"><div class="form-group"><label>Nome completo *</label><input id="nome" required /></div><div class="form-group"><label>WhatsApp *</label><input id="telefone" required /></div><div class="form-group"><label>E-mail *</label><input id="email" type="email" required /></div><div class="form-group"><label>Endereço *</label><textarea id="endereco" required placeholder="Rua, número, bairro, cidade, CEP"></textarea></div><div class="order-summary">${carrinho.map(i=>`<div class="order-item"><span>${escapeHtml(i.nome)} x${i.quantidade}</span><strong>R$ ${money(i.preco*i.quantidade)}</strong></div>`).join("")}<div class="order-item"><span>Frete</span><strong>${frete===0?"Grátis":`R$ ${money(frete)}`}</strong></div><div class="order-total"><span>Total</span><strong>R$ ${money(total)}</strong></div></div><button class="submit" type="submit">Gerar Pix</button></form>`; document.getElementById("checkoutModal").classList.add("active"); }
+    function openCheckout(){
+      if(!carrinho.length) return;
+
+      const subtotal=carrinho.reduce((s,i)=>s+Number(i.preco||0)*Number(i.quantidade||0),0);
+      const frete=subtotal>=400?0:9.9;
+      const total=subtotal+frete;
+
+      document.getElementById("checkoutBody").innerHTML=`
+        <form onsubmit="criarPedidoPixManual(event)">
+          <div class="form-group"><label>Nome completo *</label><input id="nome" required /></div>
+          <div class="form-group"><label>WhatsApp *</label><input id="telefone" required /></div>
+          <div class="form-group"><label>E-mail</label><input id="email" type="email" /></div>
+          <div class="form-group"><label>Endereço *</label><textarea id="endereco" required placeholder="Rua, número, bairro, cidade, CEP"></textarea></div>
+          <div class="order-summary">
+            ${carrinho.map(i=>`<div class="order-item"><span>${escapeHtml(i.nome)} x${i.quantidade}</span><strong>R$ ${money(i.preco*i.quantidade)}</strong></div>`).join("")}
+            <div class="order-item"><span>Frete</span><strong>${frete===0?"Grátis":`R$ ${money(frete)}`}</strong></div>
+            <div class="order-total"><span>Total</span><strong>R$ ${money(total)}</strong></div>
+          </div>
+          <button class="submit" type="submit">Ir para Pix</button>
+          <p style="margin-top:10px;color:#777;font-size:13px;line-height:1.5">
+            O pagamento é manual. Na próxima página você copia a chave Pix e envia o comprovante pelo WhatsApp.
+          </p>
+        </form>`;
+      document.getElementById("checkoutModal").classList.add("active");
+    }
+
+    function criarPedidoPixManual(e){
+      e.preventDefault();
+
+      const subtotal=carrinho.reduce((s,i)=>s+Number(i.preco||0)*Number(i.quantidade||0),0);
+      const frete=subtotal>=400?0:9.9;
+      const total=subtotal+frete;
+      const pedidoId=`JW-${Date.now()}`;
+
+      const pedido={
+        id:pedidoId,
+        criadoEm:new Date().toISOString(),
+        pixChave:PIX_CHAVE_MANUAL,
+        whatsappLoja:WHATSAPP_LOJA,
+        cliente:{
+          nome:document.getElementById("nome").value.trim(),
+          telefone:document.getElementById("telefone").value.trim(),
+          email:document.getElementById("email").value.trim(),
+          endereco:document.getElementById("endereco").value.trim()
+        },
+        itens:carrinho,
+        subtotal,
+        frete,
+        total
+      };
+
+      localStorage.setItem(`jws_pedido_${pedidoId}`, JSON.stringify(pedido));
+      localStorage.setItem("jws_ultimo_pedido", pedidoId);
+
+      window.location.href=`pix/?pedido=${encodeURIComponent(pedidoId)}`;
+    }
+
     function closeCheckout(){ document.getElementById("checkoutModal").classList.remove("active"); }
-    async function criarPix(e){ e.preventDefault(); const cliente={nome:document.getElementById("nome").value,telefone:document.getElementById("telefone").value,email:document.getElementById("email").value,endereco:document.getElementById("endereco").value}; const itens=carrinho.map(i=>({id:i.id,quantidade:i.quantidade,tamanho:i.tamanho||""})); try{ const res=await fetch(`${API_URL}/api/criar-pix`,{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({cliente,itens})}); const data=await res.json(); if(!data.ok){notify(data.erro||"Erro ao gerar Pix","error"); return;} closeCheckout(); showPix(data); }catch(err){notify("Erro ao conectar com o backend","error");} }
-    function showPix(data){ document.getElementById("pixBody").innerHTML=`<h2>Pix gerado</h2><p>Pedido: <b>${escapeHtml(data.pedidoId||"")}</b></p><p>Total: <b>R$ ${money(data.total)}</b></p>${data.qrCodeBase64?`<img src="data:image/png;base64,${data.qrCodeBase64}" alt="QR Code Pix" />`:""}<textarea readonly>${data.qrCode||data.pixChave||""}</textarea><button class="copy" onclick="copyPix('${data.qrCode||data.pixChave||""}')">Copiar Pix</button><button class="close-light" onclick="closePix()">Fechar</button>`; document.getElementById("pixModal").classList.add("active"); }
     function closePix(){ document.getElementById("pixModal").classList.remove("active"); }
     function copyPix(text){ navigator.clipboard.writeText(text); notify("Pix copiado","success"); }
 

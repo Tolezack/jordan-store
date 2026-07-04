@@ -18,7 +18,9 @@
     .pedido-status.danger{background:#ffd7d7;color:#9b1111}
     .pedido-status.wait{background:#e8e8e8;color:#555}
     .admin-toolbar button:disabled{opacity:.45;cursor:not-allowed}
-  </style>
+  
+.admin-comprovante-img{width:100%;max-width:260px;border:1px solid #ccc;background:#f7f7f7;display:block;margin-top:8px;image-rendering:auto}.admin-comprovante-actions{display:grid;gap:8px}.admin-comprovante-actions a{color:#111;font-weight:900;text-transform:uppercase;font-size:12px}.pedido-status.warn{color:#b26b00}.pedido-status.ok{color:#15934f}.pedido-status.bad{color:#d63031}
+</style>
 </head>
 <body>
   <div class="promo-strip">Comprando a partir de <b>R$ 400,00</b>, o frete fica grátis.</div>
@@ -493,7 +495,13 @@
     function adminPedidoHtml(p){
       const itens = Array.isArray(p.itens) ? p.itens : [];
       const itensHtml = itens.length ? itens.map(i=>`<small>• ${escapeHtml(i.nome||"Produto")} ${i.tamanho?`Tam. ${escapeHtml(i.tamanho)} `:""}x${Number(i.quantidade||1)} — R$ ${money(Number(i.preco||0)*Number(i.quantidade||1))}</small>`).join("") : `<small>${escapeHtml(p.nome||"Pedido")}</small>`;
-      const comprovante = p.comprovanteLink ? `<a href="${escapeHtml(p.comprovanteLink)}" target="_blank" rel="noopener" style="color:#111;font-weight:900">Abrir comprovante</a>` : `<span style="color:#d63031;font-weight:900">Sem link de comprovante</span>`;
+      const temComprovante = !!(p.comprovanteLink || p.comprovanteImagem);
+      const comprovante = temComprovante ? `
+        <div class="admin-comprovante-actions">
+          ${p.comprovanteLink ? `<a href="${escapeHtml(p.comprovanteLink)}" target="_blank" rel="noopener">Abrir link do comprovante</a>` : ""}
+          ${p.comprovanteImagem ? `<a href="${escapeHtml(p.comprovanteImagem)}" target="_blank" rel="noopener">Abrir imagem</a><img class="admin-comprovante-img" src="${escapeHtml(p.comprovanteImagem)}" alt="Comprovante" />` : ""}
+        </div>
+      ` : `<span style="color:#d63031;font-weight:900">Sem comprovante</span>`;
       return `<div class="admin-product">
         <div class="admin-product-top">
           <img src="${escapeHtml(p.imagem || itens[0]?.imagem || "https://via.placeholder.com/120")}" onerror="this.src='https://via.placeholder.com/120'" />
@@ -545,7 +553,7 @@
     async function confirmarPedido(id){
       const pedido = adminPedidos.find(p=>String(p.id)===String(id));
       if(!pedido) return;
-      if(!pedido.comprovanteLink && !confirm("Esse pedido não tem link de comprovante. Aceitar mesmo assim?")) return;
+      if(!pedido.comprovanteLink && !pedido.comprovanteImagem && !confirm("Esse pedido não tem comprovante. Aceitar mesmo assim?")) return;
       if(!confirm(`Aceitar pagamento do pedido ${id} e baixar o estoque?`)) return;
       try{
         notify("Confirmando pedido...","success");

@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Jordan Wear Store</title>
-  <link rel="stylesheet" href="style.css?v=90" />
+  <link rel="stylesheet" href="style.css?v=91" />
 </head>
 <body>
   <div class="promo-strip">Comprando a partir de <b>R$ 400,00</b>, o frete fica grátis.</div>
@@ -132,6 +132,16 @@
 
     const categoriaNomes = { all:"todos os produtos", camisa:"camisas", calca:"calças", tenis:"tênis", bermuda:"bermudas", moletom:"moletons" };
 
+    async function fetchComTempo(url, options = {}, tempo = 12000) {
+      const controller = new AbortController();
+      const timer = setTimeout(() => controller.abort(), tempo);
+      try {
+        return await fetch(url, { ...options, cache: "no-store", signal: controller.signal });
+      } finally {
+        clearTimeout(timer);
+      }
+    }
+
     document.addEventListener("DOMContentLoaded", () => { carregarProdutos(); updateCart(); });
     document.addEventListener("keydown", e => { if (e.ctrlKey && e.altKey && e.key === "8") { e.preventDefault(); openAdmin(); } });
 
@@ -211,11 +221,11 @@
         status.textContent = "carregando..."; status.className = "api-status";
         let data = null;
         try {
-          const local = await fetch("produtos.json?v=90");
+          const local = await fetchComTempo(`produtos.json?cache=${Date.now()}`);
           if (!local.ok) throw new Error("produtos.json falhou");
           data = await local.json();
         } catch (errLocal) {
-          const res = await fetch(`${API_URL}/api/produtos`);
+          const res = await fetchComTempo(`${API_URL}/api/produtos`);
           if (!res.ok) throw new Error("Não consegui carregar produtos");
           data = await res.json();
         }
@@ -230,7 +240,7 @@
       }
     }
 
-    function abrirProduto(id, categoria) { window.location.href = `produtos/${normalizarCategoria(categoria)}/?id=${encodeURIComponent(id)}&v=90`; }
+    function abrirProduto(id, categoria) { window.location.href = `produtos/${normalizarCategoria(categoria)}/?id=${encodeURIComponent(id)}&v=91`; }
 
     function renderProducts(list = null) {
       const grid = document.getElementById("productsGrid");
@@ -311,7 +321,7 @@
       const subtotal = getCarrinhoSubtotal();
       const pedido = { id:`PED-${Date.now()}`, tipo:"carrinho", cliente:{ nome:document.getElementById("nome").value, telefone:document.getElementById("telefone").value, endereco:document.getElementById("endereco").value }, itens:carrinho, subtotal, frete:checkoutFrete, total:subtotal + checkoutFrete, cep:checkoutEndereco.cep, enderecoFrete:checkoutEndereco, imagem:carrinho[0]?.imagem || "", nome:`Pedido com ${carrinho.length} item(ns)`, tamanho:"", quantidade:carrinho.reduce((s,i)=>s+Number(i.quantidade||0),0) };
       localStorage.setItem("pedido_pix_manual", JSON.stringify(pedido));
-      window.location.href = "pix/index.html?v=90";
+      window.location.href = "pix/index.html?v=91";
     }
 
     function toggleSidebar(force) { const sidebar=document.getElementById("sidebar"), overlay=document.querySelector(".overlay"); if (force===false) { sidebar.classList.remove("active"); overlay.classList.remove("active"); return; } sidebar.classList.toggle("active"); overlay.classList.toggle("active"); }
@@ -324,18 +334,68 @@
     function showAdminLogin(){ document.getElementById("adminBody").innerHTML = `<form onsubmit="adminLogin(event)"><div class="form-group"><label>Senha admin</label><input id="adminSenha" type="password" required autocomplete="off" /></div><button class="submit" type="submit">Entrar</button></form>`; }
     function openAdmin(){ document.getElementById("adminModal").classList.add("active"); adminToken ? loadAdminProducts() : showAdminLogin(); }
     function closeAdmin(){ document.getElementById("adminModal").classList.remove("active"); }
-    async function adminLogin(event){ event.preventDefault(); const senha=document.getElementById("adminSenha").value; try{ const res=await fetch(`${API_URL}/api/admin/login`, {method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({senha})}); const data=await res.json(); if(!data.ok) return notify(data.erro||"Senha incorreta","error"); adminToken=data.token; localStorage.setItem("jws_admin_token", adminToken); loadAdminProducts(); }catch(err){ console.error(err); notify("Erro ao conectar no backend","error"); } }
-    async function loadAdminProducts(){ document.getElementById("adminBody").innerHTML=`<div class="loading"><div><div class="spinner"></div><p>Carregando painel...</p></div></div>`; try{ const res=await fetch(`${API_URL}/api/admin/produtos`, {headers:{Authorization:`Bearer ${adminToken}`}}); const data=await res.json(); if(!data.ok){ adminLogout(); return notify(data.erro||"Login expirou","error"); } adminProdutos=(Array.isArray(data.produtos)?data.produtos:[]).map(normalizarProduto); renderAdmin(); }catch(err){ console.error(err); notify("Erro ao carregar admin","error"); } }
+    async function adminLogin(event){
+      event.preventDefault();
+      const senha=document.getElementById("adminSenha").value;
+      const body=document.getElementById("adminBody");
+      body.innerHTML=`<div class="loading"><div><div class="spinner"></div><p>Entrando...</p></div></div>`;
+      try{
+        const res=await fetchComTempo(`${API_URL}/api/admin/login`, {method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({senha})}, 12000);
+        const data=await res.json();
+        if(!data.ok){ showAdminLogin(); return notify(data.erro||"Senha incorreta","error"); }
+        adminToken=data.token;
+        localStorage.setItem("jws_admin_token", adminToken);
+        loadAdminProducts();
+      }catch(err){
+        console.error(err);
+        showAdminLogin();
+        notify("Backend demorou ou não respondeu. Abre o Render e confere se está ligado.","error");
+      }
+    }
+
+    async function loadAdminProducts(){
+      const body=document.getElementById("adminBody");
+      body.innerHTML=`<div class="loading"><div><div class="spinner"></div><p>Carregando painel...</p></div></div>`;
+      try{
+        const res=await fetchComTempo(`${API_URL}/api/admin/produtos?cache=${Date.now()}`, {headers:{Authorization:`Bearer ${adminToken}`}}, 15000);
+        const data=await res.json();
+        if(!data.ok){ adminLogout(); return notify(data.erro||"Login expirou","error"); }
+        adminProdutos=(Array.isArray(data.produtos)?data.produtos:[]).map(normalizarProduto);
+        renderAdmin();
+      }catch(err){
+        console.error(err);
+        body.innerHTML=`<div class="erro"><div><h1>Erro no painel</h1><p>O backend não respondeu. Espera o Render acordar e tenta de novo.</p><button class="submit" onclick="loadAdminProducts()">Tentar novamente</button><button class="clear" onclick="adminLogout()">Entrar de novo</button></div></div>`;
+        notify("Erro ao carregar admin","error");
+      }
+    }
     function formatEstoqueTamanhos(estoqueTamanhos,tamanhos){ const estoque=estoqueTamanhos&&typeof estoqueTamanhos==="object"?estoqueTamanhos:{}; const lista=Object.keys(estoque).length?Object.keys(estoque):(Array.isArray(tamanhos)&&tamanhos.length?tamanhos:["P","M","G","GG"]); return lista.map(t=>{const tam=normalizarTamanho(t); return `${tam}: ${Number(estoque[tam] ?? estoque[t] ?? 0)}`;}).join("\n"); }
     function parseEstoqueTamanhos(texto){ const obj={}; const regex=/([A-Za-z0-9À-ÿ]+)\s*:\s*([0-9]+)/g; let match; while((match=regex.exec(String(texto||"")))!==null){ const tamanho=normalizarTamanho(match[1]); const quantidade=Number(match[2]||0); if(tamanho) obj[tamanho]=quantidade; } return obj; }
     function renderAdmin(){ document.getElementById("adminBody").innerHTML = `<div class="admin-toolbar"><button class="submit" onclick="addAdminProduct()">+ Produto</button><button class="submit" onclick="saveAdminProducts()">Salvar tudo</button><button class="clear" onclick="adminLogout()">Sair</button></div><div class="admin-list">${adminProdutos.map((p,i)=>adminProductHtml(p,i)).join("")}</div>`; }
-    function adminProductHtml(p,i){ const fotos=getFotosProduto(p); const estoque=getEstoqueTamanhos(p); return `<div class="admin-product"><div class="admin-product-top"><img src="${fotos[0]||"https://via.placeholder.com/120"}" onerror="this.src='https://via.placeholder.com/120'" /><div><b>${escapeHtml(p.nome)}</b><small>${escapeHtml(p.id)}</small><small>${fotos.length} foto(s) • estoque total ${getEstoqueTotal(p)}</small></div></div><div class="admin-grid"><div class="form-group"><label>ID</label><input value="${escapeHtml(p.id)}" onchange="adminProdutos[${i}].id=this.value" /></div><div class="form-group"><label>Nome</label><input value="${escapeHtml(p.nome)}" onchange="adminProdutos[${i}].nome=this.value" /></div><div class="form-group"><label>Categoria</label><select onchange="adminProdutos[${i}].categoria=this.value"><option value="camisa" ${p.categoria==='camisa'?'selected':''}>Camisa</option><option value="calca" ${p.categoria==='calca'?'selected':''}>Calça</option><option value="tenis" ${p.categoria==='tenis'?'selected':''}>Tênis</option><option value="bermuda" ${p.categoria==='bermuda'?'selected':''}>Bermuda</option><option value="moletom" ${p.categoria==='moletom'?'selected':''}>Moletom</option></select></div><div class="form-group"><label>Preço</label><input type="number" step="0.01" value="${Number(p.preco||0)}" onchange="adminProdutos[${i}].preco=Number(this.value)" /></div></div><div class="form-group"><label>Fotos do produto / miniatura</label><textarea class="admin-big-textarea" onchange="atualizarFotosAdmin(${i}, this.value)">${escapeHtml(fotos.join("\n"))}</textarea></div><div class="admin-grid"><div class="form-group"><label>Tamanhos separados por vírgula</label><input value="${escapeHtml(getTamanhosProduto(p).join(", "))}" onchange="atualizarTamanhosAdmin(${i}, this.value)" /></div><div class="form-group"><label>Estoque por tamanho</label><textarea onchange="atualizarEstoqueAdmin(${i}, this.value)">${formatEstoqueTamanhos(estoque,getTamanhosProduto(p))}</textarea></div></div><div class="form-group"><label>Descrição</label><textarea onchange="adminProdutos[${i}].descricao=this.value">${escapeHtml(p.descricao)}</textarea></div><button class="clear danger" onclick="deleteAdminProduct(${i})">Excluir produto</button></div>`; }
+    function adminProductHtml(p,i){ const fotos=getFotosProduto(p); const estoque=getEstoqueTamanhos(p); return `<div class="admin-product"><div class="admin-product-top"><img src="${fotos[0]||"https://via.placeholder.com/120"}" onerror="this.src='https://via.placeholder.com/120'" /><div><b>${escapeHtml(p.nome)}</b><small>${escapeHtml(p.id)}</small><small>${fotos.length} foto(s) • estoque total ${getEstoqueTotal(p)}</small></div></div><div class="admin-grid"><div class="form-group"><label>ID</label><input value="${escapeHtml(p.id)}" oninput="adminProdutos[${i}].id=this.value" /></div><div class="form-group"><label>Nome</label><input value="${escapeHtml(p.nome)}" oninput="adminProdutos[${i}].nome=this.value" /></div><div class="form-group"><label>Categoria</label><select onchange="adminProdutos[${i}].categoria=this.value"><option value="camisa" ${p.categoria==='camisa'?'selected':''}>Camisa</option><option value="calca" ${p.categoria==='calca'?'selected':''}>Calça</option><option value="tenis" ${p.categoria==='tenis'?'selected':''}>Tênis</option><option value="bermuda" ${p.categoria==='bermuda'?'selected':''}>Bermuda</option><option value="moletom" ${p.categoria==='moletom'?'selected':''}>Moletom</option></select></div><div class="form-group"><label>Preço</label><input type="number" step="0.01" value="${Number(p.preco||0)}" oninput="adminProdutos[${i}].preco=Number(this.value)" /></div></div><div class="form-group"><label>Fotos do produto / miniatura</label><textarea class="admin-big-textarea" oninput="atualizarFotosAdmin(${i}, this.value)">${escapeHtml(fotos.join("\n"))}</textarea></div><div class="admin-grid"><div class="form-group"><label>Tamanhos separados por vírgula</label><input value="${escapeHtml(getTamanhosProduto(p).join(", "))}" onchange="atualizarTamanhosAdmin(${i}, this.value)" /></div><div class="form-group"><label>Estoque por tamanho</label><textarea oninput="atualizarEstoqueAdmin(${i}, this.value)">${formatEstoqueTamanhos(estoque,getTamanhosProduto(p))}</textarea></div></div><div class="form-group"><label>Descrição</label><textarea oninput="adminProdutos[${i}].descricao=this.value">${escapeHtml(p.descricao)}</textarea></div><button class="clear danger" onclick="deleteAdminProduct(${i})">Excluir produto</button></div>`; }
     function atualizarFotosAdmin(index,texto){ const fotos=String(texto||"").split("\n").map(x=>x.trim()).filter(Boolean); adminProdutos[index].imagem=fotos[0]||""; adminProdutos[index].imagens=fotos; }
     function atualizarTamanhosAdmin(index,texto){ const tamanhos=String(texto||"").split(",").map(normalizarTamanho).filter(Boolean); const antigos=getEstoqueTamanhos(adminProdutos[index]); const novo={}; tamanhos.forEach(t=>novo[t]=Number(antigos[t]||0)); adminProdutos[index].tamanhos=tamanhos; adminProdutos[index].estoqueTamanhos=novo; adminProdutos[index].estoque_tamanhos=novo; adminProdutos[index].estoque=getEstoqueTotal(adminProdutos[index]); renderAdmin(); }
     function atualizarEstoqueAdmin(index,texto){ const estoque=parseEstoqueTamanhos(texto); adminProdutos[index].estoqueTamanhos=estoque; adminProdutos[index].estoque_tamanhos=estoque; adminProdutos[index].tamanhos=Object.keys(estoque); adminProdutos[index].estoque=Object.values(estoque).reduce((s,v)=>s+Number(v||0),0); }
     function addAdminProduct(){ const estoquePadrao={P:0,M:0,G:0,GG:0}; adminProdutos.unshift({id:`produto-${Date.now()}`,nome:"Novo produto",categoria:"camisa",preco:0,estoque:0,estoqueTamanhos:estoquePadrao,estoque_tamanhos:estoquePadrao,imagem:"",imagens:[],descricao:"",tamanhos:["P","M","G","GG"]}); renderAdmin(); }
     function deleteAdminProduct(index){ if(!confirm("Excluir produto?")) return; adminProdutos.splice(index,1); renderAdmin(); }
-    async function saveAdminProducts(){ try{ const produtosParaSalvar=adminProdutos.map(normalizarProduto); const res=await fetch(`${API_URL}/api/admin/produtos`,{method:"PUT",headers:{"Content-Type":"application/json",Authorization:`Bearer ${adminToken}`},body:JSON.stringify({produtos:produtosParaSalvar})}); const data=await res.json(); if(!data.ok) return notify(data.erro||"Erro ao salvar","error"); notify("Produtos salvos","success"); carregarProdutos(); }catch(err){ console.error(err); notify("Erro ao salvar produtos","error"); } }
+    async function saveAdminProducts(){
+      try{
+        const produtosParaSalvar=adminProdutos.map(normalizarProduto);
+        notify("Salvando produtos...","success");
+        const res=await fetchComTempo(`${API_URL}/api/admin/produtos`,{method:"PUT",headers:{"Content-Type":"application/json",Authorization:`Bearer ${adminToken}`},body:JSON.stringify({produtos:produtosParaSalvar})}, 20000);
+        const data=await res.json();
+        if(!data.ok) return notify(data.erro||"Erro ao salvar","error");
+        adminProdutos=(Array.isArray(data.produtos)?data.produtos:produtosParaSalvar).map(normalizarProduto);
+        produtos=[...adminProdutos];
+        produtosRender=[...produtos];
+        renderAdmin();
+        renderProducts();
+        updateCart();
+        notify("Produtos salvos. Atualiza a página com Ctrl+F5 se o GitHub demorar.","success");
+      }catch(err){
+        console.error(err);
+        notify("Erro ao salvar produtos. Confere Render/GITHUB_TOKEN.","error");
+      }
+    }
     function adminLogout(){ adminToken=""; localStorage.removeItem("jws_admin_token"); showAdminLogin(); }
   </script>
 </body>

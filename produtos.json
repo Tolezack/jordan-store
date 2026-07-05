@@ -5,7 +5,7 @@
       "nome": "zsdg",
       "categoria": "camisa",
       "preco": 0.1,
-      "estoque": 1,
+      "estoque": 13,
       "imagem": "",
       "imagens": [],
       "descricao": "",
@@ -18,13 +18,13 @@
       "estoqueTamanhos": {
         "P": 0,
         "M": 0,
-        "G": 0,
+        "G": 12,
         "GG": 1
       },
       "estoque_tamanhos": {
         "P": 0,
         "M": 0,
-        "G": 0,
+        "G": 12,
         "GG": 1
       }
     },
@@ -150,6 +150,6 @@
       }
     }
   ],
-  "ultimaAtualizacao": "2026-07-05T14:28:42.971Z",
+  "ultimaAtualizacao": "2026-07-05T14:45:14.460Z",
   "totalProdutos": 5
 }

@@ -490,7 +490,7 @@ body.cart-open .hamburger {
       }
     }
 
-    function abrirProduto(id, categoria) { window.location.href = `produtos/${normalizarCategoria(categoria)}/?id=${encodeURIComponent(id)}&v=105`; }
+    function abrirProduto(id, categoria) { window.location.href = `produtos/${normalizarCategoria(categoria)}/?id=${encodeURIComponent(id)}&v=108`; }
 
     function renderProducts(list = null) {
       const grid = document.getElementById("productsGrid");
@@ -584,6 +584,126 @@ body.cart-open .hamburger {
     function removeItem(cartId) { carrinho = carrinho.filter(i => getCartKey(i) !== String(cartId)); saveCart(); updateCart(); }
     function clearCart() { if (!confirm("Limpar carrinho?")) return; carrinho = []; saveCart(); updateCart(); }
     function saveCart() { localStorage.setItem("jws_cart", JSON.stringify(carrinho)); }
+
+    async function carregarProdutosAtualizadosParaCarrinho() {
+      let data = null;
+
+      try {
+        const local = await fetchComTempo(`produtos.json?validar=${Date.now()}`, {}, 12000);
+        if (!local.ok) throw new Error("produtos.json falhou");
+        data = await local.json();
+      } catch (errLocal) {
+        const res = await fetchComTempo(`${API_URL}/api/produtos?validar=${Date.now()}`, {}, 12000);
+        if (!res.ok) throw new Error("Não consegui conferir o estoque atualizado.");
+        data = await res.json();
+      }
+
+      const lista = Array.isArray(data) ? data : Array.isArray(data.produtos) ? data.produtos : [];
+      return lista.map(normalizarProduto);
+    }
+
+    async function validarCarrinhoComEstoqueAtual() {
+      let produtosAtualizados = [];
+
+      try {
+        produtosAtualizados = await carregarProdutosAtualizadosParaCarrinho();
+      } catch (err) {
+        console.error(err);
+        alert("Não consegui conferir o estoque atualizado. Tente novamente em alguns segundos.");
+        return false;
+      }
+
+      const carrinhoCorrigido = [];
+      let carrinhoMudou = false;
+      let mensagens = [];
+
+      for (const item of carrinho) {
+        const idItem = String(item.produtoId || item.id || "");
+        const nomeItem = normalizarTexto(item.nome || "");
+
+        const produtoAtual =
+          produtosAtualizados.find(p => String(p.id) === idItem) ||
+          produtosAtualizados.find(p => normalizarTexto(p.nome || "") === nomeItem);
+
+        if (!produtoAtual) {
+          carrinhoMudou = true;
+          mensagens.push(`${item.nome || "Produto"} saiu da loja.`);
+          continue;
+        }
+
+        const estoqueTamanhos = getEstoqueTamanhos(produtoAtual);
+        const tamanhoItem = normalizarTamanho(item.tamanho || item.size || "");
+        let estoqueDisponivel = 0;
+
+        if (tamanhoItem && Object.keys(estoqueTamanhos).length > 0) {
+          estoqueDisponivel = Number(estoqueTamanhos[tamanhoItem] || 0);
+        } else {
+          estoqueDisponivel = Number(getEstoqueTotal(produtoAtual) || 0);
+        }
+
+        if (estoqueDisponivel <= 0) {
+          carrinhoMudou = true;
+          mensagens.push(`${produtoAtual.nome} ${tamanhoItem ? "tam. " + tamanhoItem : ""} está sem estoque.`);
+          continue;
+        }
+
+        const quantidadeAntiga = Math.max(1, Number(item.quantidade || 1));
+        const quantidadeNova = Math.min(quantidadeAntiga, estoqueDisponivel);
+        const precoAtual = Number(produtoAtual.preco || 0);
+
+        if (quantidadeNova !== quantidadeAntiga) {
+          carrinhoMudou = true;
+          mensagens.push(`${produtoAtual.nome} foi ajustado para ${quantidadeNova} un.`);
+        }
+
+        if (Number(item.preco || 0) !== precoAtual) {
+          carrinhoMudou = true;
+          mensagens.push(`${produtoAtual.nome} mudou de preço.`);
+        }
+
+        carrinhoCorrigido.push({
+          ...item,
+          id: produtoAtual.id,
+          produtoId: produtoAtual.id,
+          nome: produtoAtual.nome,
+          categoria: produtoAtual.categoria,
+          preco: precoAtual,
+          imagem: getFotosProduto(produtoAtual)[0] || produtoAtual.imagem || item.imagem || "",
+          tamanho: tamanhoItem || item.tamanho || "",
+          quantidade: quantidadeNova,
+          estoque: estoqueDisponivel
+        });
+      }
+
+      produtos = produtosAtualizados;
+      produtosRender = [...produtosAtualizados];
+      renderProducts();
+
+      if (carrinhoMudou) {
+        carrinho = carrinhoCorrigido;
+        saveCart();
+        updateCart();
+        closeCheckout();
+
+        const resumo = mensagens.slice(0, 4).join("\n");
+        alert(`O carrinho foi atualizado porque o estoque/preço mudou.\n\n${resumo}\n\nConfira o carrinho e tente finalizar de novo.`);
+        return false;
+      }
+
+      if (carrinhoCorrigido.length === 0) {
+        carrinho = [];
+        saveCart();
+        updateCart();
+        closeCheckout();
+        alert("Seu carrinho ficou vazio porque os produtos não têm mais estoque.");
+        return false;
+      }
+
+      carrinho = carrinhoCorrigido;
+      saveCart();
+      updateCart();
+      return true;
+    }
     function toggleCart(force) {
       const cart = document.getElementById("cart");
       if (!cart) return;
@@ -653,17 +773,82 @@ body.cart-open .hamburger {
       if (freteEl) freteEl.textContent = checkoutFrete === null ? "Escolha PAC ou SEDEX" : frete === 0 ? "Grátis" : `R$ ${money(frete)}`;
       if (totalEl) totalEl.textContent = `R$ ${money(total)}`;
     }
-    function irParaPix(event) {
+    async function irParaPix(event) {
       event.preventDefault();
-      if (checkoutFrete === null || !checkoutEndereco || !freteSelecionado) { alert("Calcule o frete pelo CEP e escolha PAC ou SEDEX antes de ir para o Pix."); return; }
+
+      if (!carrinho.length) {
+        alert("Seu carrinho está vazio.");
+        return;
+      }
+
+      const btn = document.getElementById("btnIrPix");
+      const textoOriginal = btn ? btn.textContent : "";
+
+      if (btn) {
+        btn.disabled = true;
+        btn.textContent = "Conferindo estoque...";
+      }
+
+      const carrinhoOk = await validarCarrinhoComEstoqueAtual();
+
+      if (!carrinhoOk) {
+        if (btn) {
+          btn.disabled = false;
+          btn.textContent = textoOriginal || "Ir para Pix";
+        }
+        return;
+      }
+
+      if (checkoutEndereco) {
+        const tipoEscolhido = freteSelecionado ? freteSelecionado.tipo : null;
+        opcoesFreteAtual = calcularOpcoesFrete(checkoutEndereco, getCarrinhoSubtotal());
+        freteSelecionado = opcoesFreteAtual.find(opcao => opcao.tipo === tipoEscolhido) || opcoesFreteAtual[0] || null;
+        checkoutFrete = freteSelecionado ? Number(freteSelecionado.valor || 0) : null;
+      }
+
+      if (checkoutFrete === null || !checkoutEndereco || !freteSelecionado) {
+        alert("Calcule o frete pelo CEP e escolha PAC ou SEDEX antes de ir para o Pix.");
+        if (btn) {
+          btn.disabled = false;
+          btn.textContent = textoOriginal || "Ir para Pix";
+        }
+        return;
+      }
+
       const subtotal = getCarrinhoSubtotal();
       const frete = Number(freteSelecionado.valor || 0);
-      const pedido = { id:`PED-${Date.now()}`, tipo:"carrinho", status:"pendente", criadoEm:new Date().toISOString(), cliente:{ nome:document.getElementById("nome").value, telefone:document.getElementById("telefone").value, endereco:document.getElementById("endereco").value }, itens:carrinho, subtotal, frete, total:subtotal + frete, freteTipo:freteSelecionado.tipo, freteNome:freteSelecionado.nome, fretePrazo:freteSelecionado.prazo, cep:checkoutEndereco.cep, enderecoFrete:checkoutEndereco, imagem:carrinho[0]?.imagem || "", nome:`Pedido com ${carrinho.length} item(ns)`, tamanho:"", quantidade:carrinho.reduce((s,i)=>s+Number(i.quantidade||0),0) };
+      const pedido = {
+        id: `PED-${Date.now()}`,
+        tipo: "carrinho",
+        status: "pendente",
+        criadoEm: new Date().toISOString(),
+        cliente: {
+          nome: document.getElementById("nome").value,
+          telefone: document.getElementById("telefone").value,
+          endereco: document.getElementById("endereco").value
+        },
+        itens: carrinho.map(item => ({ ...item })),
+        subtotal,
+        frete,
+        total: subtotal + frete,
+        freteTipo: freteSelecionado.tipo,
+        freteNome: freteSelecionado.nome,
+        fretePrazo: freteSelecionado.prazo,
+        cep: checkoutEndereco.cep,
+        enderecoFrete: checkoutEndereco,
+        imagem: carrinho[0]?.imagem || "",
+        nome: `Pedido com ${carrinho.length} item(ns)`,
+        tamanho: "",
+        quantidade: carrinho.reduce((s, i) => s + Number(i.quantidade || 0), 0)
+      };
+
       localStorage.setItem("pedido_pix_manual", JSON.stringify(pedido));
+
       carrinho = [];
       saveCart();
       updateCart();
-      window.location.href = "pix/index.html?v=105";
+
+      window.location.href = "pix/index.html?v=108";
     }
 
     function toggleSidebar(force) {

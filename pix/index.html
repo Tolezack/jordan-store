@@ -663,7 +663,7 @@
       const statusEl = document.getElementById("pedidoBackendStatus");
 
       if (localStorage.getItem(chaveCriado) === "sim") {
-        if (statusEl) statusEl.textContent = ".";
+        if (statusEl) statusEl.textContent = "";
         return;
       }
 
@@ -677,7 +677,7 @@
       iniciarCooldown(chaveCooldown);
 
       try {
-        if (statusEl) statusEl.textContent = "Enviando pedido.";
+        if (statusEl) statusEl.textContent = "";
 
         const res = await fetch(`${API_URL}/api/pedidos`, {
           method: "POST",

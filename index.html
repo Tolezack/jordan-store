@@ -22,7 +22,7 @@
 .admin-comprovante-img{width:100%;max-width:260px;border:1px solid #ccc;background:#f7f7f7;display:block;margin-top:8px;image-rendering:auto}.admin-comprovante-actions{display:grid;gap:8px}.admin-comprovante-actions a{color:#111;font-weight:900;text-transform:uppercase;font-size:12px}.pedido-status.warn{color:#b26b00}.pedido-status.ok{color:#15934f}.pedido-status.bad{color:#d63031}
 
 
-/* V100: removido texto do principal e dos produtos */
+/* V101: remove com Pix do principal inclusive se vier injetado/cache */
 .promo-strip{position:relative;z-index:80}
 header{position:sticky;top:0;z-index:90;background:#fff}
 .hamburger{position:fixed!important;top:20px!important;left:18px!important;z-index:9999!important}
@@ -32,7 +32,12 @@ header{position:sticky;top:0;z-index:90;background:#fff}
 .modal{z-index:10000!important}
 @media(max-width:760px){.hamburger{top:18px!important;left:14px!important}}
 
-</style>
+
+    /* V101: esconde qualquer badge/linha de preço Pix que sobrar no principal */
+    .pix-price, .price-pix, .preco-pix, .preco-pix-verde, .pix-badge, .pix-tag, .badge-pix, .com-pix {
+      display: none !important;
+    }
+  </style>
 </head>
 <body>
   <button class="hamburger" onclick="toggleSidebar()" aria-label="Abrir menu">
@@ -172,7 +177,9 @@ header{position:sticky;top:0;z-index:90;background:#fff}
       }
     }
 
-    document.addEventListener("DOMContentLoaded", () => { carregarProdutos(); updateCart(); });
+    document.addEventListener("DOMContentLoaded", () => { carregarProdutos();
+      removerTextoComPixPrincipal();
+      setTimeout(removerTextoComPixPrincipal, 800); updateCart(); });
     document.addEventListener("keydown", e => { if (e.ctrlKey && e.altKey && e.key === "8") { e.preventDefault(); openAdmin(); } });
 
     function normalizarTexto(texto) { return String(texto || "").toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").trim(); }

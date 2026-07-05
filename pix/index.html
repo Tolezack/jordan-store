@@ -663,7 +663,7 @@
       const statusEl = document.getElementById("pedidoBackendStatus");
 
       if (localStorage.getItem(chaveCriado) === "sim") {
-        if (statusEl) statusEl.textContent = "Pedido enviado!.";
+        if (statusEl) statusEl.textContent = ".";
         return;
       }
 
@@ -690,7 +690,7 @@
         if (!data.ok) throw new Error(data.erro || "Erro ao criar pedido");
 
         localStorage.setItem(chaveCriado, "sim");
-        if (statusEl) statusEl.textContent = "";
+        if (statusEl) statusEl.textContent = "Pedido enviado!.";
       } catch (err) {
         console.error(err);
         if (statusEl) statusEl.textContent = "Não foi possivel enviar o pedido. Tente novamente em alguns segundos.";

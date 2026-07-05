@@ -4,7 +4,8 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Jordan Wear Store</title>
-  <link rel="stylesheet" href="style.css?v=104" />
+  <!-- V106: removido Todos os produtos da sidebar e status online/quantidade -->
+  <link rel="stylesheet" href="style.css?v=105" />
   <style>
     .frete-opcoes{display:grid;gap:8px;margin-top:10px}
     .frete-opcao{width:100%;border:1px solid #ccc;background:#fff;min-height:58px;padding:10px 12px;display:flex;justify-content:space-between;align-items:center;gap:12px;text-align:left;cursor:pointer}
@@ -33,10 +34,16 @@ header{position:sticky;top:0;z-index:90;background:#fff}
 @media(max-width:760px){.hamburger{top:18px!important;left:14px!important}}
 
 /* V104: esconde os três pontinhos quando a barra lateral está aberta */
-body.sidebar-open .hamburger {
+body.sidebar-open .hamburger,
+body.cart-open .hamburger {
   opacity: 0 !important;
   pointer-events: none !important;
   visibility: hidden !important;
+}
+
+.quantity-btn:disabled{
+  opacity:.35!important;
+  cursor:not-allowed!important;
 }
 
 
@@ -174,7 +181,6 @@ body.sidebar-open .hamburger {
       <button class="side-link" onclick="openCategoryPage('tenis')">Tênis</button>
       <button class="side-link" onclick="openCategoryPage('bermuda')">Bermudas</button>
       <button class="side-link" onclick="openCategoryPage('moletom')">Moletons</button>
-      <button class="side-link" onclick="scrollToShop()">Todos os produtos</button>
     </nav>
   </aside>
 
@@ -229,8 +235,8 @@ body.sidebar-open .hamburger {
     <section class="shop" id="shop">
       <div class="section-head">
         <span class="tag dark">produtos</span>
-        <h2 id="shopTitle">todos os produtos</h2>
-        <div class="api-status" id="apiStatus">carregando...</div>
+        <h2 id="shopTitle">produtos</h2>
+        <div class="api-status" id="apiStatus" aria-hidden="true" style="display:none"></div>
       </div>
 
       <div class="tabs">
@@ -300,7 +306,7 @@ body.sidebar-open .hamburger {
     let opcoesFreteAtual = [];
     let freteSelecionado = null;
 
-    const categoriaNomes = { all:"todos os produtos", camisa:"camisas", calca:"calças", tenis:"tênis", bermuda:"bermudas", moletom:"moletons" };
+    const categoriaNomes = { all:"produtos", camisa:"camisas", calca:"calças", tenis:"tênis", bermuda:"bermudas", moletom:"moletons" };
 
     async function fetchComTempo(url, options = {}, tempo = 12000) {
       const controller = new AbortController();
@@ -448,7 +454,7 @@ body.sidebar-open .hamburger {
       const status = document.getElementById("apiStatus");
       const grid = document.getElementById("productsGrid");
       try {
-        status.textContent = "carregando..."; status.className = "api-status";
+        status.textContent = ""; status.className = "api-status";
         let data = null;
         try {
           const local = await fetchComTempo(`produtos.json?cache=${Date.now()}`);
@@ -462,15 +468,15 @@ body.sidebar-open .hamburger {
         const lista = Array.isArray(data) ? data : data.produtos || [];
         produtos = lista.map(normalizarProduto);
         produtosRender = [...produtos];
-        status.textContent = `online • ${produtos.length} produtos`; status.className = "api-status ok";
+        status.textContent = ""; status.className = "api-status ok";
         renderProducts();
       } catch (err) {
-        console.error(err); status.textContent = "erro"; status.className = "api-status err";
+        console.error(err); status.textContent = ""; status.className = "api-status err";
         grid.innerHTML = `<div class="loading"><div><p><b>Não foi possível carregar os produtos.</b></p><p style="margin-top:8px;color:#777;font-size:13px">${escapeHtml(err.message)}</p><button class="submit" onclick="carregarProdutos()">Tentar novamente</button></div></div>`;
       }
     }
 
-    function abrirProduto(id, categoria) { window.location.href = `produtos/${normalizarCategoria(categoria)}/?id=${encodeURIComponent(id)}&v=102`; }
+    function abrirProduto(id, categoria) { window.location.href = `produtos/${normalizarCategoria(categoria)}/?id=${encodeURIComponent(id)}&v=105`; }
 
     function renderProducts(list = null) {
       const grid = document.getElementById("productsGrid");
@@ -500,24 +506,78 @@ body.sidebar-open .hamburger {
     function searchProducts() { const term = document.getElementById("searchInput")?.value.toLowerCase() || ""; let arr = produtos; if (currentCategory !== "all") arr = arr.filter(p => normalizarCategoria(p.categoria) === currentCategory); if (term) arr = arr.filter(p => String(p.nome || "").toLowerCase().includes(term) || String(p.descricao || "").toLowerCase().includes(term)); produtosRender = arr; renderProducts(arr); }
     function sortProducts() { const value = document.getElementById("sortSelect")?.value; let arr = [...produtosRender]; if (value === "price-asc") arr.sort((a,b)=>a.preco-b.preco); if (value === "price-desc") arr.sort((a,b)=>b.preco-a.preco); if (value === "name-asc") arr.sort((a,b)=>String(a.nome).localeCompare(String(b.nome))); if (value === "stock") arr.sort((a,b)=>getEstoqueTotal(b)-getEstoqueTotal(a)); renderProducts(arr); }
 
+    function getCartKey(item) {
+      return String(item.cartId || `${item.id || item.produtoId || item.nome || "item"}-${item.tamanho || ""}`);
+    }
+
+    function acharProdutoDoCarrinho(item) {
+      const id = String(item.produtoId || item.id || "");
+      return produtos.find(p => String(p.id) === id) || produtos.find(p => String(p.nome || "").toLowerCase() === String(item.nome || "").toLowerCase()) || null;
+    }
+
+    function getEstoqueMaxCarrinho(item) {
+      const produto = acharProdutoDoCarrinho(item);
+      if (!produto) return Infinity;
+
+      const estoqueTamanhos = getEstoqueTamanhos(produto);
+      const tamanho = normalizarTamanho(item.tamanho || item.size || "");
+
+      if (tamanho && Object.keys(estoqueTamanhos).length > 0) {
+        return Number(estoqueTamanhos[tamanho] ?? 0);
+      }
+
+      return Number(getEstoqueTotal(produto) || 0);
+    }
+
     function updateCart() {
       const count = carrinho.reduce((s, i) => s + Number(i.quantidade || 0), 0);
       const countEl = document.querySelector(".cart-count"); if (countEl) countEl.textContent = count;
       const items = document.getElementById("cartItems"), summary = document.getElementById("cartSummary"), checkout = document.getElementById("checkoutBtn"), clear = document.getElementById("clearCartBtn"); if (!items) return;
       if (!carrinho.length) { items.innerHTML = `<div class="empty-cart"><div>🛍️</div><p>Carrinho vazio</p></div>`; summary.style.display="none"; checkout.style.display="none"; clear.style.display="none"; return; }
       summary.style.display="grid"; checkout.style.display="block"; clear.style.display="block";
-      items.innerHTML = carrinho.map(item => `<div class="cart-item"><img class="cart-item-image" src="${item.imagem || "https://via.placeholder.com/200"}" onerror="this.src='https://via.placeholder.com/200'" /><div><div class="cart-item-name">${escapeHtml(item.nome)}</div><div class="cart-item-price">R$ ${money(item.preco * item.quantidade)}</div><div class="cart-item-actions"><div class="quantity-control"><button class="quantity-btn" onclick="changeQty('${item.cartId || item.id}', -1)">-</button><span>${item.quantidade}</span><button class="quantity-btn" onclick="changeQty('${item.cartId || item.id}', 1)">+</button></div><button class="remove-item" onclick="removeItem('${item.cartId || item.id}')">remover</button></div></div></div>`).join("");
+      items.innerHTML = carrinho.map(item => {
+        const key = getCartKey(item);
+        const max = getEstoqueMaxCarrinho(item);
+        const quantidade = Number(item.quantidade || 1);
+        const limiteTexto = Number.isFinite(max) ? `<small style="display:block;color:#777;margin-top:3px">máx. ${max} un.</small>` : "";
+        const plusDisabled = Number.isFinite(max) && quantidade >= max ? "disabled" : "";
+        return `<div class="cart-item"><img class="cart-item-image" src="${item.imagem || "https://via.placeholder.com/200"}" onerror="this.src='https://via.placeholder.com/200'" /><div><div class="cart-item-name">${escapeHtml(item.nome)}${item.tamanho ? ` - ${escapeHtml(item.tamanho)}` : ""}</div><div class="cart-item-price">R$ ${money(Number(item.preco || 0) * quantidade)}</div>${limiteTexto}<div class="cart-item-actions"><div class="quantity-control"><button class="quantity-btn" onclick="changeQty('${key}', -1)">-</button><span>${quantidade}</span><button class="quantity-btn" ${plusDisabled} onclick="changeQty('${key}', 1)">+</button></div><button class="remove-item" onclick="removeItem('${key}')">remover</button></div></div></div>`;
+      }).join("");
       const subtotal = getCarrinhoSubtotal();
       document.getElementById("cartSubtotal").textContent = `R$ ${money(subtotal)}`;
       document.getElementById("cartFrete").textContent = "Calcule no checkout";
       document.getElementById("cartTotal").textContent = `R$ ${money(subtotal)}`;
     }
     function getCarrinhoSubtotal() { return carrinho.reduce((s, i) => s + Number(i.preco || 0) * Number(i.quantidade || 0), 0); }
-    function changeQty(cartId, amount) { const item = carrinho.find(i => (i.cartId || i.id) === cartId); if (!item) return; const nova = Number(item.quantidade || 0) + amount; if (nova <= 0) return removeItem(cartId); item.quantidade = nova; saveCart(); updateCart(); }
-    function removeItem(cartId) { carrinho = carrinho.filter(i => (i.cartId || i.id) !== cartId); saveCart(); updateCart(); }
+    function changeQty(cartId, amount) {
+      const item = carrinho.find(i => getCartKey(i) === String(cartId));
+      if (!item) return;
+      const atual = Number(item.quantidade || 1);
+      const nova = atual + amount;
+      if (nova <= 0) return removeItem(cartId);
+      const max = getEstoqueMaxCarrinho(item);
+      if (Number.isFinite(max) && nova > max) {
+        notify(`Só tem ${max} unidade(s) em estoque.`, "error");
+        item.quantidade = Math.max(1, max);
+        saveCart();
+        updateCart();
+        return;
+      }
+      item.quantidade = nova;
+      saveCart();
+      updateCart();
+    }
+    function removeItem(cartId) { carrinho = carrinho.filter(i => getCartKey(i) !== String(cartId)); saveCart(); updateCart(); }
     function clearCart() { if (!confirm("Limpar carrinho?")) return; carrinho = []; saveCart(); updateCart(); }
     function saveCart() { localStorage.setItem("jws_cart", JSON.stringify(carrinho)); }
-    function toggleCart() { document.getElementById("cart").classList.toggle("active"); }
+    function toggleCart(force) {
+      const cart = document.getElementById("cart");
+      if (!cart) return;
+      if (force === false) cart.classList.remove("active");
+      else cart.classList.toggle("active");
+      document.body.classList.toggle("cart-open", cart.classList.contains("active"));
+      if (cart.classList.contains("active")) toggleSidebar(false);
+    }
 
     function openCheckout() {
       if (!carrinho.length) return;
@@ -586,7 +646,10 @@ body.sidebar-open .hamburger {
       const frete = Number(freteSelecionado.valor || 0);
       const pedido = { id:`PED-${Date.now()}`, tipo:"carrinho", status:"pendente", criadoEm:new Date().toISOString(), cliente:{ nome:document.getElementById("nome").value, telefone:document.getElementById("telefone").value, endereco:document.getElementById("endereco").value }, itens:carrinho, subtotal, frete, total:subtotal + frete, freteTipo:freteSelecionado.tipo, freteNome:freteSelecionado.nome, fretePrazo:freteSelecionado.prazo, cep:checkoutEndereco.cep, enderecoFrete:checkoutEndereco, imagem:carrinho[0]?.imagem || "", nome:`Pedido com ${carrinho.length} item(ns)`, tamanho:"", quantidade:carrinho.reduce((s,i)=>s+Number(i.quantidade||0),0) };
       localStorage.setItem("pedido_pix_manual", JSON.stringify(pedido));
-      window.location.href = "pix/index.html?v=102";
+      carrinho = [];
+      saveCart();
+      updateCart();
+      window.location.href = "pix/index.html?v=105";
     }
 
     function toggleSidebar(force) {
@@ -604,6 +667,7 @@ body.sidebar-open .hamburger {
       sidebar.classList.toggle("active");
       overlay.classList.toggle("active");
       document.body.classList.toggle("sidebar-open", sidebar.classList.contains("active"));
+      if (sidebar.classList.contains("active")) toggleCart(false);
     }
     function focusSearch(){ const input=document.getElementById("searchInput"); if(input){ input.focus(); document.getElementById("shop")?.scrollIntoView({behavior:"smooth"}); } }
     function scrollToShop(){ document.getElementById("shop")?.scrollIntoView({behavior:"smooth"}); toggleSidebar(false); }

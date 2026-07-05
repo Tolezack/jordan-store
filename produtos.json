@@ -5,7 +5,7 @@
       "nome": "zsdg",
       "categoria": "camisa",
       "preco": 0.1,
-      "estoque": 0,
+      "estoque": 1,
       "imagem": "",
       "imagens": [],
       "descricao": "",
@@ -19,13 +19,13 @@
         "P": 0,
         "M": 0,
         "G": 0,
-        "GG": 0
+        "GG": 1
       },
       "estoque_tamanhos": {
         "P": 0,
         "M": 0,
         "G": 0,
-        "GG": 0
+        "GG": 1
       }
     },
     {
@@ -33,7 +33,7 @@
       "nome": "cagada",
       "categoria": "camisa",
       "preco": 0.1,
-      "estoque": 0,
+      "estoque": 1,
       "imagem": "https://i.pinimg.com/736x/36/b5/9c/36b59ca555262a203a8415083d9c3f63.jpg",
       "imagens": [
         "https://i.pinimg.com/736x/36/b5/9c/36b59ca555262a203a8415083d9c3f63.jpg",
@@ -48,13 +48,13 @@
       ],
       "estoqueTamanhos": {
         "P": 0,
-        "M": 0,
+        "M": 1,
         "G": 0,
         "GG": 0
       },
       "estoque_tamanhos": {
         "P": 0,
-        "M": 0,
+        "M": 1,
         "G": 0,
         "GG": 0
       }
@@ -94,7 +94,7 @@
       "nome": "Calça Street Preta",
       "categoria": "calca",
       "preco": 125,
-      "estoque": 4,
+      "estoque": 1,
       "imagem": "https://i.pinimg.com/736x/47/9c/46/479c46d2e3a13214638a3d80d9ef2cd3.jpg",
       "imagens": [
         "https://i.pinimg.com/736x/47/9c/46/479c46d2e3a13214638a3d80d9ef2cd3.jpg"
@@ -106,8 +106,18 @@
         "G",
         "GG"
       ],
-      "estoqueTamanhos": {},
-      "estoque_tamanhos": {}
+      "estoqueTamanhos": {
+        "P": 1,
+        "M": 0,
+        "G": 0,
+        "GG": 0
+      },
+      "estoque_tamanhos": {
+        "P": 1,
+        "M": 0,
+        "G": 0,
+        "GG": 0
+      }
     },
     {
       "id": "tenis-jordan-vermelho",
@@ -126,10 +136,20 @@
         "G",
         "GG"
       ],
-      "estoqueTamanhos": {},
-      "estoque_tamanhos": {}
+      "estoqueTamanhos": {
+        "P": 0,
+        "M": 0,
+        "G": 0,
+        "GG": 1
+      },
+      "estoque_tamanhos": {
+        "P": 0,
+        "M": 0,
+        "G": 0,
+        "GG": 1
+      }
     }
   ],
-  "ultimaAtualizacao": "2026-07-05T14:11:12.253Z",
+  "ultimaAtualizacao": "2026-07-05T14:28:42.971Z",
   "totalProdutos": 5
 }

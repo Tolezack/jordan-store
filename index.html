@@ -181,6 +181,16 @@ body.cart-open .hamburger {
   display: none !important;
 }
 
+
+/* V110: logo SVG novo no topo */
+.logo {
+  width: 58px !important;
+  height: 58px !important;
+  object-fit: contain !important;
+  display: block !important;
+  background: transparent !important;
+}
+
   </style>
 </head>
 <body>
@@ -207,7 +217,7 @@ body.cart-open .hamburger {
 
   <header>
     <button class="header-search" onclick="focusSearch()" aria-label="Buscar"></button>
-    <img class="logo" src="https://i.pinimg.com/736x/97/20/a6/9720a60b3796f5660a5e12c771775a02.jpg" alt="Jordan Wear Store" />
+    <img class="logo" src="Logo.svg" alt="Jordan Wear Store" />
     <button class="cart-btn" onclick="toggleCart()" aria-label="Abrir carrinho">
       <img src="Carrinho.svg" alt="Carrinho" onerror="this.style.display='none'" />
       <span class="cart-count">0</span>

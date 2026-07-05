@@ -878,7 +878,7 @@
         localStorage.setItem("pedido_pix_manual", JSON.stringify(pedidoAtual));
         localStorage.setItem(chaveEnviado, "sim");
 
-        if (statusEl) statusEl.textContent = "Comprovante enviado..";
+        if (statusEl) statusEl.textContent = "Comprovante enviado!";
         setBotaoComprovanteTravado(true, "Comprovante enviado");
         mostrarOkCustomizado("Enviado", "Comprovante enviado para a loja. Seu pedido ficou pendente até ser aprovado.");
       } catch (err) {
@@ -1034,7 +1034,6 @@
             </div>
 
             <div class="anti-spam-note">
-              Anti-spam ativo: o pedido não é duplicado e o comprovante só pode ser enviado uma vez.
             </div>
           </div>
 

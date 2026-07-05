@@ -1,0 +1,58 @@
+name: pages build and deployment
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+  actions: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Baixar arquivos
+        uses: actions/checkout@v4
+
+      - name: Configurar Pages
+        uses: actions/configure-pages@v5
+
+      - name: Enviar site para Pages
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: "."
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+
+    steps:
+      - name: Deploy no GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v5
+
+  tentar_novamente:
+    needs: deploy
+    runs-on: ubuntu-latest
+    if: failure() && github.run_attempt < 3
+
+    steps:
+      - name: Tentar novamente se falhar
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          echo "Deploy falhou. Tentando novamente..."
+          gh run rerun ${{ github.run_id }} --failed

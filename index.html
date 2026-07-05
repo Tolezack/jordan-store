@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Jordan Wear Store</title>
-  <!-- V106: removido Todos os produtos da sidebar e status online/quantidade -->
+  <!-- V107: removido texto/box do hero principal -->
   <link rel="stylesheet" href="style.css?v=105" />
   <style>
     .frete-opcoes{display:grid;gap:8px;margin-top:10px}
@@ -160,6 +160,27 @@ body.cart-open .hamburger {
   .hero-next { right: 8px; }
 }
 
+
+/* V107: remove o bloco de texto do hero e deixa só o slide */
+.hero-com-slider {
+  display: block !important;
+  padding: 0 !important;
+  margin: 0 0 28px !important;
+  border: 0 !important;
+  background: transparent !important;
+}
+
+.hero-com-slider .hero-banner,
+.hero-com-slider .hero-slider {
+  width: 100% !important;
+  margin: 0 !important;
+}
+
+.hero-com-slider .hero-text,
+.hero-text {
+  display: none !important;
+}
+
   </style>
 </head>
 <body>
@@ -216,13 +237,6 @@ body.cart-open .hamburger {
           <button onclick="goToHeroSlide(1)" aria-label="Slide 2"></button>
           <button onclick="goToHeroSlide(2)" aria-label="Slide 3"></button>
         </div>
-      </div>
-
-      <div class="hero-text">
-        <span class="tag">nova coleção</span>
-        <h1>jordan wear store</h1>
-        <p>Loja streetwear com camisas, calças, tênis, bermudas e moletons.</p>
-        <div class="hero-actions"><button onclick="scrollToShop()">Ver produtos</button></div>
       </div>
     </section>
 

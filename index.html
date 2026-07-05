@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Jordan Wear Store</title>
-  <link rel="stylesheet" href="style.css?v=100" />
+  <link rel="stylesheet" href="style.css?v=102" />
   <style>
     .frete-opcoes{display:grid;gap:8px;margin-top:10px}
     .frete-opcao{width:100%;border:1px solid #ccc;background:#fff;min-height:58px;padding:10px 12px;display:flex;justify-content:space-between;align-items:center;gap:12px;text-align:left;cursor:pointer}
@@ -37,6 +37,30 @@ header{position:sticky;top:0;z-index:90;background:#fff}
     .pix-price, .price-pix, .preco-pix, .preco-pix-verde, .pix-badge, .pix-tag, .badge-pix, .com-pix {
       display: none !important;
     }
+  
+
+/* V102: remove o "com Pix" verde das miniaturas/cards */
+.product-price::after,
+.product-price::before,
+.product-card .price::after,
+.product-card .preco::after,
+.product-card [class*="pix"]::after,
+.product-card [class*="pix"]::before {
+  content: none !important;
+  display: none !important;
+}
+.product-card .pix-price,
+.product-card .price-pix,
+.product-card .preco-pix,
+.product-card .preco-pix-verde,
+.product-card .pix-badge,
+.product-card .pix-tag,
+.product-card .badge-pix,
+.product-card .com-pix,
+.product-card [class*="pix"] {
+  display: none !important;
+}
+
   </style>
 </head>
 <body>
@@ -177,6 +201,33 @@ header{position:sticky;top:0;z-index:90;background:#fff}
       }
     }
 
+
+    function removerTextoComPixPrincipal() {
+      document.querySelectorAll(".product-card").forEach(card => {
+        card.querySelectorAll("*").forEach(el => {
+          const texto = (el.textContent || "").trim().toLowerCase();
+
+          if (texto === "com pix" || texto === "no pix" || texto === "pix") {
+            el.remove();
+            return;
+          }
+
+          if (texto.includes("com pix") && !el.classList.contains("product-price")) {
+            el.textContent = el.textContent.replace(/\s*com\s*pix\s*/gi, "").trim();
+          }
+        });
+
+        const preco = card.querySelector(".product-price");
+        if (preco) {
+          preco.childNodes.forEach(node => {
+            if (node.nodeType === Node.TEXT_NODE) {
+              node.textContent = node.textContent.replace(/\s*com\s*pix\s*/gi, "");
+            }
+          });
+        }
+      });
+    }
+
     document.addEventListener("DOMContentLoaded", () => { carregarProdutos();
       removerTextoComPixPrincipal();
       setTimeout(removerTextoComPixPrincipal, 800); updateCart(); });
@@ -307,7 +358,7 @@ header{position:sticky;top:0;z-index:90;background:#fff}
       }
     }
 
-    function abrirProduto(id, categoria) { window.location.href = `produtos/${normalizarCategoria(categoria)}/?id=${encodeURIComponent(id)}&v=94`; }
+    function abrirProduto(id, categoria) { window.location.href = `produtos/${normalizarCategoria(categoria)}/?id=${encodeURIComponent(id)}&v=102`; }
 
     function renderProducts(list = null) {
       const grid = document.getElementById("productsGrid");
@@ -324,6 +375,8 @@ header{position:sticky;top:0;z-index:90;background:#fff}
           <div class="product-info"><h3 class="product-name" onclick="abrirProduto('${p.id}', '${cat}')">${escapeHtml(p.nome)}</h3><div class="product-price">R$ ${money(p.preco)}</div><div class="stock-info ${stockClass}">${stockText}</div><div class="product-buttons">${estoque > 0 ? `<button class="product-btn buy-btn" onclick="abrirProduto('${p.id}', '${cat}')">Comprar</button>` : `<button class="product-btn disabled-btn" disabled>Esgotado</button>`}<button class="product-btn details-btn" onclick="abrirProduto('${p.id}', '${cat}')">Ver detalhes</button></div></div>
         </article>`;
       }).join("");
+      removerTextoComPixPrincipal();
+      setTimeout(removerTextoComPixPrincipal, 50);
     }
 
     function setCategory(category) {
@@ -421,7 +474,7 @@ header{position:sticky;top:0;z-index:90;background:#fff}
       const frete = Number(freteSelecionado.valor || 0);
       const pedido = { id:`PED-${Date.now()}`, tipo:"carrinho", status:"pendente", criadoEm:new Date().toISOString(), cliente:{ nome:document.getElementById("nome").value, telefone:document.getElementById("telefone").value, endereco:document.getElementById("endereco").value }, itens:carrinho, subtotal, frete, total:subtotal + frete, freteTipo:freteSelecionado.tipo, freteNome:freteSelecionado.nome, fretePrazo:freteSelecionado.prazo, cep:checkoutEndereco.cep, enderecoFrete:checkoutEndereco, imagem:carrinho[0]?.imagem || "", nome:`Pedido com ${carrinho.length} item(ns)`, tamanho:"", quantidade:carrinho.reduce((s,i)=>s+Number(i.quantidade||0),0) };
       localStorage.setItem("pedido_pix_manual", JSON.stringify(pedido));
-      window.location.href = "pix/index.html?v=94";
+      window.location.href = "pix/index.html?v=102";
     }
 
     function toggleSidebar(force) { const sidebar=document.getElementById("sidebar"), overlay=document.querySelector(".overlay"); if (force===false) { sidebar.classList.remove("active"); overlay.classList.remove("active"); return; } sidebar.classList.toggle("active"); overlay.classList.toggle("active"); }

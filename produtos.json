@@ -64,7 +64,7 @@
       "nome": "Camisa França Azuk",
       "categoria": "camisa",
       "preco": 66,
-      "estoque": 124,
+      "estoque": 123,
       "imagem": "https://dcdn-us.mitiendanube.com/stores/007/694/334/products/20260519153953230001-88cd9e4b013f14281017792052534092-1024-1024.webp",
       "imagens": [
         "https://dcdn-us.mitiendanube.com/stores/007/694/334/products/20260519153953230001-88cd9e4b013f14281017792052534092-1024-1024.webp"
@@ -77,13 +77,13 @@
         "GG"
       ],
       "estoqueTamanhos": {
-        "P": 1,
+        "P": 0,
         "M": 0,
         "G": 0,
         "GG": 123
       },
       "estoque_tamanhos": {
-        "P": 1,
+        "P": 0,
         "M": 0,
         "G": 0,
         "GG": 123
@@ -130,6 +130,6 @@
       "estoque_tamanhos": {}
     }
   ],
-  "ultimaAtualizacao": "2026-07-05T13:53:16.343Z",
+  "ultimaAtualizacao": "2026-07-05T14:11:12.253Z",
   "totalProdutos": 5
 }

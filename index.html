@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Jordan Wear Store</title>
-  <link rel="stylesheet" href="style.css?v=102" />
+  <link rel="stylesheet" href="style.css?v=103" />
   <style>
     .frete-opcoes{display:grid;gap:8px;margin-top:10px}
     .frete-opcao{width:100%;border:1px solid #ccc;background:#fff;min-height:58px;padding:10px 12px;display:flex;justify-content:space-between;align-items:center;gap:12px;text-align:left;cursor:pointer}
@@ -61,6 +61,90 @@ header{position:sticky;top:0;z-index:90;background:#fff}
   display: none !important;
 }
 
+
+/* V103: slide de imagens no index principal */
+.hero-com-slider .hero-banner,
+.hero-slider {
+  position: relative;
+  overflow: hidden;
+  background: #111;
+}
+
+.hero-track {
+  display: flex;
+  width: 100%;
+  height: 100%;
+  transition: transform 0.45s ease;
+  will-change: transform;
+}
+
+.hero-slide {
+  min-width: 100%;
+  width: 100%;
+  height: 100%;
+  flex: 0 0 100%;
+  background: #111;
+}
+
+.hero-slide img {
+  width: 100%;
+  height: 100%;
+  min-height: 420px;
+  display: block;
+  object-fit: cover;
+}
+
+.hero-arrow {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 48px;
+  height: 48px;
+  background: rgba(0, 0, 0, 0.62);
+  color: #fff;
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  font-size: 34px;
+  font-weight: 900;
+  line-height: 1;
+  z-index: 8;
+  cursor: pointer;
+}
+
+.hero-prev { left: 14px; }
+.hero-next { right: 14px; }
+
+.hero-dots {
+  position: absolute;
+  left: 50%;
+  bottom: 14px;
+  transform: translateX(-50%);
+  display: flex;
+  gap: 8px;
+  z-index: 8;
+}
+
+.hero-dots button {
+  width: 11px;
+  height: 11px;
+  border: 0;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.45);
+  cursor: pointer;
+}
+
+.hero-dots button.active { background: #fff; }
+
+@media (max-width: 900px) {
+  .hero-slide img { min-height: 360px; }
+}
+
+@media (max-width: 640px) {
+  .hero-slide img { min-height: 280px; }
+  .hero-arrow { width: 40px; height: 40px; font-size: 28px; }
+  .hero-prev { left: 8px; }
+  .hero-next { right: 8px; }
+}
+
   </style>
 </head>
 <body>
@@ -97,10 +181,30 @@ header{position:sticky;top:0;z-index:90;background:#fff}
   </header>
 
   <main id="app">
-    <section class="hero">
-      <div class="hero-banner">
-        <img class="banner active" src="https://i.pinimg.com/1200x/e1/5c/c1/e15cc1589691392bbcdad5ab9f7d0d4a.jpg" alt="Banner Jordan Wear" />
+    <section class="hero hero-com-slider">
+      <div class="hero-banner hero-slider" id="heroSlider">
+        <div class="hero-track" id="heroTrack">
+          <div class="hero-slide">
+            <img src="https://i.pinimg.com/1200x/e1/5c/c1/e15cc1589691392bbcdad5ab9f7d0d4a.jpg" alt="Jordan Wear Banner 1" />
+          </div>
+          <div class="hero-slide">
+            <img src="https://i.pinimg.com/1200x/97/20/a6/9720a60b3796f5660a5e12c771775a02.jpg" alt="Jordan Wear Banner 2" />
+          </div>
+          <div class="hero-slide">
+            <img src="https://i.pinimg.com/1200x/a1/a9/eb/a1a9eb306f17c06cad965d70695ad323.jpg" alt="Jordan Wear Banner 3" />
+          </div>
+        </div>
+
+        <button class="hero-arrow hero-prev" onclick="prevHeroSlide()" aria-label="Slide anterior">‹</button>
+        <button class="hero-arrow hero-next" onclick="nextHeroSlide()" aria-label="Próximo slide">›</button>
+
+        <div class="hero-dots" id="heroDots">
+          <button class="active" onclick="goToHeroSlide(0)" aria-label="Slide 1"></button>
+          <button onclick="goToHeroSlide(1)" aria-label="Slide 2"></button>
+          <button onclick="goToHeroSlide(2)" aria-label="Slide 3"></button>
+        </div>
       </div>
+
       <div class="hero-text">
         <span class="tag">nova coleção</span>
         <h1>jordan wear store</h1>
@@ -229,6 +333,7 @@ header{position:sticky;top:0;z-index:90;background:#fff}
     }
 
     document.addEventListener("DOMContentLoaded", () => { carregarProdutos();
+      iniciarSlidePrincipal();
       removerTextoComPixPrincipal();
       setTimeout(removerTextoComPixPrincipal, 800); updateCart(); });
     document.addEventListener("keydown", e => { if (e.ctrlKey && e.altKey && e.key === "8") { e.preventDefault(); openAdmin(); } });
@@ -649,6 +754,87 @@ header{position:sticky;top:0;z-index:90;background:#fff}
       }catch(err){ console.error(err); notify("Erro ao negar pedido.","error"); }
     }
     function adminLogout(){ adminToken=""; localStorage.removeItem("jws_admin_token"); showAdminLogin(); }
+
+    /* V103: slide de imagens do index principal */
+    let heroSlideAtual = 0;
+    let heroSlideTimer = null;
+
+    function getHeroSlides() {
+      return document.querySelectorAll(".hero-slide");
+    }
+
+    function getHeroDots() {
+      return document.querySelectorAll("#heroDots button");
+    }
+
+    function updateHeroSlide() {
+      const track = document.getElementById("heroTrack");
+      const slides = getHeroSlides();
+      const dots = getHeroDots();
+
+      if (!track || slides.length === 0) return;
+
+      if (heroSlideAtual < 0) heroSlideAtual = slides.length - 1;
+      if (heroSlideAtual >= slides.length) heroSlideAtual = 0;
+
+      track.style.transform = `translateX(-${heroSlideAtual * 100}%)`;
+
+      dots.forEach((dot, index) => {
+        dot.classList.toggle("active", index === heroSlideAtual);
+      });
+    }
+
+    function goToHeroSlide(index) {
+      heroSlideAtual = index;
+      updateHeroSlide();
+      restartHeroSlideAuto();
+    }
+
+    function nextHeroSlide() {
+      const slides = getHeroSlides();
+      if (slides.length === 0) return;
+      heroSlideAtual = (heroSlideAtual + 1) % slides.length;
+      updateHeroSlide();
+    }
+
+    function prevHeroSlide() {
+      const slides = getHeroSlides();
+      if (slides.length === 0) return;
+      heroSlideAtual = (heroSlideAtual - 1 + slides.length) % slides.length;
+      updateHeroSlide();
+      restartHeroSlideAuto();
+    }
+
+    function startHeroSlideAuto() {
+      stopHeroSlideAuto();
+      heroSlideTimer = setInterval(nextHeroSlide, 4000);
+    }
+
+    function stopHeroSlideAuto() {
+      if (heroSlideTimer) {
+        clearInterval(heroSlideTimer);
+        heroSlideTimer = null;
+      }
+    }
+
+    function restartHeroSlideAuto() {
+      stopHeroSlideAuto();
+      startHeroSlideAuto();
+    }
+
+    function iniciarSlidePrincipal() {
+      const slider = document.getElementById("heroSlider");
+      if (!slider) return;
+
+      updateHeroSlide();
+      startHeroSlideAuto();
+
+      slider.addEventListener("mouseenter", stopHeroSlideAuto);
+      slider.addEventListener("mouseleave", startHeroSlideAuto);
+      slider.addEventListener("touchstart", stopHeroSlideAuto, { passive: true });
+      slider.addEventListener("touchend", startHeroSlideAuto, { passive: true });
+    }
+
   </script>
 </body>
 </html>

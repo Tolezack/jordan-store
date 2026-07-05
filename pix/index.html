@@ -212,6 +212,21 @@
       background: var(--green);
     }
 
+    .btn:disabled,
+    .upload-comprovante-btn.disabled {
+      background: #cfcfcf !important;
+      color: #777 !important;
+      cursor: not-allowed !important;
+      pointer-events: none;
+    }
+
+    .anti-spam-note {
+      margin-top: 8px;
+      font-size: 12px;
+      color: #777;
+      line-height: 1.4;
+    }
+
     .aviso {
       margin-top: 12px;
       font-size: 13px;
@@ -445,6 +460,11 @@
     let pixCodeAtual = "";
     let comprovanteImagemBase64 = "";
     let comprovanteArquivoNome = "";
+    let enviandoPedidoBackend = false;
+    let enviandoComprovante = false;
+
+    const PEDIDO_COOLDOWN_MS = 15000;
+    const COMPROVANTE_COOLDOWN_MS = 45000;
 
     function numero(valor) {
       const n = Number(valor);
@@ -597,16 +617,64 @@
       return `- ${nome}${tamanho} x${quantidade}${preco}`;
     }
 
+    function agoraMs() {
+      return Date.now();
+    }
+
+    function getAntiSpamKey(tipo) {
+      const id = pedidoAtual && pedidoAtual.id ? pedidoAtual.id : "sem-pedido";
+      return `${tipo}_${id}`;
+    }
+
+    function tempoRestanteCooldown(chave, cooldownMs) {
+      const ultimo = Number(localStorage.getItem(chave) || 0);
+      const restante = cooldownMs - (agoraMs() - ultimo);
+      return Math.max(0, restante);
+    }
+
+    function iniciarCooldown(chave) {
+      localStorage.setItem(chave, String(agoraMs()));
+    }
+
+    function segundos(ms) {
+      return Math.ceil(ms / 1000);
+    }
+
+    function setBotaoComprovanteTravado(travado, texto) {
+      const btn = document.getElementById("btnEnviarComprovante");
+      const upload = document.getElementById("uploadComprovanteBtn");
+
+      if (btn) {
+        btn.disabled = !!travado;
+        btn.textContent = texto || (travado ? "Aguarde..." : "Enviar comprovante");
+      }
+
+      if (upload) {
+        upload.classList.toggle("disabled", !!travado);
+      }
+    }
+
     async function criarPedidoPendenteNoBackend() {
       if (!pedidoAtual || !pedidoAtual.id) return;
+      if (enviandoPedidoBackend) return;
 
-      const chave = `pedido_backend_criado_${pedidoAtual.id}`;
+      const chaveCriado = `pedido_backend_criado_${pedidoAtual.id}`;
+      const chaveCooldown = getAntiSpamKey("pedido_backend_ultimo_envio");
       const statusEl = document.getElementById("pedidoBackendStatus");
 
-      if (localStorage.getItem(chave) === "sim") {
+      if (localStorage.getItem(chaveCriado) === "sim") {
         if (statusEl) statusEl.textContent = "Pedido pendente já enviado para o painel admin.";
         return;
       }
+
+      const restante = tempoRestanteCooldown(chaveCooldown, PEDIDO_COOLDOWN_MS);
+      if (restante > 0) {
+        if (statusEl) statusEl.textContent = `Anti-spam: aguarde ${segundos(restante)}s para reenviar o pedido.`;
+        return;
+      }
+
+      enviandoPedidoBackend = true;
+      iniciarCooldown(chaveCooldown);
 
       try {
         if (statusEl) statusEl.textContent = "Enviando pedido para o painel admin...";
@@ -621,11 +689,13 @@
 
         if (!data.ok) throw new Error(data.erro || "Erro ao criar pedido");
 
-        localStorage.setItem(chave, "sim");
+        localStorage.setItem(chaveCriado, "sim");
         if (statusEl) statusEl.textContent = "Pedido pendente enviado para o painel admin.";
       } catch (err) {
         console.error(err);
-        if (statusEl) statusEl.textContent = "Não consegui enviar o pedido para o painel. Tente atualizar a página.";
+        if (statusEl) statusEl.textContent = "Não consegui enviar o pedido para o painel. Tente novamente em alguns segundos.";
+      } finally {
+        enviandoPedidoBackend = false;
       }
     }
 
@@ -745,15 +815,41 @@
 
     async function enviarComprovante() {
       if (!pedidoAtual || !pedidoAtual.id) return;
+      if (enviandoComprovante) return;
+
+      if (enviandoPedidoBackend) {
+        mostrarOkCustomizado("Aguarde", "O pedido ainda está sendo enviado para o painel. Tente de novo em alguns segundos.");
+        return;
+      }
 
       const input = document.getElementById("comprovanteLink");
       const statusEl = document.getElementById("pedidoBackendStatus");
       const link = String(input?.value || "").trim();
+      const chaveEnviado = `comprovante_enviado_${pedidoAtual.id}`;
+      const chaveCooldown = getAntiSpamKey("comprovante_ultimo_envio");
 
       if (!link && !comprovanteImagemBase64) {
         mostrarOkCustomizado("Falta comprovante", "Cole um link ou coloque uma imagem do comprovante antes de enviar.");
         return;
       }
+
+      if (localStorage.getItem(chaveEnviado) === "sim") {
+        mostrarOkCustomizado("Já enviado", "Esse comprovante já foi enviado para a loja. Aguarde a aprovação no painel admin.");
+        if (statusEl) statusEl.textContent = "Comprovante já enviado. Aguarde a loja aprovar ou recusar.";
+        setBotaoComprovanteTravado(true, "Comprovante enviado");
+        return;
+      }
+
+      const restante = tempoRestanteCooldown(chaveCooldown, COMPROVANTE_COOLDOWN_MS);
+      if (restante > 0) {
+        mostrarOkCustomizado("Aguarde", `Para evitar spam, espere ${segundos(restante)} segundos antes de enviar de novo.`);
+        if (statusEl) statusEl.textContent = `Anti-spam ativo. Aguarde ${segundos(restante)}s.`;
+        return;
+      }
+
+      enviandoComprovante = true;
+      iniciarCooldown(chaveCooldown);
+      setBotaoComprovanteTravado(true, "Enviando...");
 
       try {
         if (statusEl) statusEl.textContent = "Enviando comprovante para a loja...";
@@ -778,14 +874,21 @@
         pedidoAtual.comprovanteImagem = comprovanteImagemBase64;
         pedidoAtual.comprovanteArquivoNome = comprovanteArquivoNome;
         pedidoAtual.status = "pendente";
+        pedidoAtual.comprovanteEnviadoEm = new Date().toISOString();
         localStorage.setItem("pedido_pix_manual", JSON.stringify(pedidoAtual));
+        localStorage.setItem(chaveEnviado, "sim");
 
         if (statusEl) statusEl.textContent = "Comprovante enviado. Aguarde a loja aceitar no painel admin.";
+        setBotaoComprovanteTravado(true, "Comprovante enviado");
         mostrarOkCustomizado("Enviado", "Comprovante enviado para a loja. Seu pedido ficou pendente até ser aprovado.");
       } catch (err) {
         console.error(err);
+        localStorage.removeItem(chaveEnviado);
         if (statusEl) statusEl.textContent = "Erro ao enviar comprovante. Confira se o backend está online.";
+        setBotaoComprovanteTravado(false, "Enviar comprovante");
         mostrarOkCustomizado("Erro", "Não consegui enviar o comprovante agora. Tente de novo em alguns segundos.");
+      } finally {
+        enviandoComprovante = false;
       }
     }
 
@@ -908,12 +1011,12 @@
             <input id="comprovanteLink" placeholder="Cole o link do comprovante, se tiver" value="${p.comprovanteLink || ""}" />
 
             <div class="comprovante-actions">
-              <label class="upload-comprovante-btn">
+              <label class="upload-comprovante-btn" id="uploadComprovanteBtn">
                 Colocar imagem
                 <input type="file" accept="image/*" onchange="escolherImagemComprovante(this)" />
               </label>
 
-              <button class="btn" onclick="enviarComprovante()">
+              <button class="btn" id="btnEnviarComprovante" onclick="enviarComprovante()">
                 Enviar comprovante
               </button>
             </div>
@@ -928,6 +1031,10 @@
 
             <div class="pedido-backend-status" id="pedidoBackendStatus">
               Enviando pedido para o painel admin...
+            </div>
+
+            <div class="anti-spam-note">
+              Anti-spam ativo: o pedido não é duplicado e o comprovante só pode ser enviado uma vez.
             </div>
           </div>
 
@@ -971,6 +1078,11 @@
       localStorage.setItem("pedido_pix_manual", JSON.stringify(pedidoAtual));
 
       renderPix();
+
+      if (localStorage.getItem(`comprovante_enviado_${pedidoAtual.id}`) === "sim") {
+        setTimeout(() => setBotaoComprovanteTravado(true, "Comprovante enviado"), 50);
+      }
+
       criarPedidoPendenteNoBackend();
     }
 

@@ -33,7 +33,7 @@
       "nome": "cagada",
       "categoria": "camisa",
       "preco": 0.1,
-      "estoque": 1,
+      "estoque": 0,
       "imagem": "https://i.pinimg.com/736x/36/b5/9c/36b59ca555262a203a8415083d9c3f63.jpg",
       "imagens": [
         "https://i.pinimg.com/736x/36/b5/9c/36b59ca555262a203a8415083d9c3f63.jpg",
@@ -48,13 +48,13 @@
       ],
       "estoqueTamanhos": {
         "P": 0,
-        "M": 1,
+        "M": 0,
         "G": 0,
         "GG": 0
       },
       "estoque_tamanhos": {
         "P": 0,
-        "M": 1,
+        "M": 0,
         "G": 0,
         "GG": 0
       }
@@ -150,6 +150,6 @@
       }
     }
   ],
-  "ultimaAtualizacao": "2026-07-05T14:45:14.460Z",
+  "ultimaAtualizacao": "2026-07-05T15:09:39.774Z",
   "totalProdutos": 5
 }

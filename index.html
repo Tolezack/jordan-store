@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Jordan Wear Store</title>
-  <link rel="stylesheet" href="style.css?v=94" />
+  <link rel="stylesheet" href="style.css?v=98" />
   <style>
     .frete-opcoes{display:grid;gap:8px;margin-top:10px}
     .frete-opcao{width:100%;border:1px solid #ccc;background:#fff;min-height:58px;padding:10px 12px;display:flex;justify-content:space-between;align-items:center;gap:12px;text-align:left;cursor:pointer}
@@ -20,6 +20,18 @@
     .admin-toolbar button:disabled{opacity:.45;cursor:not-allowed}
   
 .admin-comprovante-img{width:100%;max-width:260px;border:1px solid #ccc;background:#f7f7f7;display:block;margin-top:8px;image-rendering:auto}.admin-comprovante-actions{display:grid;gap:8px}.admin-comprovante-actions a{color:#111;font-weight:900;text-transform:uppercase;font-size:12px}.pedido-status.warn{color:#b26b00}.pedido-status.ok{color:#15934f}.pedido-status.bad{color:#d63031}
+
+
+/* V98 FIX: os três pontinhos/menu sempre ficam acima da barra branca ao rolar */
+.promo-strip{position:relative;z-index:80}
+header{position:sticky;top:0;z-index:90;background:#fff}
+.hamburger{position:fixed!important;top:20px!important;left:18px!important;z-index:9999!important}
+.overlay{z-index:9990!important}
+.sidebar{z-index:9998!important}
+.cart{z-index:9997!important}
+.modal{z-index:10000!important}
+@media(max-width:760px){.hamburger{top:18px!important;left:14px!important}}
+
 </style>
 </head>
 <body>

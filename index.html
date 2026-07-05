@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Jordan Wear Store</title>
-  <link rel="stylesheet" href="style.css?v=103" />
+  <link rel="stylesheet" href="style.css?v=104" />
   <style>
     .frete-opcoes{display:grid;gap:8px;margin-top:10px}
     .frete-opcao{width:100%;border:1px solid #ccc;background:#fff;min-height:58px;padding:10px 12px;display:flex;justify-content:space-between;align-items:center;gap:12px;text-align:left;cursor:pointer}
@@ -31,6 +31,14 @@ header{position:sticky;top:0;z-index:90;background:#fff}
 .cart{z-index:9997!important}
 .modal{z-index:10000!important}
 @media(max-width:760px){.hamburger{top:18px!important;left:14px!important}}
+
+/* V104: esconde os três pontinhos quando a barra lateral está aberta */
+body.sidebar-open .hamburger {
+  opacity: 0 !important;
+  pointer-events: none !important;
+  visibility: hidden !important;
+}
+
 
 
     /* V101: esconde qualquer badge/linha de preço Pix que sobrar no principal */
@@ -168,7 +176,6 @@ header{position:sticky;top:0;z-index:90;background:#fff}
       <button class="side-link" onclick="openCategoryPage('moletom')">Moletons</button>
       <button class="side-link" onclick="scrollToShop()">Todos os produtos</button>
     </nav>
-    <div class="safe-note">Painel admin oculto: <b>Ctrl + Alt + 8</b>.</div>
   </aside>
 
   <header>
@@ -582,7 +589,22 @@ header{position:sticky;top:0;z-index:90;background:#fff}
       window.location.href = "pix/index.html?v=102";
     }
 
-    function toggleSidebar(force) { const sidebar=document.getElementById("sidebar"), overlay=document.querySelector(".overlay"); if (force===false) { sidebar.classList.remove("active"); overlay.classList.remove("active"); return; } sidebar.classList.toggle("active"); overlay.classList.toggle("active"); }
+    function toggleSidebar(force) {
+      const sidebar = document.getElementById("sidebar");
+      const overlay = document.querySelector(".overlay");
+      if (!sidebar || !overlay) return;
+
+      if (force === false) {
+        sidebar.classList.remove("active");
+        overlay.classList.remove("active");
+        document.body.classList.remove("sidebar-open");
+        return;
+      }
+
+      sidebar.classList.toggle("active");
+      overlay.classList.toggle("active");
+      document.body.classList.toggle("sidebar-open", sidebar.classList.contains("active"));
+    }
     function focusSearch(){ const input=document.getElementById("searchInput"); if(input){ input.focus(); document.getElementById("shop")?.scrollIntoView({behavior:"smooth"}); } }
     function scrollToShop(){ document.getElementById("shop")?.scrollIntoView({behavior:"smooth"}); toggleSidebar(false); }
     function goHome(){ currentCategory="all"; setCategory("all"); window.scrollTo({top:0,behavior:"smooth"}); toggleSidebar(false); }

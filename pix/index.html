@@ -663,7 +663,7 @@
       const statusEl = document.getElementById("pedidoBackendStatus");
 
       if (localStorage.getItem(chaveCriado) === "sim") {
-        if (statusEl) statusEl.textContent = "";
+        if (statusEl) statusEl.textContent = "Pedido pendente já enviado.";
         return;
       }
 
@@ -677,7 +677,7 @@
       iniciarCooldown(chaveCooldown);
 
       try {
-        if (statusEl) statusEl.textContent = "";
+        if (statusEl) statusEl.textContent = "Enviando pedido...";
 
         const res = await fetch(`${API_URL}/api/pedidos`, {
           method: "POST",
@@ -690,10 +690,10 @@
         if (!data.ok) throw new Error(data.erro || "Erro ao criar pedido");
 
         localStorage.setItem(chaveCriado, "sim");
-        if (statusEl) statusEl.textContent = "";
+        if (statusEl) statusEl.textContent = "Pedido pendente enviado.";
       } catch (err) {
         console.error(err);
-        if (statusEl) statusEl.textContent = "Não foi possivel enviar o pedido. Tente novamente em alguns segundos.";
+        if (statusEl) statusEl.textContent = "Não consegui enviar o pedido para o painel. Tente novamente em alguns segundos.";
       } finally {
         enviandoPedidoBackend = false;
       }
@@ -818,7 +818,7 @@
       if (enviandoComprovante) return;
 
       if (enviandoPedidoBackend) {
-        mostrarOkCustomizado("Aguarde", "O pedido ainda está sendo enviado. Tente de novo em alguns segundos.");
+        mostrarOkCustomizado("Aguarde", "O pedido ainda está sendo enviado para o painel. Tente de novo em alguns segundos.");
         return;
       }
 
@@ -834,8 +834,8 @@
       }
 
       if (localStorage.getItem(chaveEnviado) === "sim") {
-        mostrarOkCustomizado("Já enviado", "Esse comprovante já foi enviado para a loja. Aguarde a aprovação.");
-        if (statusEl) statusEl.textContent = "Comprovante já enviado. Aguarde.";
+        mostrarOkCustomizado("Já enviado", "Esse comprovante já foi enviado para a loja. Aguarde a confirmação.");
+        if (statusEl) statusEl.textContent = "Comprovante já enviado. Aguarde a loja aprovar ou recusar.";
         setBotaoComprovanteTravado(true, "Comprovante enviado");
         return;
       }
@@ -852,7 +852,7 @@
       setBotaoComprovanteTravado(true, "Enviando...");
 
       try {
-        if (statusEl) statusEl.textContent = "Enviando comprovante...";
+        if (statusEl) statusEl.textContent = "Enviando comprovante para a loja...";
 
         await criarPedidoPendenteNoBackend();
 
@@ -878,15 +878,15 @@
         localStorage.setItem("pedido_pix_manual", JSON.stringify(pedidoAtual));
         localStorage.setItem(chaveEnviado, "sim");
 
-        if (statusEl) statusEl.textContent = "Comprovante enviado!";
+        if (statusEl) statusEl.textContent = "Comprovante enviado. Aguarde a confirmação da loja.";
         setBotaoComprovanteTravado(true, "Comprovante enviado");
         mostrarOkCustomizado("Enviado", "Comprovante enviado para a loja. Seu pedido ficou pendente até ser aprovado.");
       } catch (err) {
         console.error(err);
         localStorage.removeItem(chaveEnviado);
-        if (statusEl) statusEl.textContent = "Erro ao enviar comprovante.";
+        if (statusEl) statusEl.textContent = "Erro ao enviar comprovante. Confira se o backend está online.";
         setBotaoComprovanteTravado(false, "Enviar comprovante");
-        mostrarOkCustomizado("Erro", "Não foi possivel enviar o comprovante agora. Tente de novo em alguns segundos.");
+        mostrarOkCustomizado("Erro", "Não consegui enviar o comprovante agora. Tente de novo em alguns segundos.");
       } finally {
         enviandoComprovante = false;
       }
@@ -954,7 +954,7 @@
           <h1>Pagamento Pix</h1>
 
           <p>
-            Escaneie o QR Code ou copie o Pix. Depois envie o comprovante.
+            Escaneie o QR Code ou copie o Pix. Depois envie o comprovante no WhatsApp.
           </p>
 
           <div class="pedido-box">
@@ -1034,6 +1034,7 @@
             </div>
 
             <div class="anti-spam-note">
+              Anti-spam ativo: o pedido não é duplicado e o comprovante só pode ser enviado uma vez.
             </div>
           </div>
 
@@ -1041,8 +1042,8 @@
             Abrir WhatsApp da loja
           </button>
 
-          <p class="">
-            
+          <p class="aviso">
+            Esse pagamento é manual. O pedido fica pendente e será confirmado depois que o comprovante for conferido.
           </p>
         </section>
       `;

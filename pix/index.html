@@ -466,6 +466,31 @@
     const PEDIDO_COOLDOWN_MS = 15000;
     const COMPROVANTE_COOLDOWN_MS = 45000;
 
+    function gerarIdCliente() {
+      const parteTempo = Date.now().toString(36).toUpperCase();
+      let parteAleatoria = "";
+
+      if (window.crypto && crypto.getRandomValues) {
+        const nums = crypto.getRandomValues(new Uint32Array(2));
+        parteAleatoria = Array.from(nums).map(n => n.toString(36).toUpperCase()).join("");
+      } else {
+        parteAleatoria = Math.random().toString(36).slice(2, 12).toUpperCase();
+      }
+
+      return `CL-${parteTempo}-${parteAleatoria}`;
+    }
+
+    function getClienteId() {
+      let clienteId = localStorage.getItem("jordan_cliente_id");
+
+      if (!clienteId) {
+        clienteId = gerarIdCliente();
+        localStorage.setItem("jordan_cliente_id", clienteId);
+      }
+
+      return clienteId;
+    }
+
     function numero(valor) {
       const n = Number(valor);
       return Number.isFinite(n) ? n : 0;
@@ -560,6 +585,7 @@
       return {
         ...pedido,
         id: pedido.id || `PED-${Date.now()}`,
+        clienteId: pedido.clienteId || getClienteId(),
         nome: pedido.nome || "Pedido Jordan Wear",
         subtotal,
         frete,
@@ -899,6 +925,7 @@
       const texto =
         `Olá, fiz um pedido na Jordan Wear.%0A%0A` +
         `Pedido: ${p.id}%0A` +
+        `${p.clienteId ? `ID cliente: ${p.clienteId}%0A` : ""}` +
         `${itens}%0A%0A` +
         `Subtotal: R$ ${money(p.subtotal)}%0A` +
         `Frete: ${numero(p.frete) === 0 ? "Grátis" : `R$ ${money(p.frete)}`}%0A` +
@@ -966,6 +993,7 @@
               <small>Pedido: ${p.id}</small>
               ${p.enderecoFrete ? `<small>Entrega: ${p.enderecoFrete.cidade}/${p.enderecoFrete.uf}</small>` : ""}
               ${p.cep ? `<small>CEP: ${p.cep}</small>` : ""}
+              ${p.clienteId ? `<small>ID cliente: ${p.clienteId}</small>` : ""}
             </div>
           </div>
 

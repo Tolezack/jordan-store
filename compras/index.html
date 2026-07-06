@@ -1,0 +1,505 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Minhas compras - Jordan Wear</title>
+
+  <style>
+    :root {
+      --bg: #eeeeee;
+      --text: #050505;
+      --line: #cccccc;
+      --white: #ffffff;
+      --muted: #666666;
+      --green: #15934f;
+      --red: #d63031;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      min-height: 100vh;
+      background: var(--bg);
+      color: var(--text);
+      font-family: Arial, Helvetica, sans-serif;
+    }
+
+    button {
+      border: 0;
+      cursor: pointer;
+      font: inherit;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    .topbar {
+      height: 82px;
+      background: #f6f6f6;
+      border-bottom: 1px solid var(--line);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: sticky;
+      top: 0;
+      z-index: 20;
+    }
+
+    .back {
+      position: absolute;
+      left: 18px;
+      color: #111;
+      text-decoration: none;
+      font-size: 36px;
+      font-weight: 900;
+      line-height: 1;
+    }
+
+    .logo {
+      max-width: 150px;
+      max-height: 54px;
+      object-fit: contain;
+      display: block;
+    }
+
+    .wrap {
+      width: min(1080px, calc(100% - 24px));
+      margin: 28px auto 70px;
+    }
+
+    .head {
+      background: var(--white);
+      border: 1px solid var(--line);
+      padding: 24px;
+      margin-bottom: 16px;
+    }
+
+    .head small {
+      display: block;
+      text-transform: uppercase;
+      font-size: 12px;
+      letter-spacing: 0.14em;
+      color: var(--muted);
+      font-weight: 900;
+      margin-bottom: 10px;
+    }
+
+    .head h1 {
+      font-size: clamp(40px, 7vw, 76px);
+      line-height: 0.9;
+      letter-spacing: -0.07em;
+      text-transform: uppercase;
+      margin-bottom: 12px;
+    }
+
+    .head p {
+      color: var(--muted);
+      line-height: 1.6;
+      max-width: 720px;
+    }
+
+    .actions {
+      margin-top: 18px;
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .btn {
+      min-height: 50px;
+      padding: 0 18px;
+      background: #111;
+      color: #fff;
+      font-weight: 900;
+      text-transform: uppercase;
+      letter-spacing: 0.1em;
+      font-size: 12px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .btn.secondary {
+      background: #fff;
+      color: #111;
+      border: 1px solid var(--line);
+    }
+
+    .grid {
+      display: grid;
+      gap: 12px;
+    }
+
+    .order-card {
+      background: #fff;
+      border: 1px solid var(--line);
+      padding: 16px;
+      display: grid;
+      grid-template-columns: 96px 1fr;
+      gap: 14px;
+      align-items: start;
+    }
+
+    .order-img {
+      width: 96px;
+      height: 118px;
+      object-fit: cover;
+      background: #ddd;
+      border: 1px solid var(--line);
+    }
+
+    .order-info b {
+      display: block;
+      text-transform: uppercase;
+      letter-spacing: -0.03em;
+      font-size: 18px;
+      margin-bottom: 8px;
+      word-break: break-word;
+    }
+
+    .meta {
+      display: grid;
+      gap: 5px;
+      margin: 10px 0;
+    }
+
+    .meta small {
+      display: block;
+      color: var(--muted);
+      line-height: 1.35;
+    }
+
+    .items {
+      border-top: 1px solid var(--line);
+      border-bottom: 1px solid var(--line);
+      padding: 10px 0;
+      margin: 10px 0;
+      display: grid;
+      gap: 7px;
+    }
+
+    .item {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      color: #333;
+      font-size: 13px;
+      line-height: 1.35;
+    }
+
+    .item span:first-child {
+      font-weight: 800;
+    }
+
+    .totals {
+      display: grid;
+      gap: 7px;
+      margin-top: 10px;
+    }
+
+    .line {
+      display: flex;
+      justify-content: space-between;
+      gap: 14px;
+      color: var(--muted);
+      font-size: 14px;
+    }
+
+    .line strong {
+      color: #111;
+    }
+
+    .line.total {
+      border-top: 1px solid var(--line);
+      padding-top: 10px;
+      margin-top: 4px;
+      font-size: 18px;
+      font-weight: 900;
+      color: #111;
+    }
+
+    .status {
+      display: inline-flex;
+      align-items: center;
+      min-height: 30px;
+      padding: 0 10px;
+      border: 1px solid var(--line);
+      background: #f7f7f7;
+      font-size: 11px;
+      font-weight: 900;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      margin-top: 8px;
+    }
+
+    .status.pendente {
+      border-color: #d8b400;
+      background: #fff8d8;
+    }
+
+    .status.aprovado {
+      border-color: var(--green);
+      background: #eafff2;
+      color: #0d6b39;
+    }
+
+    .status.recusado {
+      border-color: var(--red);
+      background: #ffe8e8;
+      color: #a31313;
+    }
+
+    .empty {
+      background: #fff;
+      border: 1px solid var(--line);
+      padding: 34px;
+      text-align: center;
+    }
+
+    .empty h2 {
+      font-size: 36px;
+      text-transform: uppercase;
+      letter-spacing: -0.06em;
+      margin-bottom: 10px;
+    }
+
+    .empty p {
+      color: var(--muted);
+      line-height: 1.5;
+    }
+
+    .note {
+      color: var(--muted);
+      font-size: 13px;
+      line-height: 1.5;
+      margin-top: 14px;
+      background: #fff;
+      border: 1px solid var(--line);
+      padding: 12px;
+    }
+
+    @media (max-width: 640px) {
+      .wrap {
+        margin-top: 16px;
+      }
+
+      .head {
+        padding: 18px;
+      }
+
+      .order-card {
+        grid-template-columns: 76px 1fr;
+        padding: 12px;
+      }
+
+      .order-img {
+        width: 76px;
+        height: 96px;
+      }
+
+      .btn {
+        width: 100%;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <header class="topbar">
+    <a class="back" href="../index.html">‹</a>
+    <img class="logo" src="../Logo.svg" alt="Jordan Wear" onerror="this.outerHTML='<b>jordanwear</b>'" />
+  </header>
+
+  <main class="wrap">
+    <section class="head">
+      <small>Área do cliente</small>
+      <h1>Minhas compras</h1>
+      <p>
+        Aqui aparecem só as compras feitas neste celular ou computador. Essa lista fica salva localmente,
+        então outro cliente não consegue ver suas compras no aparelho dele.
+      </p>
+
+      <div class="actions">
+        <a class="btn" href="../index.html">Voltar para loja</a>
+        <button class="btn secondary" onclick="recarregarCompras()">Atualizar</button>
+        <button class="btn secondary" onclick="limparCompras()">Limpar deste aparelho</button>
+      </div>
+    </section>
+
+    <section id="listaCompras" class="grid"></section>
+
+    <p class="note">
+      A confirmação oficial do pagamento e entrega aparece quando a loja atualizar o pedido. Essa página não mostra pedidos de outros clientes.
+    </p>
+  </main>
+
+  <script>
+    const MINHAS_COMPRAS_KEY = "jws_minhas_compras";
+
+    function numero(valor) {
+      const n = Number(valor);
+      return Number.isFinite(n) ? n : 0;
+    }
+
+    function money(valor) {
+      return numero(valor).toFixed(2).replace(".", ",");
+    }
+
+    function escapeHtml(texto) {
+      return String(texto || "")
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
+    }
+
+    function formatarData(valor) {
+      if (!valor) return "-";
+
+      const data = new Date(valor);
+      if (Number.isNaN(data.getTime())) return "-";
+
+      return data.toLocaleString("pt-BR", {
+        day: "2-digit",
+        month: "2-digit",
+        year: "numeric",
+        hour: "2-digit",
+        minute: "2-digit"
+      });
+    }
+
+    function getCompras() {
+      try {
+        const compras = JSON.parse(localStorage.getItem(MINHAS_COMPRAS_KEY) || "[]");
+        return Array.isArray(compras) ? compras : [];
+      } catch (err) {
+        return [];
+      }
+    }
+
+    function getImagemPedido(pedido) {
+      if (pedido.imagem) return pedido.imagem;
+
+      if (Array.isArray(pedido.itens) && pedido.itens.length > 0) {
+        return pedido.itens[0].imagem || pedido.itens[0].foto || "";
+      }
+
+      return "";
+    }
+
+    function getStatusPedido(pedido) {
+      return String(pedido.status || pedido.statusLocal || "pendente").toLowerCase();
+    }
+
+    function getStatusTexto(status) {
+      if (status === "aprovado") return "Aprovado";
+      if (status === "entregue") return "Entregue";
+      if (status === "recusado") return "Recusado";
+      return "Pendente";
+    }
+
+    function renderItens(pedido) {
+      const itens = Array.isArray(pedido.itens) ? pedido.itens : [];
+
+      if (!itens.length) {
+        const nome = escapeHtml(pedido.nome || "Produto");
+        const tamanho = pedido.tamanho ? `Tam. ${escapeHtml(pedido.tamanho)}` : "";
+        const quantidade = Number(pedido.quantidade || 1);
+        const preco = pedido.preco ? `R$ ${money(pedido.preco)}` : "";
+
+        return `<div class="item"><span>${nome} ${tamanho}</span><span>x${quantidade} ${preco}</span></div>`;
+      }
+
+      return itens.map(item => {
+        const nome = escapeHtml(item.nome || "Produto");
+        const tamanho = item.tamanho ? `Tam. ${escapeHtml(item.tamanho)}` : "";
+        const quantidade = Number(item.quantidade || 1);
+        const preco = item.preco ? `R$ ${money(item.preco)}` : "";
+
+        return `<div class="item"><span>${nome} ${tamanho}</span><span>x${quantidade} ${preco}</span></div>`;
+      }).join("");
+    }
+
+    function renderCompra(pedido) {
+      const status = getStatusPedido(pedido);
+      const imagem = getImagemPedido(pedido) || "https://via.placeholder.com/180x220?text=Jordan";
+      const frete = numero(pedido.frete || 0);
+      const subtotal = numero(pedido.subtotal || pedido.total || 0);
+      const total = numero(pedido.total || subtotal + frete);
+
+      return `
+        <article class="order-card">
+          <img class="order-img" src="${escapeHtml(imagem)}" alt="Compra" />
+
+          <div class="order-info">
+            <b>${escapeHtml(pedido.id || "Pedido")}</b>
+
+            <div class="meta">
+              <small>Data: ${formatarData(pedido.salvoLocalEm || pedido.criadoEm || pedido.atualizadoEm)}</small>
+              ${pedido.cep ? `<small>CEP: ${escapeHtml(pedido.cep)}</small>` : ""}
+              ${pedido.enderecoFrete ? `<small>Entrega: ${escapeHtml(pedido.enderecoFrete.cidade || "")}/${escapeHtml(pedido.enderecoFrete.uf || "")}</small>` : ""}
+              ${pedido.freteNome ? `<small>Frete: ${escapeHtml(pedido.freteNome)} ${pedido.fretePrazo ? `• ${escapeHtml(pedido.fretePrazo)}` : ""}</small>` : ""}
+              ${pedido.localizacaoEntrega ? `<small>Onde está agora: ${escapeHtml(pedido.localizacaoEntrega)}</small>` : ""}
+            </div>
+
+            <div class="items">
+              ${renderItens(pedido)}
+            </div>
+
+            <div class="totals">
+              <div class="line"><span>Subtotal</span><strong>R$ ${money(subtotal)}</strong></div>
+              <div class="line"><span>Frete</span><strong>${frete === 0 ? "Grátis" : `R$ ${money(frete)}`}</strong></div>
+              <div class="line total"><span>Total</span><strong>R$ ${money(total)}</strong></div>
+            </div>
+
+            <span class="status ${escapeHtml(status)}">${getStatusTexto(status)}</span>
+          </div>
+        </article>
+      `;
+    }
+
+    function renderCompras() {
+      const lista = document.getElementById("listaCompras");
+      const compras = getCompras();
+
+      if (!compras.length) {
+        lista.innerHTML = `
+          <div class="empty">
+            <h2>Sem compras</h2>
+            <p>Quando você finalizar uma compra neste aparelho, ela vai aparecer aqui.</p>
+          </div>
+        `;
+        return;
+      }
+
+      lista.innerHTML = compras
+        .slice()
+        .sort((a, b) => String(b.salvoLocalEm || b.criadoEm || "").localeCompare(String(a.salvoLocalEm || a.criadoEm || "")))
+        .map(renderCompra)
+        .join("");
+    }
+
+    function recarregarCompras() {
+      renderCompras();
+    }
+
+    function limparCompras() {
+      const ok = confirm("Apagar as compras salvas neste aparelho?");
+      if (!ok) return;
+
+      localStorage.removeItem(MINHAS_COMPRAS_KEY);
+      renderCompras();
+    }
+
+    renderCompras();
+  </script>
+</body>
+</html>

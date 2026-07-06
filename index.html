@@ -4,7 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Jordan Wear Store</title>
-  <!-- V114: Minhas compras em página separada -->
+  <!-- V118: ID aleatório por cliente; Minhas compras por clienteId -->
   <!-- V107: removido texto/box do hero principal -->
   <link rel="stylesheet" href="style.css?v=105" />
   <style>
@@ -354,6 +354,31 @@ body.cart-open .hamburger {
     const API_URL = "https://jordan-store-backend.onrender.com".replace(/\/$/, "");
     const FRETE_GRATIS_ACIMA = 400;
 
+    function gerarIdCliente() {
+      const parteTempo = Date.now().toString(36).toUpperCase();
+      let parteAleatoria = "";
+
+      if (window.crypto && crypto.getRandomValues) {
+        const nums = crypto.getRandomValues(new Uint32Array(2));
+        parteAleatoria = Array.from(nums).map(n => n.toString(36).toUpperCase()).join("");
+      } else {
+        parteAleatoria = Math.random().toString(36).slice(2, 12).toUpperCase();
+      }
+
+      return `CL-${parteTempo}-${parteAleatoria}`;
+    }
+
+    function getClienteId() {
+      let clienteId = localStorage.getItem("jordan_cliente_id");
+
+      if (!clienteId) {
+        clienteId = gerarIdCliente();
+        localStorage.setItem("jordan_cliente_id", clienteId);
+      }
+
+      return clienteId;
+    }
+
     let produtos = [];
     let produtosRender = [];
     let carrinho = JSON.parse(localStorage.getItem("jws_cart") || "[]");
@@ -363,7 +388,6 @@ body.cart-open .hamburger {
     let adminPedidos = [];
     let adminCaminho = [];
     let adminAba = "produtos";
-    const MINHAS_COMPRAS_KEY = "jws_minhas_compras";
     let checkoutFrete = null;
     let checkoutEndereco = null;
     let opcoesFreteAtual = [];
@@ -872,6 +896,7 @@ body.cart-open .hamburger {
       const frete = Number(freteSelecionado.valor || 0);
       const pedido = {
         id: `PED-${Date.now()}`,
+        clienteId: getClienteId(),
         tipo: "carrinho",
         status: "pendente",
         criadoEm: new Date().toISOString(),
@@ -896,13 +921,12 @@ body.cart-open .hamburger {
       };
 
       localStorage.setItem("pedido_pix_manual", JSON.stringify(pedido));
-      salvarCompraLocal(pedido);
 
       carrinho = [];
       saveCart();
       updateCart();
 
-      window.location.href = "pix/index.html?v=113";
+      window.location.href = "pix/index.html?v=118";
     }
 
     function toggleSidebar(force) {
@@ -1256,36 +1280,11 @@ body.cart-open .hamburger {
       }catch(err){ console.error(err); notify("Erro ao negar pedido.","error"); }
     }
 
-    function getMinhasComprasLocal(){
-      try { return JSON.parse(localStorage.getItem(MINHAS_COMPRAS_KEY) || "[]"); }
-      catch(err){ return []; }
-    }
-    function salvarCompraLocal(pedido){
-      const compras = getMinhasComprasLocal();
-      if(!compras.some(p=>String(p.id)===String(pedido.id))){
-        compras.unshift({ ...pedido, salvoLocalEm: new Date().toISOString() });
-        localStorage.setItem(MINHAS_COMPRAS_KEY, JSON.stringify(compras.slice(0, 50)));
-      }
-    }
     function openMinhasCompras(){
       toggleSidebar(false);
-      const modal = document.getElementById("minhasComprasModal");
-      const body = document.getElementById("minhasComprasBody");
-      const compras = getMinhasComprasLocal();
-      if(!body || !modal) return;
-      if(!compras.length){
-        body.innerHTML = `<div class="erro"><div><h1>Sem compras</h1><p>As compras feitas neste aparelho vão aparecer aqui.</p></div></div>`;
-      } else {
-        body.innerHTML = `<div class="local-orders-list">${compras.map(renderCompraLocal).join("")}</div><p class="admin-report-note">Essa lista fica salva só neste celular/computador. Cliente 1 não vê as compras do cliente 2.</p>`;
-      }
-      modal.classList.add("active");
+      window.location.href = "compras/index.html";
     }
-    function closeMinhasCompras(){ document.getElementById("minhasComprasModal")?.classList.remove("active"); }
-    function renderCompraLocal(p){
-      const itens = Array.isArray(p.itens) ? p.itens : [];
-      const itensHtml = itens.length ? itens.map(i=>`<small>• ${escapeHtml(i.nome||"Produto")} ${i.tamanho?`Tam. ${escapeHtml(i.tamanho)} `:""}x${Number(i.quantidade||1)}</small>`).join("") : `<small>${escapeHtml(p.nome||"Pedido")}</small>`;
-      return `<div class="local-order-card"><b>${escapeHtml(p.id||"Pedido")}</b>${itensHtml}<small>Total: R$ ${money(p.total||0)}</small><small>CEP: ${escapeHtml(p.cep||"-")}</small><small>Status local: Pendente</small></div>`;
-    }
+    function closeMinhasCompras(){}
     async function atualizarStatusPedido(id,status){
       try{
         const res=await fetchComTempo(`${API_URL}/api/admin/pedidos/${encodeURIComponent(id)}/status`,{method:"POST",headers:{"Content-Type":"application/json",Authorization:`Bearer ${adminToken}`},body:JSON.stringify({status})}, 15000);

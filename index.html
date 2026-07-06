@@ -1148,7 +1148,6 @@ body.cart-open .hamburger {
         </div>
         <div class="admin-order-controls">
           <button class="submit" onclick="confirmarPedido('${safeId}')" ${["aprovado","pago","entregue"].includes(String(p.status||"")) ? "disabled" : ""}>Aceitar / baixar estoque</button>
-          <button class="submit" onclick="atualizarStatusPedido('${safeId}','pendente')">Pendente</button>
           <button class="submit" onclick="atualizarStatusPedido('${safeId}','entregue')">Entregue</button>
           <button class="clear danger" onclick="negarPedido('${safeId}')" ${["recusado","negado"].includes(String(p.status||"")) ? "disabled" : ""}>Recusar</button>
         </div>
@@ -1236,7 +1235,7 @@ body.cart-open .hamburger {
     function renderCompraLocal(p){
       const itens = Array.isArray(p.itens) ? p.itens : [];
       const itensHtml = itens.length ? itens.map(i=>`<small>• ${escapeHtml(i.nome||"Produto")} ${i.tamanho?`Tam. ${escapeHtml(i.tamanho)} `:""}x${Number(i.quantidade||1)}</small>`).join("") : `<small>${escapeHtml(p.nome||"Pedido")}</small>`;
-      return `<div class="local-order-card"><b>${escapeHtml(p.id||"Pedido")}</b>${itensHtml}<small>Total: R$ ${money(p.total||0)}</small><small>CEP: ${escapeHtml(p.cep||"-")}</small><small>Status local: aguardando aprovação da loja</small></div>`;
+      return `<div class="local-order-card"><b>${escapeHtml(p.id||"Pedido")}</b>${itensHtml}<small>Total: R$ ${money(p.total||0)}</small><small>CEP: ${escapeHtml(p.cep||"-")}</small><small>Status local: Pendente</small></div>`;
     }
     async function atualizarStatusPedido(id,status){
       try{

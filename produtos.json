@@ -7,7 +7,7 @@
       "preco": 0.1,
       "custoFornecedor": 0,
       "custo_fornecedor": 0,
-      "estoque": 10,
+      "estoque": 9,
       "imagem": "",
       "imagens": [],
       "descricao": "",
@@ -20,13 +20,13 @@
       "estoqueTamanhos": {
         "P": 0,
         "M": 0,
-        "G": 9,
+        "G": 8,
         "GG": 1
       },
       "estoque_tamanhos": {
         "P": 0,
         "M": 0,
-        "G": 9,
+        "G": 8,
         "GG": 1
       }
     },
@@ -160,6 +160,6 @@
       }
     }
   ],
-  "ultimaAtualizacao": "2026-07-06T23:32:14.020Z",
+  "ultimaAtualizacao": "2026-07-06T23:32:27.820Z",
   "totalProdutos": 5
 }

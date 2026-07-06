@@ -191,6 +191,29 @@ body.cart-open .hamburger {
   background: transparent !important;
 }
 
+  
+
+/* V111: relatórios do admin com gráficos */
+.admin-report-grid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:10px;margin-bottom:12px}
+.admin-report-card{border:1px solid #ccc;background:#f7f7f7;padding:14px;min-height:86px}
+.admin-report-card small{display:block;color:#666;text-transform:uppercase;font-weight:900;letter-spacing:.06em;font-size:11px;margin-bottom:6px}
+.admin-report-card strong{display:block;color:#111;font-size:24px;letter-spacing:-.04em;line-height:1}
+.admin-report-card span{display:block;color:#777;font-size:12px;margin-top:6px;line-height:1.35}
+.admin-chart-box{border:1px solid #ccc;background:#fff;padding:14px;margin-top:12px}
+.admin-chart-head{display:flex;justify-content:space-between;gap:12px;align-items:flex-start;margin-bottom:12px;border-bottom:1px solid #ddd;padding-bottom:10px}
+.admin-chart-head h4{font-size:18px;text-transform:uppercase;letter-spacing:-.04em;margin:0}
+.admin-chart-head small{color:#666;line-height:1.35;text-align:right}
+.admin-bars{display:grid;gap:9px}
+.admin-bar-row{display:grid;grid-template-columns:minmax(110px,170px) 1fr auto;gap:10px;align-items:center;font-size:13px}
+.admin-bar-name{font-weight:900;color:#111;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.admin-bar-track{height:24px;background:#eee;border:1px solid #d0d0d0;position:relative;overflow:hidden}
+.admin-bar-fill{height:100%;background:#111;min-width:3px}
+.admin-bar-value{font-weight:900;color:#111;white-space:nowrap;text-align:right}
+.admin-line-chart{width:100%;height:240px;border:1px solid #ddd;background:#fafafa;display:block}
+.admin-report-note{font-size:12px;color:#666;line-height:1.45;margin-top:10px}
+@media(max-width:850px){.admin-report-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.admin-bar-row{grid-template-columns:1fr;gap:5px}.admin-bar-value{text-align:left}.admin-chart-head{display:grid}.admin-chart-head small{text-align:left}}
+@media(max-width:520px){.admin-report-grid{grid-template-columns:1fr}.admin-report-card strong{font-size:21px}}
+
   </style>
 </head>
 <body>
@@ -426,6 +449,8 @@ body.cart-open .hamburger {
       return {
         ...p,
         id: String(p.id || `produto-${Date.now()}`).trim(), nome: String(p.nome || "Produto sem nome").trim(), categoria: normalizarCategoria(p.categoria), preco: Number(p.preco || 0),
+        custoFornecedor: Number(p.custoFornecedor ?? p.custo_fornecedor ?? p.custo ?? 0),
+        custo_fornecedor: Number(p.custoFornecedor ?? p.custo_fornecedor ?? p.custo ?? 0),
         estoque: getEstoqueTotal(p), estoqueTamanhos, estoque_tamanhos: estoqueTamanhos,
         imagem: fotos[0] || String(p.imagem || "").trim(), imagens: fotos,
         descricao: String(p.descricao || "").trim(), tamanhos: getTamanhosProduto(p)
@@ -678,6 +703,8 @@ body.cart-open .hamburger {
           nome: produtoAtual.nome,
           categoria: produtoAtual.categoria,
           preco: precoAtual,
+          custoFornecedor: Number(produtoAtual.custoFornecedor ?? produtoAtual.custo_fornecedor ?? produtoAtual.custo ?? item.custoFornecedor ?? 0),
+          custo_fornecedor: Number(produtoAtual.custoFornecedor ?? produtoAtual.custo_fornecedor ?? produtoAtual.custo ?? item.custoFornecedor ?? 0),
           imagem: getFotosProduto(produtoAtual)[0] || produtoAtual.imagem || item.imagem || "",
           tamanho: tamanhoItem || item.tamanho || "",
           quantidade: quantidadeNova,
@@ -950,12 +977,107 @@ body.cart-open .hamburger {
         <div class="admin-toolbar">
           <button class="submit" onclick="setAdminAba('produtos')">Produtos</button>
           <button class="submit" onclick="setAdminAba('pedidos')">Pedidos${pendentes ? ` (${pendentes})` : ""}</button>
+          <button class="submit" onclick="setAdminAba('relatorios')">Relatórios</button>
           <button class="submit" onclick="loadAdminData()">Atualizar</button>
           <button class="clear" onclick="adminLogout()">Sair</button>
         </div>
-        ${adminAba === "pedidos" ? renderAdminPedidos() : renderAdminProdutos()}
+        ${adminAba === "pedidos" ? renderAdminPedidos() : adminAba === "relatorios" ? renderAdminRelatorios() : renderAdminProdutos()}
       `;
     }
+
+    function isPedidoAprovado(p){
+      const status = String(p.status || "").toLowerCase();
+      return status === "aprovado" || status === "pago" || status === "aceito" || status === "confirmado";
+    }
+    function getDataPedido(p){
+      const raw = p.confirmadoEm || p.pagoEm || p.aprovadoEm || p.atualizadoEm || p.criadoEm || "";
+      const data = new Date(raw);
+      return Number.isNaN(data.getTime()) ? null : data;
+    }
+    function estaNoMesAtual(data){
+      if(!data) return false;
+      const agora = new Date();
+      return data.getFullYear() === agora.getFullYear() && data.getMonth() === agora.getMonth();
+    }
+    function getProdutoAdminPorItem(item){
+      const id = String(item.produtoId || item.id || "");
+      const nome = normalizarTexto(item.nome || "");
+      return adminProdutos.find(p=>String(p.id)===id) || adminProdutos.find(p=>normalizarTexto(p.nome||"")===nome) || null;
+    }
+    function getCustoUnitarioItem(item){
+      const produto = getProdutoAdminPorItem(item);
+      return Number(item.custoFornecedor ?? item.custo_fornecedor ?? produto?.custoFornecedor ?? produto?.custo_fornecedor ?? produto?.custo ?? 0);
+    }
+    function getPedidosAprovadosMesAtual(){
+      return adminPedidos.filter(p=>isPedidoAprovado(p) && estaNoMesAtual(getDataPedido(p)));
+    }
+    function calcularRelatorioAdmin(){
+      const pedidosMes = getPedidosAprovadosMesAtual();
+      const dias = {};
+      const ranking = {};
+      let receita = 0, custo = 0, unidades = 0;
+      pedidosMes.forEach(p=>{
+        const data = getDataPedido(p) || new Date();
+        const dia = String(data.getDate()).padStart(2,"0");
+        if(!dias[dia]) dias[dia] = {dia, receita:0, custo:0, lucro:0};
+        const itens = Array.isArray(p.itens) && p.itens.length ? p.itens : [{nome:p.nome||"Pedido", quantidade:p.quantidade||1, preco:p.total||0, tamanho:p.tamanho||""}];
+        itens.forEach(item=>{
+          const qtd = Math.max(1, Number(item.quantidade || 1));
+          const venda = Number(item.preco || 0) * qtd;
+          const custoItem = getCustoUnitarioItem(item) * qtd;
+          receita += venda;
+          custo += custoItem;
+          unidades += qtd;
+          dias[dia].receita += venda;
+          dias[dia].custo += custoItem;
+          dias[dia].lucro += venda - custoItem;
+          const nome = String(item.nome || "Produto").trim() || "Produto";
+          if(!ranking[nome]) ranking[nome] = {nome, quantidade:0, receita:0};
+          ranking[nome].quantidade += qtd;
+          ranking[nome].receita += venda;
+        });
+      });
+      const lucro = receita - custo;
+      const diasOrdenados = Object.values(dias).sort((a,b)=>Number(a.dia)-Number(b.dia));
+      const rankingOrdenado = Object.values(ranking).sort((a,b)=>b.quantidade-a.quantidade || b.receita-a.receita).slice(0,8);
+      return {pedidosMes, receita, custo, lucro, unidades, diasOrdenados, rankingOrdenado};
+    }
+    function renderGraficoBarrasAdmin(itens, valorKey, labelKey, valorFormatador){
+      if(!itens.length) return `<div class="erro"><div><h1>Sem dados</h1><p>Ainda não tem pedido aprovado neste mês.</p></div></div>`;
+      const max = Math.max(...itens.map(i=>Number(i[valorKey]||0)), 1);
+      return `<div class="admin-bars">${itens.map(i=>{
+        const valor = Number(i[valorKey]||0);
+        const width = Math.max(3, (valor / max) * 100);
+        return `<div class="admin-bar-row"><div class="admin-bar-name" title="${escapeHtml(i[labelKey])}">${escapeHtml(i[labelKey])}</div><div class="admin-bar-track"><div class="admin-bar-fill" style="width:${width}%"></div></div><div class="admin-bar-value">${valorFormatador(valor, i)}</div></div>`;
+      }).join("")}</div>`;
+    }
+    function renderGraficoLucroAdmin(dias){
+      if(!dias.length) return `<div class="erro"><div><h1>Sem lucro</h1><p>Sem pedidos aprovados neste mês.</p></div></div>`;
+      const w=720, h=240, pad=34;
+      const valores = dias.map(d=>Number(d.lucro||0));
+      const min = Math.min(0, ...valores), max = Math.max(1, ...valores);
+      const range = max - min || 1;
+      const x = i => pad + (dias.length === 1 ? (w-pad*2)/2 : i * ((w-pad*2)/(dias.length-1)));
+      const y = v => h - pad - ((v - min) / range) * (h - pad*2);
+      const points = dias.map((d,i)=>`${x(i)},${y(Number(d.lucro||0))}`).join(" ");
+      const circles = dias.map((d,i)=>`<circle cx="${x(i)}" cy="${y(Number(d.lucro||0))}" r="4"><title>Dia ${d.dia}: R$ ${money(d.lucro)}</title></circle>`).join("");
+      const labels = dias.map((d,i)=>`<text x="${x(i)}" y="${h-10}" text-anchor="middle" font-size="11">${d.dia}</text>`).join("");
+      return `<svg class="admin-line-chart" viewBox="0 0 ${w} ${h}" role="img" aria-label="Lucro líquido por dia"><line x1="${pad}" y1="${h-pad}" x2="${w-pad}" y2="${h-pad}" stroke="#ccc"/><line x1="${pad}" y1="${pad}" x2="${pad}" y2="${h-pad}" stroke="#ccc"/><polyline fill="none" stroke="#111" stroke-width="4" points="${points}"/>${circles}${labels}<text x="${pad}" y="20" font-size="11" fill="#666">R$ ${money(max)}</text><text x="${pad}" y="${h-pad-4}" font-size="11" fill="#666">R$ ${money(min)}</text></svg>`;
+    }
+    function renderAdminRelatorios(){
+      const r = calcularRelatorioAdmin();
+      const mes = new Date().toLocaleDateString("pt-BR", {month:"long", year:"numeric"});
+      return `<div class="admin-report-grid">
+        <div class="admin-report-card"><small>Lucro líquido do mês</small><strong>R$ ${money(r.lucro)}</strong><span>Receita menos custo fornecedor.</span></div>
+        <div class="admin-report-card"><small>Receita do mês</small><strong>R$ ${money(r.receita)}</strong><span>Pedidos aprovados em ${mes}.</span></div>
+        <div class="admin-report-card"><small>Custo fornecedor</small><strong>R$ ${money(r.custo)}</strong><span>Baseado no campo custo dos produtos.</span></div>
+        <div class="admin-report-card"><small>Unidades vendidas</small><strong>${r.unidades}</strong><span>Somente pedidos aprovados.</span></div>
+      </div>
+      <div class="admin-chart-box"><div class="admin-chart-head"><h4>Lucro líquido por dia</h4><small>${mes}<br>Use o custo fornecedor nos produtos para o lucro ficar correto.</small></div>${renderGraficoLucroAdmin(r.diasOrdenados)}</div>
+      <div class="admin-chart-box"><div class="admin-chart-head"><h4>Roupas mais vendidas do mês</h4><small>Ranking por quantidade vendida<br>Somente pedidos aprovados.</small></div>${renderGraficoBarrasAdmin(r.rankingOrdenado,"quantidade","nome",(v,i)=>`${v} un. • R$ ${money(i.receita)}`)}</div>
+      <p class="admin-report-note">Lucro líquido = soma dos preços dos itens vendidos menos o custo fornecedor de cada item. Frete não entra como lucro porque normalmente vai para entrega.</p>`;
+    }
+
     function renderAdminProdutos(){ return `<div class="admin-toolbar"><button class="submit" onclick="addAdminProduct()">+ Produto</button><button class="submit" onclick="saveAdminProducts()">Salvar tudo</button></div><div class="admin-list">${adminProdutos.map((p,i)=>adminProductHtml(p,i)).join("")}</div>`; }
     function renderAdminPedidos(){
       const pedidos = [...adminPedidos].sort((a,b)=>String(b.criadoEm||b.atualizadoEm||"").localeCompare(String(a.criadoEm||a.atualizadoEm||"")));
@@ -995,11 +1117,11 @@ body.cart-open .hamburger {
         </div>
       </div>`;
     }
-    function adminProductHtml(p,i){ const fotos=getFotosProduto(p); const estoque=getEstoqueTamanhos(p); return `<div class="admin-product"><div class="admin-product-top"><img src="${fotos[0]||"https://via.placeholder.com/120"}" onerror="this.src='https://via.placeholder.com/120'" /><div><b>${escapeHtml(p.nome)}</b><small>${escapeHtml(p.id)}</small><small>${fotos.length} foto(s) • estoque total ${getEstoqueTotal(p)}</small></div></div><div class="admin-grid"><div class="form-group"><label>ID</label><input value="${escapeHtml(p.id)}" oninput="adminProdutos[${i}].id=this.value" /></div><div class="form-group"><label>Nome</label><input value="${escapeHtml(p.nome)}" oninput="adminProdutos[${i}].nome=this.value" /></div><div class="form-group"><label>Categoria</label><select onchange="adminProdutos[${i}].categoria=this.value"><option value="camisa" ${p.categoria==='camisa'?'selected':''}>Camisa</option><option value="calca" ${p.categoria==='calca'?'selected':''}>Calça</option><option value="tenis" ${p.categoria==='tenis'?'selected':''}>Tênis</option><option value="bermuda" ${p.categoria==='bermuda'?'selected':''}>Bermuda</option><option value="moletom" ${p.categoria==='moletom'?'selected':''}>Moletom</option></select></div><div class="form-group"><label>Preço</label><input type="number" step="0.01" value="${Number(p.preco||0)}" oninput="adminProdutos[${i}].preco=Number(this.value)" /></div></div><div class="form-group"><label>Fotos do produto / miniatura</label><textarea class="admin-big-textarea" oninput="atualizarFotosAdmin(${i}, this.value)">${escapeHtml(fotos.join("\n"))}</textarea></div><div class="admin-grid"><div class="form-group"><label>Tamanhos separados por vírgula</label><input value="${escapeHtml(getTamanhosProduto(p).join(", "))}" onchange="atualizarTamanhosAdmin(${i}, this.value)" /></div><div class="form-group"><label>Estoque por tamanho</label><textarea oninput="atualizarEstoqueAdmin(${i}, this.value)">${formatEstoqueTamanhos(estoque,getTamanhosProduto(p))}</textarea></div></div><div class="form-group"><label>Descrição</label><textarea oninput="adminProdutos[${i}].descricao=this.value">${escapeHtml(p.descricao)}</textarea></div><button class="clear danger" onclick="deleteAdminProduct(${i})">Excluir produto</button></div>`; }
+    function adminProductHtml(p,i){ const fotos=getFotosProduto(p); const estoque=getEstoqueTamanhos(p); return `<div class="admin-product"><div class="admin-product-top"><img src="${fotos[0]||"https://via.placeholder.com/120"}" onerror="this.src='https://via.placeholder.com/120'" /><div><b>${escapeHtml(p.nome)}</b><small>${escapeHtml(p.id)}</small><small>${fotos.length} foto(s) • estoque total ${getEstoqueTotal(p)}</small></div></div><div class="admin-grid"><div class="form-group"><label>ID</label><input value="${escapeHtml(p.id)}" oninput="adminProdutos[${i}].id=this.value" /></div><div class="form-group"><label>Nome</label><input value="${escapeHtml(p.nome)}" oninput="adminProdutos[${i}].nome=this.value" /></div><div class="form-group"><label>Categoria</label><select onchange="adminProdutos[${i}].categoria=this.value"><option value="camisa" ${p.categoria==='camisa'?'selected':''}>Camisa</option><option value="calca" ${p.categoria==='calca'?'selected':''}>Calça</option><option value="tenis" ${p.categoria==='tenis'?'selected':''}>Tênis</option><option value="bermuda" ${p.categoria==='bermuda'?'selected':''}>Bermuda</option><option value="moletom" ${p.categoria==='moletom'?'selected':''}>Moletom</option></select></div><div class="form-group"><label>Preço</label><input type="number" step="0.01" value="${Number(p.preco||0)}" oninput="adminProdutos[${i}].preco=Number(this.value)" /></div><div class="form-group"><label>Custo fornecedor</label><input type="number" step="0.01" value="${Number(p.custoFornecedor ?? p.custo_fornecedor ?? p.custo ?? 0)}" oninput="adminProdutos[${i}].custoFornecedor=Number(this.value);adminProdutos[${i}].custo_fornecedor=Number(this.value)" /></div></div><div class="form-group"><label>Fotos do produto / miniatura</label><textarea class="admin-big-textarea" oninput="atualizarFotosAdmin(${i}, this.value)">${escapeHtml(fotos.join("\n"))}</textarea></div><div class="admin-grid"><div class="form-group"><label>Tamanhos separados por vírgula</label><input value="${escapeHtml(getTamanhosProduto(p).join(", "))}" onchange="atualizarTamanhosAdmin(${i}, this.value)" /></div><div class="form-group"><label>Estoque por tamanho</label><textarea oninput="atualizarEstoqueAdmin(${i}, this.value)">${formatEstoqueTamanhos(estoque,getTamanhosProduto(p))}</textarea></div></div><div class="form-group"><label>Descrição</label><textarea oninput="adminProdutos[${i}].descricao=this.value">${escapeHtml(p.descricao)}</textarea></div><button class="clear danger" onclick="deleteAdminProduct(${i})">Excluir produto</button></div>`; }
     function atualizarFotosAdmin(index,texto){ const fotos=String(texto||"").split("\n").map(x=>x.trim()).filter(Boolean); adminProdutos[index].imagem=fotos[0]||""; adminProdutos[index].imagens=fotos; }
     function atualizarTamanhosAdmin(index,texto){ const tamanhos=String(texto||"").split(",").map(normalizarTamanho).filter(Boolean); const antigos=getEstoqueTamanhos(adminProdutos[index]); const novo={}; tamanhos.forEach(t=>novo[t]=Number(antigos[t]||0)); adminProdutos[index].tamanhos=tamanhos; adminProdutos[index].estoqueTamanhos=novo; adminProdutos[index].estoque_tamanhos=novo; adminProdutos[index].estoque=getEstoqueTotal(adminProdutos[index]); renderAdmin(); }
     function atualizarEstoqueAdmin(index,texto){ const estoque=parseEstoqueTamanhos(texto); adminProdutos[index].estoqueTamanhos=estoque; adminProdutos[index].estoque_tamanhos=estoque; adminProdutos[index].tamanhos=Object.keys(estoque); adminProdutos[index].estoque=Object.values(estoque).reduce((s,v)=>s+Number(v||0),0); }
-    function addAdminProduct(){ const estoquePadrao={P:0,M:0,G:0,GG:0}; adminProdutos.unshift({id:`produto-${Date.now()}`,nome:"Novo produto",categoria:"camisa",preco:0,estoque:0,estoqueTamanhos:estoquePadrao,estoque_tamanhos:estoquePadrao,imagem:"",imagens:[],descricao:"",tamanhos:["P","M","G","GG"]}); renderAdmin(); }
+    function addAdminProduct(){ const estoquePadrao={P:0,M:0,G:0,GG:0}; adminProdutos.unshift({id:`produto-${Date.now()}`,nome:"Novo produto",categoria:"camisa",preco:0,custoFornecedor:0,custo_fornecedor:0,estoque:0,estoqueTamanhos:estoquePadrao,estoque_tamanhos:estoquePadrao,imagem:"",imagens:[],descricao:"",tamanhos:["P","M","G","GG"]}); renderAdmin(); }
     function deleteAdminProduct(index){ if(!confirm("Excluir produto?")) return; adminProdutos.splice(index,1); renderAdmin(); }
     async function saveAdminProducts(){
       try{

@@ -396,13 +396,12 @@
     }
 
     function getStatusPedido(pedido) {
-      return String(pedido.status || pedido.statusLocal || "pendente").toLowerCase();
+      // Minhas compras é local do cliente: sempre mostra Pendente.
+      // O cliente 1 não vê atualizações/compra do cliente 2.
+      return "pendente";
     }
 
     function getStatusTexto(status) {
-      if (status === "aprovado") return "Aprovado";
-      if (status === "entregue") return "Entregue";
-      if (status === "recusado") return "Recusado";
       return "Pendente";
     }
 

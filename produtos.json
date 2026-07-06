@@ -5,7 +5,9 @@
       "nome": "zsdg",
       "categoria": "camisa",
       "preco": 0.1,
-      "estoque": 11,
+      "custoFornecedor": 0,
+      "custo_fornecedor": 0,
+      "estoque": 10,
       "imagem": "",
       "imagens": [],
       "descricao": "",
@@ -18,13 +20,13 @@
       "estoqueTamanhos": {
         "P": 0,
         "M": 0,
-        "G": 10,
+        "G": 9,
         "GG": 1
       },
       "estoque_tamanhos": {
         "P": 0,
         "M": 0,
-        "G": 10,
+        "G": 9,
         "GG": 1
       }
     },
@@ -33,6 +35,8 @@
       "nome": "cagada",
       "categoria": "camisa",
       "preco": 0.1,
+      "custoFornecedor": 0,
+      "custo_fornecedor": 0,
       "estoque": 0,
       "imagem": "https://i.pinimg.com/736x/36/b5/9c/36b59ca555262a203a8415083d9c3f63.jpg",
       "imagens": [
@@ -64,6 +68,8 @@
       "nome": "Camisa França Azuk",
       "categoria": "camisa",
       "preco": 66,
+      "custoFornecedor": 0,
+      "custo_fornecedor": 0,
       "estoque": 0,
       "imagem": "https://dcdn-us.mitiendanube.com/stores/007/694/334/products/20260519153953230001-88cd9e4b013f14281017792052534092-1024-1024.webp",
       "imagens": [
@@ -94,6 +100,8 @@
       "nome": "Calça Street Preta",
       "categoria": "calca",
       "preco": 125,
+      "custoFornecedor": 0,
+      "custo_fornecedor": 0,
       "estoque": 1,
       "imagem": "https://i.pinimg.com/736x/47/9c/46/479c46d2e3a13214638a3d80d9ef2cd3.jpg",
       "imagens": [
@@ -124,6 +132,8 @@
       "nome": "Tênis Jordan Vermelho",
       "categoria": "tenis",
       "preco": 220,
+      "custoFornecedor": 0,
+      "custo_fornecedor": 0,
       "estoque": 1,
       "imagem": "https://i.pinimg.com/736x/55/e8/60/55e8602476052c3b9e3383840c3b3741.jpg",
       "imagens": [
@@ -150,6 +160,6 @@
       }
     }
   ],
-  "ultimaAtualizacao": "2026-07-06T22:38:46.452Z",
+  "ultimaAtualizacao": "2026-07-06T23:32:14.020Z",
   "totalProdutos": 5
 }

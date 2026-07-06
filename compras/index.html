@@ -9,43 +9,18 @@
     :root{--bg:#eee;--text:#050505;--line:#ccc;--green:#15934f;--red:#d63031;--yellow:#b7791f}
     *{margin:0;padding:0;box-sizing:border-box}
     body{font-family:Arial,Helvetica,sans-serif;background:var(--bg);color:var(--text);min-height:100vh}
-    a{text-decoration:none;color:inherit}
-    button,input{font:inherit}
-    button{cursor:pointer;border:0}
+    a{text-decoration:none;color:inherit}button,input{font:inherit}button{cursor:pointer;border:0}
     .topbar{height:82px;background:#f6f6f6;border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:center;position:sticky;top:0;z-index:20}
-    .back{position:absolute;left:18px;color:#111;text-decoration:none;font-size:36px;font-weight:900;line-height:1}
-    .logo img{height:44px;max-width:160px;display:block}
-    .wrap{width:min(980px,calc(100% - 24px));margin:28px auto 60px}
-    .head{background:#fff;border:1px solid var(--line);padding:24px;margin-bottom:18px}
-    .head small{display:block;text-transform:uppercase;letter-spacing:.14em;font-weight:900;color:#777;margin-bottom:10px}
-    .head h1{font-size:clamp(36px,7vw,72px);line-height:.9;text-transform:uppercase;letter-spacing:-.07em;margin-bottom:14px}
-    .head p{color:#555;line-height:1.6;max-width:760px}
-    .actions{display:flex;flex-wrap:wrap;gap:10px;margin-top:18px}
-    .btn{min-height:50px;background:#111;color:#fff;font-weight:900;text-transform:uppercase;letter-spacing:.1em;padding:0 18px;display:inline-flex;align-items:center;justify-content:center}
-    .btn.secondary{background:#fff;color:#111;border:1px solid var(--line)}
-    .search-box{background:#fff;border:1px solid var(--line);padding:20px;margin-bottom:18px;display:grid;gap:12px}
-    .field{display:grid;gap:7px}
-    .field label{font-size:12px;font-weight:900;text-transform:uppercase;letter-spacing:.08em;color:#555}
-    .field input{height:52px;border:1px solid var(--line);background:#f7f7f7;padding:0 13px;outline:0;font-weight:800}
-    .search-grid{display:grid;grid-template-columns:1fr 1fr 160px;gap:10px;align-items:end}
-    .status-msg{font-size:13px;color:#555;line-height:1.5}
-    .grid{display:grid;gap:14px}
-    .empty,.erro{background:#fff;border:1px solid var(--line);padding:26px;text-align:center}
-    .empty h2,.erro h2{font-size:30px;text-transform:uppercase;letter-spacing:-.05em;margin-bottom:8px}
-    .empty p,.erro p{color:#555;line-height:1.5}
-    .order-card{background:#fff;border:1px solid var(--line);padding:14px;display:grid;grid-template-columns:120px 1fr;gap:14px;align-items:start}
-    .order-img{width:120px;height:150px;object-fit:cover;background:#ddd;border:1px solid var(--line)}
-    .order-info b{display:block;font-size:20px;text-transform:uppercase;letter-spacing:-.03em;margin-bottom:8px}
-    .meta{display:grid;gap:3px;margin-bottom:12px}
-    .meta small{color:#666;line-height:1.4}
-    .items{border-top:1px solid var(--line);border-bottom:1px solid var(--line);padding:10px 0;margin:10px 0;display:grid;gap:6px}
-    .item{display:flex;justify-content:space-between;gap:12px;color:#555;font-size:14px}
-    .totals{display:grid;gap:6px;margin-top:10px}
-    .line{display:flex;justify-content:space-between;gap:12px;color:#555}.line strong{color:#111}.line.total{border-top:1px solid var(--line);padding-top:8px;margin-top:4px;font-size:18px;font-weight:900;color:#111}
-    .status{display:inline-flex;margin-top:12px;padding:9px 12px;font-size:12px;font-weight:900;text-transform:uppercase;letter-spacing:.08em;background:#f7f7f7;border:1px solid var(--line)}
-    .status.aprovado{background:#e9f8ef;color:#116a38;border-color:#bfe8ce}.status.entregue{background:#eaf1ff;color:#1f4e9a;border-color:#bfceea}.status.pendente{background:#fff7e8;color:#8a5a00;border-color:#e8d3a8}.status.recusado{background:#ffecec;color:#a11e1e;border-color:#f0b5b5}
-    .note{margin-top:14px;color:#666;font-size:13px;line-height:1.5}
-    @media(max-width:760px){.search-grid{grid-template-columns:1fr}.btn{width:100%}.order-card{grid-template-columns:1fr}.order-img{width:100%;height:260px}.head{padding:18px}}
+    .back{position:absolute;left:18px;color:#111;text-decoration:none;font-size:36px;font-weight:900;line-height:1}.logo img{height:44px;max-width:160px;display:block}
+    .wrap{width:min(980px,calc(100% - 24px));margin:28px auto 60px}.head{background:#fff;border:1px solid var(--line);padding:24px;margin-bottom:18px}
+    .head small{display:block;text-transform:uppercase;letter-spacing:.14em;font-weight:900;color:#777;margin-bottom:10px}.head h1{font-size:clamp(36px,7vw,72px);line-height:.9;text-transform:uppercase;letter-spacing:-.07em;margin-bottom:14px}.head p{color:#555;line-height:1.6;max-width:760px}
+    .actions{display:flex;flex-wrap:wrap;gap:10px;margin-top:18px}.btn{min-height:50px;background:#111;color:#fff;font-weight:900;text-transform:uppercase;letter-spacing:.1em;padding:0 18px;display:inline-flex;align-items:center;justify-content:center}.btn.secondary{background:#fff;color:#111;border:1px solid var(--line)}
+    .client-box{background:#fff;border:1px solid var(--line);padding:18px;margin-bottom:18px;display:grid;gap:10px}.client-id{background:#f7f7f7;border:1px solid var(--line);padding:14px;font-weight:900;word-break:break-all}.status-msg{font-size:13px;color:#555;line-height:1.5}.grid{display:grid;gap:14px}
+    .empty,.erro{background:#fff;border:1px solid var(--line);padding:26px;text-align:center}.empty h2,.erro h2{font-size:30px;text-transform:uppercase;letter-spacing:-.05em;margin-bottom:8px}.empty p,.erro p{color:#555;line-height:1.5}
+    .order-card{background:#fff;border:1px solid var(--line);padding:14px;display:grid;grid-template-columns:120px 1fr;gap:14px;align-items:start}.order-img{width:120px;height:150px;object-fit:cover;background:#ddd;border:1px solid var(--line)}.order-info b{display:block;font-size:20px;text-transform:uppercase;letter-spacing:-.03em;margin-bottom:8px}.meta{display:grid;gap:3px;margin-bottom:12px}.meta small{color:#666;line-height:1.4}
+    .items{border-top:1px solid var(--line);border-bottom:1px solid var(--line);padding:10px 0;margin:10px 0;display:grid;gap:6px}.item{display:flex;justify-content:space-between;gap:12px;color:#555;font-size:14px}.totals{display:grid;gap:6px;margin-top:10px}.line{display:flex;justify-content:space-between;gap:12px;color:#555}.line strong{color:#111}.line.total{border-top:1px solid var(--line);padding-top:8px;margin-top:4px;font-size:18px;font-weight:900;color:#111}
+    .status{display:inline-flex;margin-top:12px;padding:9px 12px;font-size:12px;font-weight:900;text-transform:uppercase;letter-spacing:.08em;background:#f7f7f7;border:1px solid var(--line)}.status.aprovado{background:#e9f8ef;color:#116a38;border-color:#bfe8ce}.status.entregue{background:#eaf1ff;color:#1f4e9a;border-color:#bfceea}.status.pendente{background:#fff7e8;color:#8a5a00;border-color:#e8d3a8}.status.recusado{background:#ffecec;color:#a11e1e;border-color:#f0b5b5}
+    .note{margin-top:14px;color:#666;font-size:13px;line-height:1.5}@media(max-width:760px){.btn{width:100%}.order-card{grid-template-columns:1fr}.order-img{width:100%;height:260px}.head{padding:18px}}
   </style>
 </head>
 <body>
@@ -59,76 +34,65 @@
       <small>Área do cliente</small>
       <h1>Minhas compras</h1>
       <p>
-        Essa página não salva compras no celular. Para consultar, digite o código do pedido e o WhatsApp usado na compra.
-        O pedido aparece aqui quando a loja aceitar e colocar ele em entrega.
+        Essa página usa um ID aleatório salvo neste navegador para mostrar só as compras deste cliente.
+        Cliente 1 não vê as compras do cliente 2.
       </p>
       <div class="actions">
         <a class="btn" href="../index.html">Voltar para loja</a>
+        <button class="btn secondary" onclick="buscarMinhasCompras()">Atualizar</button>
       </div>
     </section>
 
-    <section class="search-box">
-      <div class="search-grid">
-        <div class="field">
-          <label>Código do pedido</label>
-          <input id="pedidoId" placeholder="Ex: PED-1783..." autocomplete="off" />
-        </div>
-        <div class="field">
-          <label>WhatsApp da compra</label>
-          <input id="pedidoTelefone" placeholder="Ex: 559699999999" inputmode="numeric" autocomplete="off" />
-        </div>
-        <button class="btn" onclick="buscarCompra()">Buscar</button>
-      </div>
-      <div class="status-msg" id="statusMsg">Digite os dados para consultar no Caminho.json do backend.</div>
+    <section class="client-box">
+      <div class="status-msg">Seu ID de cliente neste aparelho:</div>
+      <div class="client-id" id="clienteIdBox">Carregando...</div>
+      <div class="status-msg" id="statusMsg">Buscando suas compras no backend...</div>
     </section>
 
     <section id="listaCompras" class="grid">
-      <div class="empty">
-        <h2>Nenhuma compra aberta</h2>
-        <p>Use o código do pedido para ver onde está sua roupa.</p>
-      </div>
+      <div class="empty"><h2>Buscando</h2><p>Conferindo seus pedidos...</p></div>
     </section>
 
     <p class="note">
-      Por segurança, essa página não guarda histórico local. Cliente 1 não vê as compras do cliente 2 neste aparelho.
+      Se limpar os dados do navegador ou usar outro celular, outro ID será criado.
     </p>
   </main>
 
   <script>
     const API_URL = "https://jordan-store-backend.onrender.com".replace(/\/$/, "");
 
+    function gerarIdCliente() {
+      const parteTempo = Date.now().toString(36).toUpperCase();
+      let parteAleatoria = "";
+      if (window.crypto && crypto.getRandomValues) {
+        const nums = crypto.getRandomValues(new Uint32Array(2));
+        parteAleatoria = Array.from(nums).map(n => n.toString(36).toUpperCase()).join("");
+      } else {
+        parteAleatoria = Math.random().toString(36).slice(2, 12).toUpperCase();
+      }
+      return `CL-${parteTempo}-${parteAleatoria}`;
+    }
+
+    function getClienteId() {
+      let clienteId = localStorage.getItem("jordan_cliente_id");
+      if (!clienteId) {
+        clienteId = gerarIdCliente();
+        localStorage.setItem("jordan_cliente_id", clienteId);
+      }
+      return clienteId;
+    }
+
     function numero(valor){const n=Number(valor);return Number.isFinite(n)?n:0}
     function money(valor){return numero(valor).toFixed(2).replace(".",",")}
-    function escapeHtml(texto){return String(texto||"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/\"/g,"&quot;").replace(/'/g,"&#039;")}
-    function limparTelefone(t){return String(t||"").replace(/\D/g,"")}
+    function escapeHtml(texto){return String(texto||"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;").replace(/'/g,"&#039;")}
     function formatarData(valor){if(!valor)return "-";const d=new Date(valor);if(Number.isNaN(d.getTime()))return "-";return d.toLocaleString("pt-BR",{day:"2-digit",month:"2-digit",year:"numeric",hour:"2-digit",minute:"2-digit"})}
 
-    function getStatusTexto(status){
-      const s=String(status||"").toLowerCase();
-      if(s==="entregue")return "Entregue";
-      if(s==="aprovado")return "Em entrega";
-      if(s==="recusado")return "Recusado";
-      return "Pendente";
-    }
-
-    function getImagemPedido(pedido){
-      if(Array.isArray(pedido.itens)&&pedido.itens[0]) return pedido.itens[0].imagem || "";
-      return pedido.imagem || "";
-    }
-
-    function renderItens(pedido){
-      const itens=Array.isArray(pedido.itens)?pedido.itens:[];
-      if(!itens.length) return `<div class="item"><span>${escapeHtml(pedido.nome||"Pedido")}</span><span>-</span></div>`;
-      return itens.map(item=>{
-        const nome=escapeHtml(item.nome||"Produto");
-        const tamanho=item.tamanho?`Tam. ${escapeHtml(item.tamanho)}`:"";
-        const quantidade=Number(item.quantidade||1);
-        return `<div class="item"><span>${nome} ${tamanho}</span><span>x${quantidade}</span></div>`;
-      }).join("");
-    }
+    function getStatusTexto(status){const s=String(status||"").toLowerCase();if(s==="entregue")return "Entregue";if(s==="aprovado")return "Em entrega";if(s==="recusado")return "Recusado";return "Pendente"}
+    function getImagemPedido(pedido){if(Array.isArray(pedido.itens)&&pedido.itens[0]) return pedido.itens[0].imagem || "";return pedido.imagem || ""}
+    function renderItens(pedido){const itens=Array.isArray(pedido.itens)?pedido.itens:[];if(!itens.length)return `<div class="item"><span>${escapeHtml(pedido.nome||"Pedido")}</span><span>-</span></div>`;return itens.map(item=>{const nome=escapeHtml(item.nome||"Produto");const tamanho=item.tamanho?`Tam. ${escapeHtml(item.tamanho)}`:"";const quantidade=Number(item.quantidade||1);return `<div class="item"><span>${nome} ${tamanho}</span><span>x${quantidade}</span></div>`}).join("")}
 
     function renderCompra(pedido){
-      const status=String(pedido.status||"aprovado").toLowerCase();
+      const status=String(pedido.status||"pendente").toLowerCase();
       const imagem=getImagemPedido(pedido)||"https://via.placeholder.com/180x220?text=Jordan";
       const total=numero(pedido.total||0);
       return `
@@ -147,45 +111,37 @@
             <div class="totals"><div class="line total"><span>Total</span><strong>R$ ${money(total)}</strong></div></div>
             <span class="status ${escapeHtml(status)}">${getStatusTexto(status)}</span>
           </div>
-        </article>
-      `;
+        </article>`;
     }
 
-    async function buscarCompra(){
-      const id=String(document.getElementById("pedidoId")?.value||"").trim();
-      const telefone=limparTelefone(document.getElementById("pedidoTelefone")?.value||"");
+    async function buscarMinhasCompras(){
+      const clienteId=getClienteId();
       const lista=document.getElementById("listaCompras");
       const status=document.getElementById("statusMsg");
-
-      if(!id || telefone.length < 8){
-        status.textContent="Digite o código do pedido e o WhatsApp usado na compra.";
-        return;
-      }
-
+      document.getElementById("clienteIdBox").textContent=clienteId;
       status.textContent="Buscando no backend...";
-      lista.innerHTML=`<div class="empty"><h2>Buscando</h2><p>Conferindo Caminho.json...</p></div>`;
+      lista.innerHTML=`<div class="empty"><h2>Buscando</h2><p>Conferindo seus pedidos...</p></div>`;
 
       try{
-        const res=await fetch(`${API_URL}/api/caminho/${encodeURIComponent(id)}?telefone=${encodeURIComponent(telefone)}`,{cache:"no-store"});
+        const res=await fetch(`${API_URL}/api/minhas-compras?clienteId=${encodeURIComponent(clienteId)}`,{cache:"no-store"});
         const data=await res.json();
-        if(!data.ok) throw new Error(data.erro||"Pedido não encontrado");
-        lista.innerHTML=renderCompra(data.pedido);
-        status.textContent="Pedido encontrado.";
+        if(!data.ok) throw new Error(data.erro||"Erro ao buscar compras");
+        const pedidos=Array.isArray(data.pedidos)?data.pedidos:[];
+        if(!pedidos.length){
+          lista.innerHTML=`<div class="empty"><h2>Nenhuma compra</h2><p>As compras feitas neste aparelho vão aparecer aqui depois que o pedido for criado.</p></div>`;
+          status.textContent="Nenhuma compra encontrada para este ID.";
+          return;
+        }
+        lista.innerHTML=pedidos.map(renderCompra).join("");
+        status.textContent=`${pedidos.length} compra(s) encontrada(s).`;
       }catch(err){
-        lista.innerHTML=`<div class="erro"><h2>Não encontrado</h2><p>${escapeHtml(err.message||"Pedido não encontrado.")}</p></div>`;
-        status.textContent="Pedido não encontrado ou ainda não entrou em entrega.";
+        lista.innerHTML=`<div class="erro"><h2>Erro</h2><p>${escapeHtml(err.message||"Não consegui buscar suas compras.")}</p></div>`;
+        status.textContent="Não consegui buscar agora.";
       }
     }
 
-    function carregarQuery(){
-      const params=new URLSearchParams(window.location.search);
-      const id=params.get("pedido")||params.get("id")||"";
-      const telefone=params.get("telefone")||"";
-      if(id) document.getElementById("pedidoId").value=id;
-      if(telefone) document.getElementById("pedidoTelefone").value=telefone;
-    }
-
-    carregarQuery();
+    document.getElementById("clienteIdBox").textContent=getClienteId();
+    buscarMinhasCompras();
   </script>
 </body>
 </html>

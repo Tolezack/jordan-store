@@ -6,315 +6,52 @@
   <title>Minhas compras - Jordan Wear</title>
 
   <style>
-    :root {
-      --bg: #eeeeee;
-      --text: #050505;
-      --line: #cccccc;
-      --white: #ffffff;
-      --muted: #666666;
-      --green: #15934f;
-      --red: #d63031;
-    }
-
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
-
-    body {
-      min-height: 100vh;
-      background: var(--bg);
-      color: var(--text);
-      font-family: Arial, Helvetica, sans-serif;
-    }
-
-    button {
-      border: 0;
-      cursor: pointer;
-      font: inherit;
-    }
-
-    a {
-      color: inherit;
-      text-decoration: none;
-    }
-
-    .topbar {
-      height: 82px;
-      background: #f6f6f6;
-      border-bottom: 1px solid var(--line);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      position: sticky;
-      top: 0;
-      z-index: 20;
-    }
-
-    .back {
-      position: absolute;
-      left: 18px;
-      color: #111;
-      text-decoration: none;
-      font-size: 36px;
-      font-weight: 900;
-      line-height: 1;
-    }
-
-    .logo {
-      max-width: 150px;
-      max-height: 54px;
-      object-fit: contain;
-      display: block;
-    }
-
-    .wrap {
-      width: min(1080px, calc(100% - 24px));
-      margin: 28px auto 70px;
-    }
-
-    .head {
-      background: var(--white);
-      border: 1px solid var(--line);
-      padding: 24px;
-      margin-bottom: 16px;
-    }
-
-    .head small {
-      display: block;
-      text-transform: uppercase;
-      font-size: 12px;
-      letter-spacing: 0.14em;
-      color: var(--muted);
-      font-weight: 900;
-      margin-bottom: 10px;
-    }
-
-    .head h1 {
-      font-size: clamp(40px, 7vw, 76px);
-      line-height: 0.9;
-      letter-spacing: -0.07em;
-      text-transform: uppercase;
-      margin-bottom: 12px;
-    }
-
-    .head p {
-      color: var(--muted);
-      line-height: 1.6;
-      max-width: 720px;
-    }
-
-    .actions {
-      margin-top: 18px;
-      display: flex;
-      gap: 10px;
-      flex-wrap: wrap;
-    }
-
-    .btn {
-      min-height: 50px;
-      padding: 0 18px;
-      background: #111;
-      color: #fff;
-      font-weight: 900;
-      text-transform: uppercase;
-      letter-spacing: 0.1em;
-      font-size: 12px;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-    }
-
-    .btn.secondary {
-      background: #fff;
-      color: #111;
-      border: 1px solid var(--line);
-    }
-
-    .grid {
-      display: grid;
-      gap: 12px;
-    }
-
-    .order-card {
-      background: #fff;
-      border: 1px solid var(--line);
-      padding: 16px;
-      display: grid;
-      grid-template-columns: 96px 1fr;
-      gap: 14px;
-      align-items: start;
-    }
-
-    .order-img {
-      width: 96px;
-      height: 118px;
-      object-fit: cover;
-      background: #ddd;
-      border: 1px solid var(--line);
-    }
-
-    .order-info b {
-      display: block;
-      text-transform: uppercase;
-      letter-spacing: -0.03em;
-      font-size: 18px;
-      margin-bottom: 8px;
-      word-break: break-word;
-    }
-
-    .meta {
-      display: grid;
-      gap: 5px;
-      margin: 10px 0;
-    }
-
-    .meta small {
-      display: block;
-      color: var(--muted);
-      line-height: 1.35;
-    }
-
-    .items {
-      border-top: 1px solid var(--line);
-      border-bottom: 1px solid var(--line);
-      padding: 10px 0;
-      margin: 10px 0;
-      display: grid;
-      gap: 7px;
-    }
-
-    .item {
-      display: flex;
-      justify-content: space-between;
-      gap: 12px;
-      color: #333;
-      font-size: 13px;
-      line-height: 1.35;
-    }
-
-    .item span:first-child {
-      font-weight: 800;
-    }
-
-    .totals {
-      display: grid;
-      gap: 7px;
-      margin-top: 10px;
-    }
-
-    .line {
-      display: flex;
-      justify-content: space-between;
-      gap: 14px;
-      color: var(--muted);
-      font-size: 14px;
-    }
-
-    .line strong {
-      color: #111;
-    }
-
-    .line.total {
-      border-top: 1px solid var(--line);
-      padding-top: 10px;
-      margin-top: 4px;
-      font-size: 18px;
-      font-weight: 900;
-      color: #111;
-    }
-
-    .status {
-      display: inline-flex;
-      align-items: center;
-      min-height: 30px;
-      padding: 0 10px;
-      border: 1px solid var(--line);
-      background: #f7f7f7;
-      font-size: 11px;
-      font-weight: 900;
-      text-transform: uppercase;
-      letter-spacing: 0.08em;
-      margin-top: 8px;
-    }
-
-    .status.pendente {
-      border-color: #d8b400;
-      background: #fff8d8;
-    }
-
-    .status.aprovado {
-      border-color: var(--green);
-      background: #eafff2;
-      color: #0d6b39;
-    }
-
-    .status.recusado {
-      border-color: var(--red);
-      background: #ffe8e8;
-      color: #a31313;
-    }
-
-    .empty {
-      background: #fff;
-      border: 1px solid var(--line);
-      padding: 34px;
-      text-align: center;
-    }
-
-    .empty h2 {
-      font-size: 36px;
-      text-transform: uppercase;
-      letter-spacing: -0.06em;
-      margin-bottom: 10px;
-    }
-
-    .empty p {
-      color: var(--muted);
-      line-height: 1.5;
-    }
-
-    .note {
-      color: var(--muted);
-      font-size: 13px;
-      line-height: 1.5;
-      margin-top: 14px;
-      background: #fff;
-      border: 1px solid var(--line);
-      padding: 12px;
-    }
-
-    @media (max-width: 640px) {
-      .wrap {
-        margin-top: 16px;
-      }
-
-      .head {
-        padding: 18px;
-      }
-
-      .order-card {
-        grid-template-columns: 76px 1fr;
-        padding: 12px;
-      }
-
-      .order-img {
-        width: 76px;
-        height: 96px;
-      }
-
-      .btn {
-        width: 100%;
-      }
-    }
+    :root{--bg:#eee;--text:#050505;--line:#ccc;--green:#15934f;--red:#d63031;--yellow:#b7791f}
+    *{margin:0;padding:0;box-sizing:border-box}
+    body{font-family:Arial,Helvetica,sans-serif;background:var(--bg);color:var(--text);min-height:100vh}
+    a{text-decoration:none;color:inherit}
+    button,input{font:inherit}
+    button{cursor:pointer;border:0}
+    .topbar{height:82px;background:#f6f6f6;border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:center;position:sticky;top:0;z-index:20}
+    .back{position:absolute;left:18px;color:#111;text-decoration:none;font-size:36px;font-weight:900;line-height:1}
+    .logo img{height:44px;max-width:160px;display:block}
+    .wrap{width:min(980px,calc(100% - 24px));margin:28px auto 60px}
+    .head{background:#fff;border:1px solid var(--line);padding:24px;margin-bottom:18px}
+    .head small{display:block;text-transform:uppercase;letter-spacing:.14em;font-weight:900;color:#777;margin-bottom:10px}
+    .head h1{font-size:clamp(36px,7vw,72px);line-height:.9;text-transform:uppercase;letter-spacing:-.07em;margin-bottom:14px}
+    .head p{color:#555;line-height:1.6;max-width:760px}
+    .actions{display:flex;flex-wrap:wrap;gap:10px;margin-top:18px}
+    .btn{min-height:50px;background:#111;color:#fff;font-weight:900;text-transform:uppercase;letter-spacing:.1em;padding:0 18px;display:inline-flex;align-items:center;justify-content:center}
+    .btn.secondary{background:#fff;color:#111;border:1px solid var(--line)}
+    .search-box{background:#fff;border:1px solid var(--line);padding:20px;margin-bottom:18px;display:grid;gap:12px}
+    .field{display:grid;gap:7px}
+    .field label{font-size:12px;font-weight:900;text-transform:uppercase;letter-spacing:.08em;color:#555}
+    .field input{height:52px;border:1px solid var(--line);background:#f7f7f7;padding:0 13px;outline:0;font-weight:800}
+    .search-grid{display:grid;grid-template-columns:1fr 1fr 160px;gap:10px;align-items:end}
+    .status-msg{font-size:13px;color:#555;line-height:1.5}
+    .grid{display:grid;gap:14px}
+    .empty,.erro{background:#fff;border:1px solid var(--line);padding:26px;text-align:center}
+    .empty h2,.erro h2{font-size:30px;text-transform:uppercase;letter-spacing:-.05em;margin-bottom:8px}
+    .empty p,.erro p{color:#555;line-height:1.5}
+    .order-card{background:#fff;border:1px solid var(--line);padding:14px;display:grid;grid-template-columns:120px 1fr;gap:14px;align-items:start}
+    .order-img{width:120px;height:150px;object-fit:cover;background:#ddd;border:1px solid var(--line)}
+    .order-info b{display:block;font-size:20px;text-transform:uppercase;letter-spacing:-.03em;margin-bottom:8px}
+    .meta{display:grid;gap:3px;margin-bottom:12px}
+    .meta small{color:#666;line-height:1.4}
+    .items{border-top:1px solid var(--line);border-bottom:1px solid var(--line);padding:10px 0;margin:10px 0;display:grid;gap:6px}
+    .item{display:flex;justify-content:space-between;gap:12px;color:#555;font-size:14px}
+    .totals{display:grid;gap:6px;margin-top:10px}
+    .line{display:flex;justify-content:space-between;gap:12px;color:#555}.line strong{color:#111}.line.total{border-top:1px solid var(--line);padding-top:8px;margin-top:4px;font-size:18px;font-weight:900;color:#111}
+    .status{display:inline-flex;margin-top:12px;padding:9px 12px;font-size:12px;font-weight:900;text-transform:uppercase;letter-spacing:.08em;background:#f7f7f7;border:1px solid var(--line)}
+    .status.aprovado{background:#e9f8ef;color:#116a38;border-color:#bfe8ce}.status.entregue{background:#eaf1ff;color:#1f4e9a;border-color:#bfceea}.status.pendente{background:#fff7e8;color:#8a5a00;border-color:#e8d3a8}.status.recusado{background:#ffecec;color:#a11e1e;border-color:#f0b5b5}
+    .note{margin-top:14px;color:#666;font-size:13px;line-height:1.5}
+    @media(max-width:760px){.search-grid{grid-template-columns:1fr}.btn{width:100%}.order-card{grid-template-columns:1fr}.order-img{width:100%;height:260px}.head{padding:18px}}
   </style>
 </head>
-
 <body>
   <header class="topbar">
-    <a class="back" href="../index.html">‹</a>
-    <img class="logo" src="../Logo.svg" alt="Jordan Wear" onerror="this.outerHTML='<b>jordanwear</b>'" />
+    <a href="../index.html" class="back">‹</a>
+    <a href="../index.html" class="logo"><img src="../Logo.svg" alt="Jordan Wear"></a>
   </header>
 
   <main class="wrap">
@@ -322,183 +59,133 @@
       <small>Área do cliente</small>
       <h1>Minhas compras</h1>
       <p>
-        Aqui aparecem só as compras feitas neste celular ou computador. Essa lista fica salva localmente,
-        então outro cliente não consegue ver suas compras no aparelho dele.
+        Essa página não salva compras no celular. Para consultar, digite o código do pedido e o WhatsApp usado na compra.
+        O pedido aparece aqui quando a loja aceitar e colocar ele em entrega.
       </p>
-
       <div class="actions">
         <a class="btn" href="../index.html">Voltar para loja</a>
-        <button class="btn secondary" onclick="recarregarCompras()">Atualizar</button>
-        <button class="btn secondary" onclick="limparCompras()">Limpar deste aparelho</button>
       </div>
     </section>
 
-    <section id="listaCompras" class="grid"></section>
+    <section class="search-box">
+      <div class="search-grid">
+        <div class="field">
+          <label>Código do pedido</label>
+          <input id="pedidoId" placeholder="Ex: PED-1783..." autocomplete="off" />
+        </div>
+        <div class="field">
+          <label>WhatsApp da compra</label>
+          <input id="pedidoTelefone" placeholder="Ex: 559699999999" inputmode="numeric" autocomplete="off" />
+        </div>
+        <button class="btn" onclick="buscarCompra()">Buscar</button>
+      </div>
+      <div class="status-msg" id="statusMsg">Digite os dados para consultar no Caminho.json do backend.</div>
+    </section>
+
+    <section id="listaCompras" class="grid">
+      <div class="empty">
+        <h2>Nenhuma compra aberta</h2>
+        <p>Use o código do pedido para ver onde está sua roupa.</p>
+      </div>
+    </section>
 
     <p class="note">
-      A confirmação oficial do pagamento e entrega aparece quando a loja atualizar o pedido. Essa página não mostra pedidos de outros clientes.
+      Por segurança, essa página não guarda histórico local. Cliente 1 não vê as compras do cliente 2 neste aparelho.
     </p>
   </main>
 
   <script>
-    const MINHAS_COMPRAS_KEY = "jws_minhas_compras";
+    const API_URL = "https://jordan-store-backend.onrender.com".replace(/\/$/, "");
 
-    function numero(valor) {
-      const n = Number(valor);
-      return Number.isFinite(n) ? n : 0;
-    }
+    function numero(valor){const n=Number(valor);return Number.isFinite(n)?n:0}
+    function money(valor){return numero(valor).toFixed(2).replace(".",",")}
+    function escapeHtml(texto){return String(texto||"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/\"/g,"&quot;").replace(/'/g,"&#039;")}
+    function limparTelefone(t){return String(t||"").replace(/\D/g,"")}
+    function formatarData(valor){if(!valor)return "-";const d=new Date(valor);if(Number.isNaN(d.getTime()))return "-";return d.toLocaleString("pt-BR",{day:"2-digit",month:"2-digit",year:"numeric",hour:"2-digit",minute:"2-digit"})}
 
-    function money(valor) {
-      return numero(valor).toFixed(2).replace(".", ",");
-    }
-
-    function escapeHtml(texto) {
-      return String(texto || "")
-        .replace(/&/g, "&amp;")
-        .replace(/</g, "&lt;")
-        .replace(/>/g, "&gt;")
-        .replace(/"/g, "&quot;")
-        .replace(/'/g, "&#039;");
-    }
-
-    function formatarData(valor) {
-      if (!valor) return "-";
-
-      const data = new Date(valor);
-      if (Number.isNaN(data.getTime())) return "-";
-
-      return data.toLocaleString("pt-BR", {
-        day: "2-digit",
-        month: "2-digit",
-        year: "numeric",
-        hour: "2-digit",
-        minute: "2-digit"
-      });
-    }
-
-    function getCompras() {
-      try {
-        const compras = JSON.parse(localStorage.getItem(MINHAS_COMPRAS_KEY) || "[]");
-        return Array.isArray(compras) ? compras : [];
-      } catch (err) {
-        return [];
-      }
-    }
-
-    function getImagemPedido(pedido) {
-      if (pedido.imagem) return pedido.imagem;
-
-      if (Array.isArray(pedido.itens) && pedido.itens.length > 0) {
-        return pedido.itens[0].imagem || pedido.itens[0].foto || "";
-      }
-
-      return "";
-    }
-
-    function getStatusPedido(pedido) {
-      // Minhas compras é local do cliente: sempre mostra Pendente.
-      // O cliente 1 não vê atualizações/compra do cliente 2.
-      return "pendente";
-    }
-
-    function getStatusTexto(status) {
+    function getStatusTexto(status){
+      const s=String(status||"").toLowerCase();
+      if(s==="entregue")return "Entregue";
+      if(s==="aprovado")return "Em entrega";
+      if(s==="recusado")return "Recusado";
       return "Pendente";
     }
 
-    function renderItens(pedido) {
-      const itens = Array.isArray(pedido.itens) ? pedido.itens : [];
+    function getImagemPedido(pedido){
+      if(Array.isArray(pedido.itens)&&pedido.itens[0]) return pedido.itens[0].imagem || "";
+      return pedido.imagem || "";
+    }
 
-      if (!itens.length) {
-        const nome = escapeHtml(pedido.nome || "Produto");
-        const tamanho = pedido.tamanho ? `Tam. ${escapeHtml(pedido.tamanho)}` : "";
-        const quantidade = Number(pedido.quantidade || 1);
-        const preco = pedido.preco ? `R$ ${money(pedido.preco)}` : "";
-
-        return `<div class="item"><span>${nome} ${tamanho}</span><span>x${quantidade} ${preco}</span></div>`;
-      }
-
-      return itens.map(item => {
-        const nome = escapeHtml(item.nome || "Produto");
-        const tamanho = item.tamanho ? `Tam. ${escapeHtml(item.tamanho)}` : "";
-        const quantidade = Number(item.quantidade || 1);
-        const preco = item.preco ? `R$ ${money(item.preco)}` : "";
-
-        return `<div class="item"><span>${nome} ${tamanho}</span><span>x${quantidade} ${preco}</span></div>`;
+    function renderItens(pedido){
+      const itens=Array.isArray(pedido.itens)?pedido.itens:[];
+      if(!itens.length) return `<div class="item"><span>${escapeHtml(pedido.nome||"Pedido")}</span><span>-</span></div>`;
+      return itens.map(item=>{
+        const nome=escapeHtml(item.nome||"Produto");
+        const tamanho=item.tamanho?`Tam. ${escapeHtml(item.tamanho)}`:"";
+        const quantidade=Number(item.quantidade||1);
+        return `<div class="item"><span>${nome} ${tamanho}</span><span>x${quantidade}</span></div>`;
       }).join("");
     }
 
-    function renderCompra(pedido) {
-      const status = getStatusPedido(pedido);
-      const imagem = getImagemPedido(pedido) || "https://via.placeholder.com/180x220?text=Jordan";
-      const frete = numero(pedido.frete || 0);
-      const subtotal = numero(pedido.subtotal || pedido.total || 0);
-      const total = numero(pedido.total || subtotal + frete);
-
+    function renderCompra(pedido){
+      const status=String(pedido.status||"aprovado").toLowerCase();
+      const imagem=getImagemPedido(pedido)||"https://via.placeholder.com/180x220?text=Jordan";
+      const total=numero(pedido.total||0);
       return `
         <article class="order-card">
           <img class="order-img" src="${escapeHtml(imagem)}" alt="Compra" />
-
           <div class="order-info">
-            <b>${escapeHtml(pedido.id || "Pedido")}</b>
-
+            <b>${escapeHtml(pedido.id||"Pedido")}</b>
             <div class="meta">
-              <small>Data: ${formatarData(pedido.salvoLocalEm || pedido.criadoEm || pedido.atualizadoEm)}</small>
-              ${pedido.cep ? `<small>CEP: ${escapeHtml(pedido.cep)}</small>` : ""}
-              ${pedido.enderecoFrete ? `<small>Entrega: ${escapeHtml(pedido.enderecoFrete.cidade || "")}/${escapeHtml(pedido.enderecoFrete.uf || "")}</small>` : ""}
-              ${pedido.freteNome ? `<small>Frete: ${escapeHtml(pedido.freteNome)} ${pedido.fretePrazo ? `• ${escapeHtml(pedido.fretePrazo)}` : ""}</small>` : ""}
-              ${pedido.localizacaoEntrega ? `<small>Onde está agora: ${escapeHtml(pedido.localizacaoEntrega)}</small>` : ""}
+              <small>Atualizado: ${formatarData(pedido.atualizadoEm || pedido.aprovadoEm || pedido.criadoEm)}</small>
+              ${pedido.cep?`<small>CEP: ${escapeHtml(pedido.cep)}</small>`:""}
+              ${(pedido.cidade||pedido.uf)?`<small>Entrega: ${escapeHtml(pedido.cidade||"")}/${escapeHtml(pedido.uf||"")}</small>`:""}
+              ${pedido.freteTipo?`<small>Frete: ${escapeHtml(pedido.freteTipo)} ${pedido.fretePrazo?`• ${escapeHtml(pedido.fretePrazo)}`:""}</small>`:""}
+              ${pedido.localizacaoEntrega?`<small><b>Onde está agora:</b> ${escapeHtml(pedido.localizacaoEntrega)}</small>`:`<small><b>Onde está agora:</b> A loja ainda não atualizou.</small>`}
             </div>
-
-            <div class="items">
-              ${renderItens(pedido)}
-            </div>
-
-            <div class="totals">
-              <div class="line"><span>Subtotal</span><strong>R$ ${money(subtotal)}</strong></div>
-              <div class="line"><span>Frete</span><strong>${frete === 0 ? "Grátis" : `R$ ${money(frete)}`}</strong></div>
-              <div class="line total"><span>Total</span><strong>R$ ${money(total)}</strong></div>
-            </div>
-
+            <div class="items">${renderItens(pedido)}</div>
+            <div class="totals"><div class="line total"><span>Total</span><strong>R$ ${money(total)}</strong></div></div>
             <span class="status ${escapeHtml(status)}">${getStatusTexto(status)}</span>
           </div>
         </article>
       `;
     }
 
-    function renderCompras() {
-      const lista = document.getElementById("listaCompras");
-      const compras = getCompras();
+    async function buscarCompra(){
+      const id=String(document.getElementById("pedidoId")?.value||"").trim();
+      const telefone=limparTelefone(document.getElementById("pedidoTelefone")?.value||"");
+      const lista=document.getElementById("listaCompras");
+      const status=document.getElementById("statusMsg");
 
-      if (!compras.length) {
-        lista.innerHTML = `
-          <div class="empty">
-            <h2>Sem compras</h2>
-            <p>Quando você finalizar uma compra neste aparelho, ela vai aparecer aqui.</p>
-          </div>
-        `;
+      if(!id || telefone.length < 8){
+        status.textContent="Digite o código do pedido e o WhatsApp usado na compra.";
         return;
       }
 
-      lista.innerHTML = compras
-        .slice()
-        .sort((a, b) => String(b.salvoLocalEm || b.criadoEm || "").localeCompare(String(a.salvoLocalEm || a.criadoEm || "")))
-        .map(renderCompra)
-        .join("");
+      status.textContent="Buscando no backend...";
+      lista.innerHTML=`<div class="empty"><h2>Buscando</h2><p>Conferindo Caminho.json...</p></div>`;
+
+      try{
+        const res=await fetch(`${API_URL}/api/caminho/${encodeURIComponent(id)}?telefone=${encodeURIComponent(telefone)}`,{cache:"no-store"});
+        const data=await res.json();
+        if(!data.ok) throw new Error(data.erro||"Pedido não encontrado");
+        lista.innerHTML=renderCompra(data.pedido);
+        status.textContent="Pedido encontrado.";
+      }catch(err){
+        lista.innerHTML=`<div class="erro"><h2>Não encontrado</h2><p>${escapeHtml(err.message||"Pedido não encontrado.")}</p></div>`;
+        status.textContent="Pedido não encontrado ou ainda não entrou em entrega.";
+      }
     }
 
-    function recarregarCompras() {
-      renderCompras();
+    function carregarQuery(){
+      const params=new URLSearchParams(window.location.search);
+      const id=params.get("pedido")||params.get("id")||"";
+      const telefone=params.get("telefone")||"";
+      if(id) document.getElementById("pedidoId").value=id;
+      if(telefone) document.getElementById("pedidoTelefone").value=telefone;
     }
 
-    function limparCompras() {
-      const ok = confirm("Apagar as compras salvas neste aparelho?");
-      if (!ok) return;
-
-      localStorage.removeItem(MINHAS_COMPRAS_KEY);
-      renderCompras();
-    }
-
-    renderCompras();
+    carregarQuery();
   </script>
 </body>
 </html>

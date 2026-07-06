@@ -361,6 +361,7 @@ body.cart-open .hamburger {
     let adminToken = localStorage.getItem("jws_admin_token") || "";
     let adminProdutos = [];
     let adminPedidos = [];
+    let adminCaminho = [];
     let adminAba = "produtos";
     const MINHAS_COMPRAS_KEY = "jws_minhas_compras";
     let checkoutFrete = null;
@@ -954,16 +955,19 @@ body.cart-open .hamburger {
       const body=document.getElementById("adminBody");
       body.innerHTML=`<div class="loading"><div><div class="spinner"></div><p>Carregando painel...</p></div></div>`;
       try{
-        const [prodRes, pedRes] = await Promise.all([
+        const [prodRes, pedRes, camRes] = await Promise.all([
           fetchComTempo(`${API_URL}/api/admin/produtos?cache=${Date.now()}`, {headers:{Authorization:`Bearer ${adminToken}`}}, 15000),
-          fetchComTempo(`${API_URL}/api/admin/pedidos?cache=${Date.now()}`, {headers:{Authorization:`Bearer ${adminToken}`}}, 15000)
+          fetchComTempo(`${API_URL}/api/admin/pedidos?cache=${Date.now()}`, {headers:{Authorization:`Bearer ${adminToken}`}}, 15000),
+          fetchComTempo(`${API_URL}/api/admin/caminho?cache=${Date.now()}`, {headers:{Authorization:`Bearer ${adminToken}`}}, 15000)
         ]);
         const prodData=await prodRes.json();
         const pedData=await pedRes.json();
+        const camData=await camRes.json();
         if(!prodData.ok){ adminLogout(); return notify(prodData.erro||"Login expirou","error"); }
         if(!pedData.ok){ adminLogout(); return notify(pedData.erro||"Login expirou","error"); }
         adminProdutos=(Array.isArray(prodData.produtos)?prodData.produtos:[]).map(normalizarProduto);
         adminPedidos=Array.isArray(pedData.pedidos)?pedData.pedidos:[];
+        adminCaminho=Array.isArray(camData.pedidosEmEntrega)?camData.pedidosEmEntrega:[];
         renderAdmin();
       }catch(err){
         console.error(err);
@@ -996,11 +1000,12 @@ body.cart-open .hamburger {
         <div class="admin-toolbar">
           <button class="submit" onclick="setAdminAba('produtos')">Produtos</button>
           <button class="submit" onclick="setAdminAba('pedidos')">Pedidos${pendentes ? ` (${pendentes})` : ""}</button>
+          <button class="submit" onclick="setAdminAba('caminho')">Caminho</button>
           <button class="submit" onclick="setAdminAba('relatorios')">Relatórios semanais</button>
           <button class="submit" onclick="loadAdminData()">Atualizar</button>
           <button class="clear" onclick="adminLogout()">Sair</button>
         </div>
-        ${adminAba === "pedidos" ? renderAdminPedidos() : adminAba === "relatorios" ? renderAdminRelatorios() : renderAdminProdutos()}
+        ${adminAba === "pedidos" ? renderAdminPedidos() : adminAba === "caminho" ? renderAdminCaminho() : adminAba === "relatorios" ? renderAdminRelatorios() : renderAdminProdutos()}
       `;
     }
 
@@ -1107,6 +1112,48 @@ body.cart-open .hamburger {
     }
 
     function renderAdminProdutos(){ return `<div class="admin-toolbar"><button class="submit" onclick="addAdminProduct()">+ Produto</button><button class="submit" onclick="saveAdminProducts()">Salvar tudo</button></div><div class="admin-list">${adminProdutos.map((p,i)=>adminProductHtml(p,i)).join("")}</div>`; }
+
+    function renderAdminCaminho(){
+      const lista = [...adminCaminho].sort((a,b)=>String(b.atualizadoEm||"").localeCompare(String(a.atualizadoEm||"")));
+
+      if(!lista.length){
+        return `<div class="admin-empty"><h3>Nenhum pedido em entrega</h3><p>Quando um pedido for aceito ou marcado como entregue, ele entra no Caminho.json.</p></div>`;
+      }
+
+      return `
+        <div class="admin-report-note">
+          Caminho.json é leve: guarda só dados de entrega, sem imagem de comprovante.
+        </div>
+        <div class="admin-orders-list">
+          ${lista.map(p=>{
+            const itens = Array.isArray(p.itens) ? p.itens.map(i=>`<small>• ${escapeHtml(i.nome||"Produto")} ${i.tamanho ? `Tam. ${escapeHtml(i.tamanho)} ` : ""}x${Number(i.quantidade||1)}</small>`).join("") : "";
+            return `
+              <div class="order-card">
+                <div class="order-head">
+                  <div><strong>${escapeHtml(p.id||"Pedido")}</strong><small>${escapeHtml(p.cidade||"")}/${escapeHtml(p.uf||"")} ${p.cep ? `• CEP ${escapeHtml(p.cep)}` : ""}</small></div>
+                  <span class="order-status ${statusPedidoClass(p.status)}">${statusPedidoLabel(p.status)}</span>
+                </div>
+                <div class="order-items">${itens}</div>
+                <div class="order-grid">
+                  <div class="order-item"><span>Frete</span><strong>${escapeHtml(p.freteTipo||"-")}</strong></div>
+                  <div class="order-item"><span>Prazo</span><strong>${escapeHtml(p.fretePrazo||"-")}</strong></div>
+                  <div class="order-item"><span>Total</span><strong>R$ ${money(p.total||0)}</strong></div>
+                </div>
+                <div class="form-group">
+                  <label>Onde está agora</label>
+                  <textarea id="caminho_localizacao_${escapeHtml(p.id)}" placeholder="Ex: Saiu para entrega...">${escapeHtml(p.localizacaoEntrega || "")}</textarea>
+                </div>
+                <div class="admin-actions-row">
+                  <button class="submit" onclick="salvarLocalizacaoPedido('${escapeHtml(p.id)}')">Salvar caminho</button>
+                  <button class="submit" onclick="atualizarStatusPedido('${escapeHtml(p.id)}','entregue')">Marcar entregue</button>
+                </div>
+              </div>
+            `;
+          }).join("")}
+        </div>
+      `;
+    }
+
     function renderAdminPedidos(){
       const pedidos = [...adminPedidos].sort((a,b)=>String(b.criadoEm||b.atualizadoEm||"").localeCompare(String(a.criadoEm||a.atualizadoEm||"")));
       if(!pedidos.length) return `<div class="erro"><div><h1>Sem pedidos</h1><p>Nenhum pedido Pix foi criado ainda.</p></div></div>`;
@@ -1189,6 +1236,7 @@ body.cart-open .hamburger {
         const data=await res.json();
         if(!data.ok) return notify(data.erro||"Erro ao confirmar pedido","error");
         adminPedidos=Array.isArray(data.pedidos)?data.pedidos:adminPedidos;
+        if(data.caminho && Array.isArray(data.caminho.pedidosEmEntrega)) adminCaminho=data.caminho.pedidosEmEntrega;
         adminProdutos=(Array.isArray(data.produtos)?data.produtos:adminProdutos).map(normalizarProduto);
         produtos=[...adminProdutos]; produtosRender=[...produtos];
         renderAdmin(); renderProducts(); updateCart();
@@ -1202,6 +1250,7 @@ body.cart-open .hamburger {
         const data=await res.json();
         if(!data.ok) return notify(data.erro||"Erro ao negar pedido","error");
         adminPedidos=Array.isArray(data.pedidos)?data.pedidos:adminPedidos;
+        if(data.caminho && Array.isArray(data.caminho.pedidosEmEntrega)) adminCaminho=data.caminho.pedidosEmEntrega;
         renderAdmin();
         notify("Pedido negado.","success");
       }catch(err){ console.error(err); notify("Erro ao negar pedido.","error"); }
@@ -1243,18 +1292,20 @@ body.cart-open .hamburger {
         const data=await res.json();
         if(!data.ok) return notify(data.erro||"Erro ao atualizar status","error");
         adminPedidos=Array.isArray(data.pedidos)?data.pedidos:adminPedidos;
+        if(data.caminho && Array.isArray(data.caminho.pedidosEmEntrega)) adminCaminho=data.caminho.pedidosEmEntrega;
         renderAdmin();
         notify("Status atualizado.","success");
       }catch(err){ console.error(err); notify("Erro ao atualizar status.","error"); }
     }
     async function salvarLocalizacaoPedido(id){
-      const el = document.getElementById(`localizacao_${id}`);
+      const el = document.getElementById(`localizacao_${id}`) || document.getElementById(`caminho_localizacao_${id}`);
       const localizacaoEntrega = el ? el.value : "";
       try{
         const res=await fetchComTempo(`${API_URL}/api/admin/pedidos/${encodeURIComponent(id)}/localizacao`,{method:"POST",headers:{"Content-Type":"application/json",Authorization:`Bearer ${adminToken}`},body:JSON.stringify({localizacaoEntrega})}, 15000);
         const data=await res.json();
         if(!data.ok) return notify(data.erro||"Erro ao salvar localização","error");
         adminPedidos=Array.isArray(data.pedidos)?data.pedidos:adminPedidos;
+        if(data.caminho && Array.isArray(data.caminho.pedidosEmEntrega)) adminCaminho=data.caminho.pedidosEmEntrega;
         renderAdmin();
         notify("Localização salva.","success");
       }catch(err){ console.error(err); notify("Erro ao salvar localização.","error"); }

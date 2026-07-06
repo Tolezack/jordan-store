@@ -4,6 +4,7 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Jordan Wear Store</title>
+  <!-- V114: Minhas compras em página separada -->
   <!-- V107: removido texto/box do hero principal -->
   <link rel="stylesheet" href="style.css?v=105" />
   <style>
@@ -214,6 +215,18 @@ body.cart-open .hamburger {
 @media(max-width:850px){.admin-report-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.admin-bar-row{grid-template-columns:1fr;gap:5px}.admin-bar-value{text-align:left}.admin-chart-head{display:grid}.admin-chart-head small{text-align:left}}
 @media(max-width:520px){.admin-report-grid{grid-template-columns:1fr}.admin-report-card strong{font-size:21px}}
 
+
+/* V113: compras locais e pedidos/entrega */
+.local-orders-list{display:grid;gap:10px}
+.local-order-card{border:1px solid #ccc;background:#fff;padding:14px}
+.local-order-card b{display:block;text-transform:uppercase;margin-bottom:6px}
+.local-order-card small{display:block;color:#666;margin-top:4px;line-height:1.35}
+.admin-order-controls{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:10px}
+.admin-location-box{margin-top:10px;border:1px solid #ccc;background:#f7f7f7;padding:10px}
+.admin-location-box textarea{width:100%;min-height:76px;border:1px solid #ccc;background:#fff;padding:10px;resize:vertical;outline:0}
+.admin-location-box label{display:block;font-size:11px;text-transform:uppercase;font-weight:900;letter-spacing:.08em;margin-bottom:6px;color:#333}
+@media(max-width:760px){.admin-order-controls{grid-template-columns:1fr}}
+
   </style>
 </head>
 <body>
@@ -235,6 +248,7 @@ body.cart-open .hamburger {
       <button class="side-link" onclick="openCategoryPage('tenis')">Tênis</button>
       <button class="side-link" onclick="openCategoryPage('bermuda')">Bermudas</button>
       <button class="side-link" onclick="openCategoryPage('moletom')">Moletons</button>
+      <button class="side-link" onclick="window.location.href='compras/index.html'">Minhas compras</button>
     </nav>
   </aside>
 
@@ -348,6 +362,7 @@ body.cart-open .hamburger {
     let adminProdutos = [];
     let adminPedidos = [];
     let adminAba = "produtos";
+    const MINHAS_COMPRAS_KEY = "jws_minhas_compras";
     let checkoutFrete = null;
     let checkoutEndereco = null;
     let opcoesFreteAtual = [];
@@ -880,12 +895,13 @@ body.cart-open .hamburger {
       };
 
       localStorage.setItem("pedido_pix_manual", JSON.stringify(pedido));
+      salvarCompraLocal(pedido);
 
       carrinho = [];
       saveCart();
       updateCart();
 
-      window.location.href = "pix/index.html?v=108";
+      window.location.href = "pix/index.html?v=113";
     }
 
     function toggleSidebar(force) {
@@ -960,15 +976,18 @@ body.cart-open .hamburger {
     function parseEstoqueTamanhos(texto){ const obj={}; const regex=/([A-Za-z0-9À-ÿ]+)\s*:\s*([0-9]+)/g; let match; while((match=regex.exec(String(texto||"")))!==null){ const tamanho=normalizarTamanho(match[1]); const quantidade=Number(match[2]||0); if(tamanho) obj[tamanho]=quantidade; } return obj; }
     function setAdminAba(aba){ adminAba=aba; renderAdmin(); }
     function statusPedidoLabel(status){
-      if(status === "aprovado" || status === "pago") return "Aprovado / estoque baixado";
-      if(status === "recusado" || status === "negado") return "Recusado";
-      if(status === "pendente" || status === "comprovante_enviado") return "Pendente";
+      const s = String(status || "").toLowerCase();
+      if(s === "aprovado" || s === "pago") return "Aprovado / estoque baixado";
+      if(s === "entregue") return "Entregue";
+      if(s === "recusado" || s === "negado") return "Recusado";
+      if(s === "pendente" || s === "comprovante_enviado") return "Pendente";
       return "Aguardando Pix";
     }
     function statusPedidoClass(status){
-      if(status === "aprovado" || status === "pago") return "ok";
-      if(status === "recusado" || status === "negado") return "danger";
-      if(status === "pendente" || status === "comprovante_enviado") return "warn";
+      const s = String(status || "").toLowerCase();
+      if(s === "aprovado" || s === "pago" || s === "entregue") return "ok";
+      if(s === "recusado" || s === "negado") return "danger";
+      if(s === "pendente" || s === "comprovante_enviado") return "warn";
       return "wait";
     }
     function renderAdmin(){
@@ -977,7 +996,7 @@ body.cart-open .hamburger {
         <div class="admin-toolbar">
           <button class="submit" onclick="setAdminAba('produtos')">Produtos</button>
           <button class="submit" onclick="setAdminAba('pedidos')">Pedidos${pendentes ? ` (${pendentes})` : ""}</button>
-          <button class="submit" onclick="setAdminAba('relatorios')">Relatórios</button>
+          <button class="submit" onclick="setAdminAba('relatorios')">Relatórios semanais</button>
           <button class="submit" onclick="loadAdminData()">Atualizar</button>
           <button class="clear" onclick="adminLogout()">Sair</button>
         </div>
@@ -994,10 +1013,19 @@ body.cart-open .hamburger {
       const data = new Date(raw);
       return Number.isNaN(data.getTime()) ? null : data;
     }
-    function estaNoMesAtual(data){
+    function getInicioSemana(data = new Date()){
+      const d = new Date(data);
+      const dia = d.getDay() || 7;
+      d.setHours(0,0,0,0);
+      d.setDate(d.getDate() - dia + 1);
+      return d;
+    }
+    function estaNaSemanaAtual(data){
       if(!data) return false;
-      const agora = new Date();
-      return data.getFullYear() === agora.getFullYear() && data.getMonth() === agora.getMonth();
+      const inicio = getInicioSemana(new Date());
+      const fim = new Date(inicio);
+      fim.setDate(fim.getDate() + 7);
+      return data >= inicio && data < fim;
     }
     function getProdutoAdminPorItem(item){
       const id = String(item.produtoId || item.id || "");
@@ -1008,11 +1036,11 @@ body.cart-open .hamburger {
       const produto = getProdutoAdminPorItem(item);
       return Number(item.custoFornecedor ?? item.custo_fornecedor ?? produto?.custoFornecedor ?? produto?.custo_fornecedor ?? produto?.custo ?? 0);
     }
-    function getPedidosAprovadosMesAtual(){
-      return adminPedidos.filter(p=>isPedidoAprovado(p) && estaNoMesAtual(getDataPedido(p)));
+    function getPedidosAprovadosSemanaAtual(){
+      return adminPedidos.filter(p=>isPedidoAprovado(p) && estaNaSemanaAtual(getDataPedido(p)));
     }
     function calcularRelatorioAdmin(){
-      const pedidosMes = getPedidosAprovadosMesAtual();
+      const pedidosMes = getPedidosAprovadosSemanaAtual();
       const dias = {};
       const ranking = {};
       let receita = 0, custo = 0, unidades = 0;
@@ -1052,7 +1080,7 @@ body.cart-open .hamburger {
       }).join("")}</div>`;
     }
     function renderGraficoLucroAdmin(dias){
-      if(!dias.length) return `<div class="erro"><div><h1>Sem lucro</h1><p>Sem pedidos aprovados neste mês.</p></div></div>`;
+      if(!dias.length) return `<div class="erro"><div><h1>Sem lucro</h1><p>Sem pedidos aprovados nesta semana.</p></div></div>`;
       const w=720, h=240, pad=34;
       const valores = dias.map(d=>Number(d.lucro||0));
       const min = Math.min(0, ...valores), max = Math.max(1, ...valores);
@@ -1066,15 +1094,15 @@ body.cart-open .hamburger {
     }
     function renderAdminRelatorios(){
       const r = calcularRelatorioAdmin();
-      const mes = new Date().toLocaleDateString("pt-BR", {month:"long", year:"numeric"});
+      const mes = `Semana de ${getInicioSemana(new Date()).toLocaleDateString("pt-BR")}`;
       return `<div class="admin-report-grid">
-        <div class="admin-report-card"><small>Lucro líquido do mês</small><strong>R$ ${money(r.lucro)}</strong><span>Receita menos custo fornecedor.</span></div>
-        <div class="admin-report-card"><small>Receita do mês</small><strong>R$ ${money(r.receita)}</strong><span>Pedidos aprovados em ${mes}.</span></div>
+        <div class="admin-report-card"><small>Lucro líquido da semana</small><strong>R$ ${money(r.lucro)}</strong><span>Receita menos custo fornecedor.</span></div>
+        <div class="admin-report-card"><small>Receita da semana</small><strong>R$ ${money(r.receita)}</strong><span>Pedidos aprovados na ${mes}.</span></div>
         <div class="admin-report-card"><small>Custo fornecedor</small><strong>R$ ${money(r.custo)}</strong><span>Baseado no campo custo dos produtos.</span></div>
         <div class="admin-report-card"><small>Unidades vendidas</small><strong>${r.unidades}</strong><span>Somente pedidos aprovados.</span></div>
       </div>
       <div class="admin-chart-box"><div class="admin-chart-head"><h4>Lucro líquido por dia</h4><small>${mes}<br>Use o custo fornecedor nos produtos para o lucro ficar correto.</small></div>${renderGraficoLucroAdmin(r.diasOrdenados)}</div>
-      <div class="admin-chart-box"><div class="admin-chart-head"><h4>Roupas mais vendidas do mês</h4><small>Ranking por quantidade vendida<br>Somente pedidos aprovados.</small></div>${renderGraficoBarrasAdmin(r.rankingOrdenado,"quantidade","nome",(v,i)=>`${v} un. • R$ ${money(i.receita)}`)}</div>
+      <div class="admin-chart-box"><div class="admin-chart-head"><h4>Roupas mais vendidas da semana</h4><small>Ranking por quantidade vendida<br>Somente pedidos aprovados.</small></div>${renderGraficoBarrasAdmin(r.rankingOrdenado,"quantidade","nome",(v,i)=>`${v} un. • R$ ${money(i.receita)}`)}</div>
       <p class="admin-report-note">Lucro líquido = soma dos preços dos itens vendidos menos o custo fornecedor de cada item. Frete não entra como lucro porque normalmente vai para entrega.</p>`;
     }
 
@@ -1086,6 +1114,7 @@ body.cart-open .hamburger {
     }
     function adminPedidoHtml(p){
       const itens = Array.isArray(p.itens) ? p.itens : [];
+      const safeId = escapeHtml(String(p.id || "")).replace(/'/g,"\\'");
       const itensHtml = itens.length ? itens.map(i=>`<small>• ${escapeHtml(i.nome||"Produto")} ${i.tamanho?`Tam. ${escapeHtml(i.tamanho)} `:""}x${Number(i.quantidade||1)} — R$ ${money(Number(i.preco||0)*Number(i.quantidade||1))}</small>`).join("") : `<small>${escapeHtml(p.nome||"Pedido")}</small>`;
       const temComprovante = !!(p.comprovanteLink || p.comprovanteImagem);
       const comprovante = temComprovante ? `
@@ -1109,11 +1138,19 @@ body.cart-open .hamburger {
           <div class="order-item"><span>CEP</span><strong>${escapeHtml(p.cep || "-")}</strong></div>
           <div class="order-item"><span>Endereço</span><strong>${escapeHtml(p.cliente?.endereco || "-")}</strong></div>
           <div class="order-item"><span>Cidade</span><strong>${escapeHtml(p.enderecoFrete?.cidade || "-")}/${escapeHtml(p.enderecoFrete?.uf || "-")}</strong></div>
+          <div class="order-item"><span>Onde está agora</span><strong>${escapeHtml(p.localizacaoEntrega || "Não informado")}</strong></div>
           <div class="order-item"><span>Comprovante</span><strong>${comprovante}</strong></div>
         </div>
-        <div class="admin-toolbar" style="margin-top:12px">
-          <button class="submit" onclick="confirmarPedido('${escapeHtml(String(p.id||"")).replace(/'/g,"\\'")}')" ${["aprovado","pago"].includes(String(p.status||"")) ? "disabled" : ""}>Aceitar / baixar estoque</button>
-          <button class="clear danger" onclick="negarPedido('${escapeHtml(String(p.id||"")).replace(/'/g,"\\'")}')" ${["recusado","negado"].includes(String(p.status||"")) ? "disabled" : ""}>Recusar</button>
+        <div class="admin-location-box">
+          <label>Onde está agora a roupa</label>
+          <textarea id="localizacao_${safeId}" placeholder="Ex: Separado para envio, saiu para entrega, entregue para transportadora...">${escapeHtml(p.localizacaoEntrega || "")}</textarea>
+          <button class="submit" style="margin-top:8px" onclick="salvarLocalizacaoPedido('${safeId}')">Salvar localização</button>
+        </div>
+        <div class="admin-order-controls">
+          <button class="submit" onclick="confirmarPedido('${safeId}')" ${["aprovado","pago","entregue"].includes(String(p.status||"")) ? "disabled" : ""}>Aceitar / baixar estoque</button>
+          <button class="submit" onclick="atualizarStatusPedido('${safeId}','pendente')">Pendente</button>
+          <button class="submit" onclick="atualizarStatusPedido('${safeId}','entregue')">Entregue</button>
+          <button class="clear danger" onclick="negarPedido('${safeId}')" ${["recusado","negado"].includes(String(p.status||"")) ? "disabled" : ""}>Recusar</button>
         </div>
       </div>`;
     }
@@ -1170,6 +1207,60 @@ body.cart-open .hamburger {
         notify("Pedido negado.","success");
       }catch(err){ console.error(err); notify("Erro ao negar pedido.","error"); }
     }
+
+    function getMinhasComprasLocal(){
+      try { return JSON.parse(localStorage.getItem(MINHAS_COMPRAS_KEY) || "[]"); }
+      catch(err){ return []; }
+    }
+    function salvarCompraLocal(pedido){
+      const compras = getMinhasComprasLocal();
+      if(!compras.some(p=>String(p.id)===String(pedido.id))){
+        compras.unshift({ ...pedido, salvoLocalEm: new Date().toISOString() });
+        localStorage.setItem(MINHAS_COMPRAS_KEY, JSON.stringify(compras.slice(0, 50)));
+      }
+    }
+    function openMinhasCompras(){
+      toggleSidebar(false);
+      const modal = document.getElementById("minhasComprasModal");
+      const body = document.getElementById("minhasComprasBody");
+      const compras = getMinhasComprasLocal();
+      if(!body || !modal) return;
+      if(!compras.length){
+        body.innerHTML = `<div class="erro"><div><h1>Sem compras</h1><p>As compras feitas neste aparelho vão aparecer aqui.</p></div></div>`;
+      } else {
+        body.innerHTML = `<div class="local-orders-list">${compras.map(renderCompraLocal).join("")}</div><p class="admin-report-note">Essa lista fica salva só neste celular/computador. Cliente 1 não vê as compras do cliente 2.</p>`;
+      }
+      modal.classList.add("active");
+    }
+    function closeMinhasCompras(){ document.getElementById("minhasComprasModal")?.classList.remove("active"); }
+    function renderCompraLocal(p){
+      const itens = Array.isArray(p.itens) ? p.itens : [];
+      const itensHtml = itens.length ? itens.map(i=>`<small>• ${escapeHtml(i.nome||"Produto")} ${i.tamanho?`Tam. ${escapeHtml(i.tamanho)} `:""}x${Number(i.quantidade||1)}</small>`).join("") : `<small>${escapeHtml(p.nome||"Pedido")}</small>`;
+      return `<div class="local-order-card"><b>${escapeHtml(p.id||"Pedido")}</b>${itensHtml}<small>Total: R$ ${money(p.total||0)}</small><small>CEP: ${escapeHtml(p.cep||"-")}</small><small>Status local: aguardando aprovação da loja</small></div>`;
+    }
+    async function atualizarStatusPedido(id,status){
+      try{
+        const res=await fetchComTempo(`${API_URL}/api/admin/pedidos/${encodeURIComponent(id)}/status`,{method:"POST",headers:{"Content-Type":"application/json",Authorization:`Bearer ${adminToken}`},body:JSON.stringify({status})}, 15000);
+        const data=await res.json();
+        if(!data.ok) return notify(data.erro||"Erro ao atualizar status","error");
+        adminPedidos=Array.isArray(data.pedidos)?data.pedidos:adminPedidos;
+        renderAdmin();
+        notify("Status atualizado.","success");
+      }catch(err){ console.error(err); notify("Erro ao atualizar status.","error"); }
+    }
+    async function salvarLocalizacaoPedido(id){
+      const el = document.getElementById(`localizacao_${id}`);
+      const localizacaoEntrega = el ? el.value : "";
+      try{
+        const res=await fetchComTempo(`${API_URL}/api/admin/pedidos/${encodeURIComponent(id)}/localizacao`,{method:"POST",headers:{"Content-Type":"application/json",Authorization:`Bearer ${adminToken}`},body:JSON.stringify({localizacaoEntrega})}, 15000);
+        const data=await res.json();
+        if(!data.ok) return notify(data.erro||"Erro ao salvar localização","error");
+        adminPedidos=Array.isArray(data.pedidos)?data.pedidos:adminPedidos;
+        renderAdmin();
+        notify("Localização salva.","success");
+      }catch(err){ console.error(err); notify("Erro ao salvar localização.","error"); }
+    }
+
     function adminLogout(){ adminToken=""; localStorage.removeItem("jws_admin_token"); showAdminLogin(); }
 
     /* V103: slide de imagens do index principal */

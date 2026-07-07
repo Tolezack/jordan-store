@@ -33,10 +33,6 @@
     <section class="head">
       <small>Área do cliente</small>
       <h1>Minhas compras</h1>
-      <p>
-        Essa página usa um ID aleatório salvo neste navegador para mostrar só as compras deste cliente.
-        Cliente 1 não vê as compras do cliente 2.
-      </p>
       <div class="actions">
         <a class="btn" href="../index.html">Voltar para loja</a>
         <button class="btn secondary" onclick="buscarMinhasCompras()">Atualizar</button>
@@ -44,18 +40,13 @@
     </section>
 
     <section class="client-box">
-      <div class="status-msg">Seu ID de cliente neste aparelho:</div>
-      <div class="client-id" id="clienteIdBox">Carregando...</div>
-      <div class="status-msg" id="statusMsg">Buscando suas compras no backend...</div>
+      <div class="status-msg" id="statusMsg">Buscando suas compras...</div>
     </section>
 
     <section id="listaCompras" class="grid">
       <div class="empty"><h2>Buscando</h2><p>Conferindo seus pedidos...</p></div>
     </section>
 
-    <p class="note">
-      Se limpar os dados do navegador ou usar outro celular, outro ID será criado.
-    </p>
   </main>
 
   <script>
@@ -118,8 +109,7 @@
       const clienteId=getClienteId();
       const lista=document.getElementById("listaCompras");
       const status=document.getElementById("statusMsg");
-      document.getElementById("clienteIdBox").textContent=clienteId;
-      status.textContent="Buscando no backend...";
+      status.textContent="Buscando suas compras...";
       lista.innerHTML=`<div class="empty"><h2>Buscando</h2><p>Conferindo seus pedidos...</p></div>`;
 
       try{
@@ -129,7 +119,7 @@
         const pedidos=Array.isArray(data.pedidos)?data.pedidos:[];
         if(!pedidos.length){
           lista.innerHTML=`<div class="empty"><h2>Nenhuma compra</h2><p>As compras feitas neste aparelho vão aparecer aqui depois que o pedido for criado.</p></div>`;
-          status.textContent="Nenhuma compra encontrada para este ID.";
+          status.textContent="Nenhuma compra encontrada.";
           return;
         }
         lista.innerHTML=pedidos.map(renderCompra).join("");
@@ -140,7 +130,6 @@
       }
     }
 
-    document.getElementById("clienteIdBox").textContent=getClienteId();
     buscarMinhasCompras();
   </script>
 </body>
